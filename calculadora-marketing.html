@@ -1,0 +1,2468 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mkteado</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--bg-card:#161b22;--bg-input:#21262d;--bg-hover:#30363d;
+  --text:#e6edf3;--text-muted:#7d8590;--border:#30363d;
+  --green:#3fb950;--amber:#d29922;--red:#f85149;--purple:#a371f7;--cyan:#39d0b0;--blue:#58a6ff;
+  --radius:10px;--radius-sm:6px;--glow:0 18px 45px rgba(0,0,0,.28);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:
+radial-gradient(circle at top left,rgba(88,166,255,.11),transparent 28%),
+radial-gradient(circle at top right,rgba(57,208,176,.08),transparent 24%),
+linear-gradient(180deg,#0d1117 0%,#0f141b 100%);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5}
+.app{display:flex;flex-direction:column;min-height:100vh}
+header{padding:1.25rem 2rem;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:1rem;flex-wrap:wrap;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0))}
+.logo{width:36px;height:36px;background:linear-gradient(135deg,#1877F2,#39d0b0);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 8px 22px rgba(24,119,242,.35)}
+header h1{font-size:18px;font-weight:600}
+header p{color:var(--text-muted);font-size:12px}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.header-right label{font-size:12px;color:var(--text-muted)}
+.tabs{display:flex;gap:2px;padding:0 2rem;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;background:rgba(13,17,23,.72);backdrop-filter:blur(16px)}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{padding:.5rem 1rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-muted);font-size:13px;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s;font-family:inherit}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--text);border-bottom-color:#1877F2}
+main{padding:1.75rem 2rem;flex:1}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.section-header{margin-bottom:1.25rem}
+.section-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.section-desc{color:var(--text-muted);font-size:13px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
+.card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:1rem}
+.field{margin-bottom:.875rem}
+.field:last-child{margin-bottom:0}
+label{display:block;font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500}
+input[type=number],select{width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:.45rem .75rem;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s}
+input[type=number]:focus,select:focus{border-color:#1877F2}
+select option{background:var(--bg-card)}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+input[type=number]{-moz-appearance:textfield}
+.input-group{position:relative}
+.input-prefix{position:absolute;left:.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:13px;pointer-events:none}
+.input-suffix{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:12px;pointer-events:none}
+.input-group input{padding-left:1.75rem}
+.input-group.suf input{padding-right:2.25rem}
+.mode-toggle{display:flex;background:var(--bg-input);border-radius:var(--radius-sm);padding:3px;margin-bottom:1rem;width:fit-content}
+.mode-btn{padding:.3rem .875rem;border:none;background:none;color:var(--text-muted);font-size:12px;border-radius:4px;cursor:pointer;font-family:inherit;transition:all .15s}
+.mode-btn.active{background:var(--bg-card);color:var(--text)}
+.platform-selector{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.plat-btn{padding:.3rem .75rem;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;color:var(--text-muted);font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s}
+.plat-btn:hover{color:var(--text)}
+.plat-btn.active{background:#1877F2;border-color:#1877F2;color:#fff}
+.plat-btn[data-p=google].active{background:#4285F4;border-color:#4285F4}
+.plat-btn[data-p=tiktok].active{background:#333;border-color:#555;color:#fff}
+.plat-btn[data-p=general].active{background:var(--purple);border-color:var(--purple)}
+.result-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem .875rem;background:var(--bg-input);border-radius:var(--radius-sm);margin-bottom:6px}
+.result-row:last-child{margin-bottom:0}
+.rl{font-size:12px;color:var(--text-muted)}
+.rv{font-size:15px;font-weight:600}
+.rv.green{color:var(--green)}.rv.amber{color:var(--amber)}.rv.red{color:var(--red)}.rv.blue{color:var(--blue)}.rv.purple{color:var(--purple)}.rv.cyan{color:var(--cyan)}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem}
+.hero-card{text-align:center;padding:1rem;background:var(--bg-input);border-radius:var(--radius-sm)}
+.hero-val{font-size:28px;font-weight:700;letter-spacing:-1px;line-height:1;margin-bottom:3px}
+.hero-lbl{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px}
+.alert-box{padding:.75rem 1rem;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin-top:.75rem;font-size:13px}
+.alert-box.green{border-left:3px solid var(--green);background:rgba(63,185,80,.1)}
+.alert-box.red{border-left:3px solid var(--red);background:rgba(248,81,73,.1)}
+.alert-box.amber{border-left:3px solid var(--amber);background:rgba(210,153,34,.1)}
+.alert-box.blue{border-left:3px solid var(--blue);background:rgba(88,166,255,.1)}
+.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+.metric-mini{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem}
+.metric-mini .formula{font-size:11px;color:var(--text-muted);font-family:monospace;background:var(--bg-input);padding:3px 8px;border-radius:4px;margin-bottom:.75rem;display:block}
+.metric-mini-title{font-size:13px;font-weight:600;margin-bottom:.5rem}
+.funnel-stage{margin-bottom:8px}
+.funnel-meta{display:flex;justify-content:space-between;padding:0 0 4px;font-size:12px}
+.funnel-name{color:var(--text-muted);font-weight:500}
+.funnel-rate{color:var(--text-muted)}
+.funnel-bar-wrap{height:40px;background:var(--bg-input);border-radius:var(--radius-sm);overflow:hidden;position:relative}
+.funnel-bar{position:absolute;left:0;top:0;bottom:0;border-radius:var(--radius-sm);transition:width .4s ease}
+.funnel-val{position:absolute;right:.875rem;top:50%;transform:translateY(-50%);font-size:13px;font-weight:600}
+.badge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:500}
+.badge-green{background:rgba(63,185,80,.15);color:var(--green)}
+.badge-red{background:rgba(248,81,73,.15);color:var(--red)}
+.badge-amber{background:rgba(210,153,34,.15);color:var(--amber)}
+.info{display:inline-block;width:14px;height:14px;background:var(--bg-hover);border-radius:50%;text-align:center;line-height:14px;font-size:9px;color:var(--text-muted);cursor:help;vertical-align:middle;margin-left:3px;position:relative}
+.info:hover::after{content:attr(data-t);position:absolute;left:50%;bottom:calc(100% + 4px);transform:translateX(-50%);background:#1c2128;border:1px solid var(--border);color:var(--text);font-size:11px;padding:4px 8px;border-radius:4px;white-space:nowrap;z-index:100}
+@media(max-width:768px){main{padding:1rem}.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}header{padding:1rem}.tabs{padding:0 1rem}}
+
+/* ===== UI IMPROVEMENTS ===== */
+/* 1. Tab activo con background sutil + esquinas redondeadas arriba */
+.tab-btn.active{background:rgba(24,119,242,.08);border-radius:6px 6px 0 0;border-bottom-width:2px}
+/* 2. Input focus glow */
+input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3px rgba(24,119,242,.14)}
+/* 3. Section title con borde izquierdo de color */
+.section-title{padding-left:10px;border-left:3px solid #1877F2;line-height:1.3;margin-left:-2px}
+/* 4. Hero-val responsive para números largos */
+.hero-val{font-size:clamp(16px,2.5vw,28px);letter-spacing:-.5px;word-break:break-all}
+/* 5. Result-rows clave destacadas */
+.result-row.key{background:rgba(163,113,247,.1);border-left:2px solid var(--purple);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding-left:calc(.875rem - 2px)}
+.result-row.key .rv{font-size:16px}
+/* 6. Cards con sombra para separarse del fondo */
+.card{box-shadow:0 2px 8px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.04);border-color:rgba(255,255,255,.07)}
+/* 7. Botones: variantes primary y accent */
+.btn-primary{background:#1877F2;border-color:#1877F2;color:#fff;font-weight:500}
+.btn-primary:hover{background:#1567d3;border-color:#1567d3}
+.btn-accent{background:rgba(163,113,247,.12);border-color:rgba(163,113,247,.4);color:var(--purple)}
+.btn-accent:hover{background:rgba(163,113,247,.22)}
+/* 8. Mix-row con borde izquierdo de color por plataforma (seteado via JS) */
+.mix-row{padding-left:8px;border-left:2px solid transparent;transition:border-color .2s,padding .2s}
+.mix-hdr{padding-left:10px}
+/* 9. Funnel bars más altas */
+.funnel-bar-wrap{height:46px}
+/* 10. Escala tipográfica consistente: eliminar 9px */
+.info{font-size:10px;width:15px;height:15px;line-height:15px}
+/* Metric mini title más legible */
+.metric-mini-title{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);font-weight:600;margin-bottom:.6rem}
+/* 11. Logo centrado correctamente */
+.logo{font-size:18px;line-height:1;justify-content:center;align-items:center}
+/* 12. Hero card con borde sutil */
+.hero-card{border:1px solid rgba(255,255,255,.06)}
+/* Benchmark usar btn accent */
+.bench-use-btn{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.35);border-radius:var(--radius-sm);color:var(--purple);padding:2px 9px;font-size:10px;cursor:pointer;font-family:inherit;font-weight:500;transition:all .15s}
+.bench-use-btn:hover{background:rgba(163,113,247,.22)}
+/* Section header más respirable */
+.section-header{margin-bottom:1.5rem}
+/* Funnel presets + editable labels */
+.funnel-preset-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1rem}
+.funnel-preset-btn{padding:.25rem .7rem;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;color:var(--text-muted);font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s}
+.funnel-preset-btn:hover{color:var(--text)}
+.funnel-preset-btn.active{background:var(--bg-hover);color:var(--text);border-color:#555}
+.funnel-label-input{background:none;border:none;border-bottom:1px dashed rgba(255,255,255,.15);color:var(--text-muted);font-size:12px;font-weight:500;font-family:inherit;outline:none;width:150px;padding:0 2px;transition:border-color .15s,color .15s}
+.funnel-label-input:focus{border-bottom-color:#1877F2;color:var(--text)}
+.tabs-wrap{position:relative;border-bottom:1px solid var(--border)}
+.tabs-wrap nav.tabs{border-bottom:none;padding:0 2rem}
+.tab-arrow{position:absolute;top:0;bottom:0;width:32px;border:none;background:var(--bg);color:var(--text-muted);font-size:18px;cursor:pointer;z-index:5;display:none;align-items:center;justify-content:center;transition:color .15s}
+.tab-arrow:hover{color:var(--text)}
+.tab-arrow.left{left:0;border-right:1px solid var(--border)}
+.tab-arrow.right{right:0;border-left:1px solid var(--border)}
+.tab-arrow.visible{display:flex}
+#scenario-bar{display:none;padding:.4rem 1.5rem;background:rgba(88,166,255,.06);border-bottom:1px solid rgba(88,166,255,.15);align-items:center;gap:8px;flex-wrap:wrap}
+#scenario-bar.show{display:flex}
+@media print{nav.tabs,#scenario-bar,.header-right{display:none!important}.tab-content{display:block!important;page-break-after:always}body,main{background:#fff!important;color:#000!important}.card,.metric-mini,.hero-card,.result-row,.bench-wrap{background:#fff!important;border-color:#ddd!important;color:#000!important}.rv,.hero-val,.funnel-val,.rv.green,.rv.red,.rv.amber,.rv.blue,.rv.purple,.rv.cyan{color:#000!important}header{border:none}}
+.mix-hdr{display:grid;grid-template-columns:115px 58px 65px 58px 55px 70px;gap:4px;font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;padding:2px 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.mix-row{display:grid;grid-template-columns:115px 58px 65px 58px 55px 70px;gap:4px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)}
+.mix-row:last-child{border-bottom:none}
+.mix-row input[type=number]{font-size:12px;padding:.3rem .4rem;text-align:center}
+.mix-name{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;cursor:pointer;user-select:none}
+.mix-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.mix-result{font-size:13px;font-weight:600;color:var(--green);text-align:right;padding-right:4px}
+.mix-result.off{color:var(--text-muted)}
+.dist-bar-row{margin-bottom:6px}
+.dist-bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:3px}
+.dist-bar-track{height:6px;background:var(--bg-input);border-radius:3px;overflow:hidden}
+.dist-bar-fill{height:100%;border-radius:3px;transition:width .3s}
+.btn{padding:.4rem .875rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-input);color:var(--text);font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.btn:hover{background:var(--bg-hover)}
+.scale-table{width:100%;border-collapse:collapse;font-size:12px}
+.scale-table th{padding:.45rem .75rem;text-align:right;background:var(--bg-input);color:var(--text-muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.4px}
+.scale-table th:first-child{text-align:left}
+.scale-table td{padding:.45rem .75rem;border-top:1px solid var(--border);text-align:right;font-size:12px}
+.scale-table td:first-child{text-align:left;font-weight:600;color:var(--text-muted)}
+.scale-table .base-row td{background:rgba(88,166,255,.07);color:var(--text)}
+.scale-table .base-row td:first-child{color:var(--blue)}
+.scale-table .roas-bad{color:var(--red)!important}
+.scale-table .roas-ok{color:var(--green)!important}
+.chart-wrap{position:relative;height:220px;margin-top:1rem}
+.comp-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:.75rem}
+.comp-table th{padding:.5rem .875rem;background:var(--bg-input);color:var(--text-muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.4px;text-align:right}
+.comp-table th:first-child{text-align:left}
+.comp-table td{padding:.5rem .875rem;border-top:1px solid var(--border);text-align:right;font-weight:500}
+.comp-table td:first-child{text-align:left;color:var(--text-muted);font-weight:400;font-size:12px}
+.comp-table .win{color:var(--green);font-weight:700}
+.comp-table .lose{color:var(--text-muted);font-weight:400}
+.campaign-header{font-size:13px;font-weight:600;margin-bottom:.875rem;display:flex;align-items:center;gap:8px}
+.camp-badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600}
+.camp-a{background:rgba(88,166,255,.15);color:var(--blue)}
+.camp-b{background:rgba(163,113,247,.15);color:var(--purple)}
+.bench-wrap{overflow-y:auto;max-height:420px;border:1px solid var(--border);border-radius:var(--radius-sm)}
+.bench-table{width:100%;border-collapse:collapse;font-size:12px}
+.bench-table th{padding:.45rem .875rem;background:var(--bg-hover);color:var(--text-muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0;z-index:1;text-align:right}
+.bench-table th:first-child,.bench-table th:nth-child(2){text-align:left}
+.bench-table td{padding:.4rem .875rem;border-top:1px solid var(--border);text-align:right}
+.bench-table td:first-child,.bench-table td:nth-child(2){text-align:left}
+.bench-table tr:hover td{background:rgba(255,255,255,.03)}
+.bench-plat{display:inline-block;padding:1px 7px;border-radius:8px;font-size:10px;font-weight:600}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.875rem}
+.filter-btn{padding:.25rem .65rem;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;color:var(--text-muted);font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s}
+.filter-btn.active{background:var(--bg-hover);color:var(--text);border-color:#555}
+.fee-btns{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:.875rem}
+.fee-btn{padding:.25rem .65rem;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;color:var(--text-muted);font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s}
+.fee-btn.active{background:var(--purple);border-color:var(--purple);color:#fff}
+.header-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;margin-bottom:1.25rem}
+.kpi-shell{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:1rem 1rem .9rem;box-shadow:var(--glow)}
+.kpi-shell .hero-lbl{margin-bottom:6px}
+.kpi-shell .hero-val{font-size:24px}
+.dashboard-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:1.25rem}
+.dashboard-stack{display:flex;flex-direction:column;gap:1.25rem}
+.summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
+.summary-item{background:var(--bg-input);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:.85rem}
+.summary-item .label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.summary-item .value{font-size:18px;font-weight:700}
+.decision-list{display:grid;gap:.55rem}
+.decision-pill{padding:.7rem .85rem;border-radius:10px;background:var(--bg-input);border:1px solid rgba(255,255,255,.04);font-size:12px}
+.toolbar-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.scenario-table,.forecast-table,.sensitivity-table{width:100%;border-collapse:collapse;font-size:12px}
+.scenario-table th,.forecast-table th,.sensitivity-table th{padding:.5rem .75rem;text-align:right;background:var(--bg-input);color:var(--text-muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.4px}
+.scenario-table th:first-child,.forecast-table th:first-child,.sensitivity-table th:first-child{text-align:left}
+.scenario-table td,.forecast-table td,.sensitivity-table td{padding:.5rem .75rem;border-top:1px solid var(--border);text-align:right}
+.scenario-table td:first-child,.forecast-table td:first-child,.sensitivity-table td:first-child{text-align:left}
+.scenario-table tr:hover td,.forecast-table tr:hover td{background:rgba(255,255,255,.025)}
+.scenario-table .best{color:var(--green);font-weight:700}
+.scenario-empty{font-size:12px;color:var(--text-muted);padding:.75rem 0}
+.subtle-note{font-size:11px;color:var(--text-muted);margin-top:.6rem}
+.sensitivity-table td.heat-good{background:rgba(63,185,80,.12)}
+.sensitivity-table td.heat-mid{background:rgba(210,153,34,.12)}
+.sensitivity-table td.heat-bad{background:rgba(248,81,73,.12)}
+.panel-title{font-size:13px;font-weight:600;margin-bottom:.8rem}
+.forecast-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:.75rem}
+.forecast-badge{padding:4px 9px;border-radius:999px;font-size:11px;border:1px solid rgba(255,255,255,.08);background:var(--bg-input);color:var(--text-muted)}
+.attr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
+.soft-card{background:linear-gradient(180deg,rgba(88,166,255,.08),rgba(88,166,255,.02));border:1px solid rgba(88,166,255,.18);border-radius:12px;padding:1rem}
+.proposal-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:1.25rem}
+.proposal-stack{display:flex;flex-direction:column;gap:1.25rem}
+.scenario-quote{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
+.quote-card{background:var(--bg-input);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:1rem}
+.quote-card.recommended{background:linear-gradient(180deg,rgba(88,166,255,.12),rgba(88,166,255,.04));border-color:rgba(88,166,255,.26)}
+.quote-title{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.35rem}
+.quote-value{font-size:22px;font-weight:700;line-height:1.1;margin-bottom:.35rem}
+.quote-meta{font-size:12px;color:var(--text-muted);line-height:1.6}
+.status-chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600}
+.status-good{background:rgba(63,185,80,.14);color:var(--green)}
+.status-warn{background:rgba(210,153,34,.14);color:var(--amber)}
+.status-bad{background:rgba(248,81,73,.14);color:var(--red)}
+@media(max-width:980px){.proposal-grid,.scenario-quote{grid-template-columns:1fr}}
+@media(max-width:980px){.header-kpis,.dashboard-grid,.attr-grid,.summary-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header>
+  <div class="logo">📊</div>
+  <div>
+    <h1>Mkteado</h1>
+    <p>Meta · Google · TikTok · Email · Agencia</p>
+  </div>
+  <div class="header-right">
+    <button class="btn" onclick="saveScenario()" title="Guardar escenario actual">Guardar</button>
+    <button class="btn" onclick="exportCSV()" title="Descargar datos en Excel/CSV">Exportar CSV</button>
+    <button class="btn" onclick="window.print()" title="Imprimir / exportar PDF">Imprimir</button>
+    <label>Moneda</label>
+    <select id="g-currency" onchange="setCurrency(this.value)" style="width:auto;padding:.3rem .5rem;font-size:13px">
+      <option value="ARS" selected>$ ARS</option>
+      <option value="USD">$ USD</option>
+      <option value="EUR">€ EUR</option>
+      <option value="BRL">R$ BRL</option>
+      <option value="MXN">$ MXN</option>
+      <option value="CLP">$ CLP</option>
+      <option value="COP">$ COP</option>
+      <option value="PEN">S/ PEN</option>
+    </select>
+  </div>
+</header>
+
+<div class="tabs-wrap">
+<button class="tab-arrow left" id="tab-arr-l" onclick="scrollTabs(-200)">‹</button>
+<nav class="tabs" id="tabs-nav">
+  <button class="tab-btn active" onclick="switchTab('dashboard',this)">Overview</button>
+  <button class="tab-btn" onclick="switchTab('presupuesto',this)">💰 Presupuesto</button>
+  <button class="tab-btn" onclick="switchTab('objetivos',this)">🎯 Objetivo</button>
+  <button class="tab-btn" onclick="switchTab('funnel',this)">🔽 Funnel</button>
+  <button class="tab-btn" onclick="switchTab('metricas',this)">📐 Métricas</button>
+  <button class="tab-btn" onclick="switchTab('roi',this)">📈 ROI / ROAS</button>
+  <button class="tab-btn" onclick="switchTab('ltvcac',this)">👥 LTV / CAC</button>
+  <button class="tab-btn" onclick="switchTab('propuesta',this)">🧾 Propuesta Cliente</button>
+  <button class="tab-btn" onclick="switchTab('sensibilidad',this)">🧪 Sensibilidad</button>
+  <button class="tab-btn" onclick="switchTab('forecast',this)">🗓 Forecast</button>
+  <button class="tab-btn" onclick="switchTab('mixmedia',this)">🔀 Media Mix</button>
+  <button class="tab-btn" onclick="switchTab('escalado',this)">⚡ Escalado</button>
+  <button class="tab-btn" onclick="switchTab('comparador',this)">⚖️ A vs B</button>
+  <button class="tab-btn" onclick="switchTab('escenarios',this)">🧷 Escenarios</button>
+  <button class="tab-btn" onclick="switchTab('benchmarks',this)">📊 Benchmarks</button>
+  <button class="tab-btn" onclick="switchTab('agencia',this)">🏢 Agencia</button>
+  <button class="tab-btn" onclick="switchTab('email',this)">📧 Email</button>
+</nav>
+<button class="tab-arrow right" id="tab-arr-r" onclick="scrollTabs(200)">›</button>
+</div>
+<div id="scenario-bar">
+  <span style="font-size:11px;color:var(--text-muted)">Escenarios guardados:</span>
+  <div id="scenario-chips" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+</div>
+
+<main>
+
+<!-- ===== TAB 0: DASHBOARD ===== -->
+<section id="tab-dashboard" class="tab-content active">
+  <div class="section-header">
+    <div class="section-title">Overview Ejecutivo</div>
+    <div class="section-desc">Un resumen de salud para decidir rápido dónde optimizar y dónde escalar</div>
+  </div>
+  <div class="header-kpis">
+    <div class="kpi-shell">
+      <div class="hero-lbl">ROAS principal</div>
+      <div class="hero-val purple" id="dash-kpi-roas">0,00x</div>
+    </div>
+    <div class="kpi-shell">
+      <div class="hero-lbl">Ganancia neta</div>
+      <div class="hero-val" id="dash-kpi-profit">-</div>
+    </div>
+    <div class="kpi-shell">
+      <div class="hero-lbl">LTV:CAC</div>
+      <div class="hero-val blue" id="dash-kpi-ltv">0,0:1</div>
+    </div>
+    <div class="kpi-shell">
+      <div class="hero-lbl">MER consolidado</div>
+      <div class="hero-val cyan" id="dash-kpi-mer">0,00x</div>
+    </div>
+  </div>
+  <div class="dashboard-grid">
+    <div class="dashboard-stack">
+      <div class="card">
+        <div class="card-title">Resumen de Operación</div>
+        <div class="summary-grid">
+          <div class="summary-item"><div class="label">Presupuesto estimado</div><div class="value" id="dash-budget">-</div></div>
+          <div class="summary-item"><div class="label">Ingresos estimados</div><div class="value green" id="dash-revenue">-</div></div>
+          <div class="summary-item"><div class="label">Break-even ROAS</div><div class="value amber" id="dash-beroas">-</div></div>
+          <div class="summary-item"><div class="label">Payback CAC</div><div class="value cyan" id="dash-payback">-</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Prioridades sugeridas</div>
+        <div class="decision-list" id="dash-actions"></div>
+      </div>
+    </div>
+    <div class="dashboard-stack">
+      <div class="soft-card">
+        <div class="panel-title">Diagnóstico rápido</div>
+        <div id="dash-score" class="hero-val">71/100</div>
+        <div class="subtle-note" id="dash-score-note">Tu estructura general es rentable, pero todavía hay margen para bajar CAC y acelerar recuperación.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Canal mix y eficiencia</div>
+        <div class="result-row"><span class="rl">ROAS del media mix</span><span class="rv purple" id="dash-mix-roas">-</span></div>
+        <div class="result-row"><span class="rl">CPA del media mix</span><span class="rv amber" id="dash-mix-cpa">-</span></div>
+        <div class="result-row"><span class="rl">Ingresos por email</span><span class="rv blue" id="dash-email-rpe">-</span></div>
+        <div class="result-row"><span class="rl">Escalabilidad recomendada</span><span class="rv" id="dash-scale-tip">-</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB 1: PRESUPUESTO ===== -->
+<section id="tab-presupuesto" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Presupuesto &rarr; Resultados</div>
+    <div class="section-desc">Ingresá tu presupuesto y calculá los resultados proyectados</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Parámetros</div>
+      <div class="platform-selector">
+        <button class="plat-btn active" data-p="meta">Meta Ads</button>
+        <button class="plat-btn" data-p="google">Google Ads</button>
+        <button class="plat-btn" data-p="tiktok">TikTok</button>
+        <button class="plat-btn" data-p="general">General</button>
+      </div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="p1-m-cpm" onclick="setMode1('cpm')">Por CPM</button>
+        <button class="mode-btn" id="p1-m-cpc" onclick="setMode1('cpc')">Por CPC</button>
+      </div>
+      <div class="field">
+        <label>Presupuesto total <span class="info" data-t="Inversión total en la campaña">?</span></label>
+        <div class="input-group"><span class="input-prefix" id="p1-sym">$</span><input type="number" id="p1-budget" value="1000" min="0" step="100" oninput="calc1()"></div>
+      </div>
+      <div id="p1-cpm-block">
+        <div class="field">
+          <label>CPM <span class="info" data-t="Costo por cada 1.000 impresiones">?</span></label>
+          <div class="input-group"><span class="input-prefix" id="p1-cpm-sym">$</span><input type="number" id="p1-cpm" value="10" min="0" step=".5" oninput="calc1()"></div>
+        </div>
+        <div class="field">
+          <label>CTR <span class="info" data-t="% de impresiones que generan un clic">?</span></label>
+          <div class="input-group suf"><input type="number" id="p1-ctr" value="1.5" min="0" max="100" step=".1" oninput="calc1()"><span class="input-suffix">%</span></div>
+        </div>
+      </div>
+      <div id="p1-cpc-block" style="display:none">
+        <div class="field">
+          <label>CPC promedio</label>
+          <div class="input-group"><span class="input-prefix" id="p1-cpc-sym">$</span><input type="number" id="p1-cpc" value=".50" min="0" step=".05" oninput="calc1()"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Tasa de conversión (landing) <span class="info" data-t="% de clics que completan el objetivo">?</span></label>
+        <div class="input-group suf"><input type="number" id="p1-cr" value="3" min="0" max="100" step=".1" oninput="calc1()"><span class="input-suffix">%</span></div>
+      </div>
+      <div class="field">
+        <label>Ticket promedio <span class="info" data-t="Valor promedio por venta/conversión">?</span></label>
+        <div class="input-group"><span class="input-prefix" id="p1-aov-sym">$</span><input type="number" id="p1-aov" value="50" min="0" step="1" oninput="calc1()"></div>
+      </div>
+      <div class="field">
+        <label>Margen bruto <span class="info" data-t="% de ganancia sobre el precio de venta">?</span></label>
+        <div class="input-group suf"><input type="number" id="p1-margin" value="40" min="0" max="100" oninput="calc1()"><span class="input-suffix">%</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Resultados Proyectados</div>
+      <div class="hero-grid">
+        <div class="hero-card"><div class="hero-val blue" id="p1-r-imp">100.000</div><div class="hero-lbl">Impresiones</div></div>
+        <div class="hero-card"><div class="hero-val" id="p1-r-clicks">1.500</div><div class="hero-lbl">Clics</div></div>
+      </div>
+      <div class="result-row"><span class="rl">Conversiones</span><span class="rv green" id="p1-r-conv">45</span></div>
+      <div class="result-row"><span class="rl">CPA (costo por conversión)</span><span class="rv amber" id="p1-r-cpa">$22,22</span></div>
+      <div class="result-row"><span class="rl">CPC efectivo</span><span class="rv" id="p1-r-cpc">$0,67</span></div>
+      <div class="result-row"><span class="rl">CPL (costo por lead)</span><span class="rv" id="p1-r-cpl">$22,22</span></div>
+      <div class="result-row"><span class="rl">Ingresos estimado</span><span class="rv green" id="p1-r-rev">$2.250</span></div>
+      <div class="result-row key"><span class="rl">ROAS</span><span class="rv purple" id="p1-r-roas">2,25x</span></div>
+      <div class="result-row"><span class="rl">ROAS neto (ajustado por margen)</span><span class="rv" id="p1-r-netroas">0,90x</span></div>
+      <div class="result-row key"><span class="rl">Ganancia neta</span><span class="rv" id="p1-r-profit">$100</span></div>
+      <div id="p1-alert"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB 2: OBJETIVOS ===== -->
+<section id="tab-objetivos" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Objetivo &rarr; Presupuesto</div>
+    <div class="section-desc">¿Cuánto necesitás invertir para alcanzar tu meta?</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Tu Objetivo</div>
+      <div class="platform-selector">
+        <button class="plat-btn active" data-p="meta">Meta Ads</button>
+        <button class="plat-btn" data-p="google">Google Ads</button>
+        <button class="plat-btn" data-p="tiktok">TikTok</button>
+        <button class="plat-btn" data-p="general">General</button>
+      </div>
+      <div class="field">
+        <label>¿Qué quiero lograr?</label>
+        <select id="p2-goal" onchange="calc2()">
+          <option value="conv">Conversiones / Leads</option>
+          <option value="clicks">Clics</option>
+          <option value="imp">Impresiones</option>
+          <option value="ingresos">Ingresos ($)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label id="p2-goal-lbl">Objetivo (conversiones)</label>
+        <div class="input-group"><span class="input-prefix" id="p2-goal-sym">#</span><input type="number" id="p2-goal-val" value="100" min="1" oninput="calc2()"></div>
+      </div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="p2-m-cpm" onclick="setMode2('cpm')">Por CPM</button>
+        <button class="mode-btn" id="p2-m-cpc" onclick="setMode2('cpc')">Por CPC</button>
+      </div>
+      <div id="p2-cpm-block">
+        <div class="field">
+          <label>CPM esperado</label>
+          <div class="input-group"><span class="input-prefix" id="p2-cpm-sym">$</span><input type="number" id="p2-cpm" value="10" min="0" step=".5" oninput="calc2()"></div>
+        </div>
+        <div class="field">
+          <label>CTR esperado</label>
+          <div class="input-group suf"><input type="number" id="p2-ctr" value="1.5" min="0" max="100" step=".1" oninput="calc2()"><span class="input-suffix">%</span></div>
+        </div>
+      </div>
+      <div id="p2-cpc-block" style="display:none">
+        <div class="field">
+          <label>CPC esperado</label>
+          <div class="input-group"><span class="input-prefix" id="p2-cpc-sym">$</span><input type="number" id="p2-cpc" value=".50" min="0" step=".05" oninput="calc2()"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Tasa de conversión</label>
+        <div class="input-group suf"><input type="number" id="p2-cr" value="3" min="0" max="100" step=".1" oninput="calc2()"><span class="input-suffix">%</span></div>
+      </div>
+      <div class="field" id="p2-aov-row" style="display:none">
+        <label>Ticket promedio</label>
+        <div class="input-group"><span class="input-prefix" id="p2-aov-sym">$</span><input type="number" id="p2-aov" value="50" min="0" oninput="calc2()"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Presupuesto Necesario</div>
+      <div class="hero-grid" style="grid-template-columns:1fr">
+        <div class="hero-card"><div class="hero-val green" id="p2-r-budget">$3.333</div><div class="hero-lbl">Presupuesto total recomendado</div></div>
+      </div>
+      <div class="result-row"><span class="rl">Presupuesto diario (÷30)</span><span class="rv" id="p2-r-daily">$111,11</span></div>
+      <div class="result-row"><span class="rl">Presupuesto semanal (÷4,3)</span><span class="rv" id="p2-r-weekly">$775,19</span></div>
+      <div class="result-row"><span class="rl">Impresiones necesarias</span><span class="rv blue" id="p2-r-imp">333.333</span></div>
+      <div class="result-row"><span class="rl">Clics necesarios</span><span class="rv" id="p2-r-clicks">5.000</span></div>
+      <div class="result-row"><span class="rl">CPA / CPL implícito</span><span class="rv amber" id="p2-r-cpa">$33,33</span></div>
+      <div id="p2-alert"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB 3: FUNNEL ===== -->
+<section id="tab-funnel" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Funnel de Conversión</div>
+    <div class="section-desc">Elegí un preset o personalizá cada etapa; los nombres son editables directamente</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Tipo de negocio</div>
+      <div class="funnel-preset-row">
+        <button class="funnel-preset-btn" data-preset="leadgen" onclick="setFunnelPreset('leadgen')">📋 Lead Gen</button>
+        <button class="funnel-preset-btn active" data-preset="ecomm" onclick="setFunnelPreset('ecomm')">🛒 E-commerce</button>
+        <button class="funnel-preset-btn" data-preset="servicios" onclick="setFunnelPreset('servicios')">🤝 Servicios</button>
+        <button class="funnel-preset-btn" data-preset="saas" onclick="setFunnelPreset('saas')">💻 SaaS</button>
+      </div>
+      <div class="card-title">Parámetros</div>
+      <div class="field"><label>Presupuesto</label><div class="input-group"><span class="input-prefix" id="f-sym">$</span><input type="number" id="f-budget" value="5000" oninput="calcF()"></div></div>
+      <div class="field"><label>CPM</label><div class="input-group"><span class="input-prefix" id="f-cpm-sym">$</span><input type="number" id="f-cpm" value="8" step=".5" oninput="calcF()"></div></div>
+      <div class="field">
+        <label>CTR · Impresiones a clics</label>
+        <div class="input-group suf"><input type="number" id="f-ctr" value="2.5" step=".1" oninput="calcF()"><span class="input-suffix">%</span></div>
+      </div>
+      <div class="field">
+        <label>Clics &rarr; <span id="f-lbl3" style="color:var(--cyan)">Visitas al producto</span></label>
+        <div class="input-group suf"><input type="number" id="f-cr1" value="15" step=".1" oninput="calcF()"><span class="input-suffix">%</span></div>
+      </div>
+      <div class="field">
+        <label><span id="f-lbl4" style="color:var(--cyan)">Visitas al producto</span> a <span id="f-lbl5" style="color:var(--amber)">Carritos</span></label>
+        <div class="input-group suf"><input type="number" id="f-cr2" value="60" step="1" oninput="calcF()"><span class="input-suffix">%</span></div>
+      </div>
+      <div class="field">
+        <label><span id="f-lbl6" style="color:var(--amber)">Carritos</span> a ventas</label>
+        <div class="input-group suf"><input type="number" id="f-cr3" value="3" step=".5" oninput="calcF()"><span class="input-suffix">%</span></div>
+      </div>
+      <div class="field"><label>Ticket promedio</label><div class="input-group"><span class="input-prefix" id="f-aov-sym">$</span><input type="number" id="f-aov" value="80" step="10" oninput="calcF()"></div></div>
+      <hr class="divider">
+      <div class="grid-2" style="gap:.75rem">
+        <div class="result-row" style="flex-direction:column;align-items:flex-start"><span class="rl">Ingresos total</span><span class="rv green" id="f-r-rev">-</span></div>
+        <div class="result-row key" style="flex-direction:column;align-items:flex-start"><span class="rl">ROAS</span><span class="rv purple" id="f-r-roas">-</span></div>
+        <div class="result-row" style="flex-direction:column;align-items:flex-start"><span class="rl" id="f-r-lbl-cpl">Costo etapa 3</span><span class="rv amber" id="f-r-cpl">-</span></div>
+        <div class="result-row" style="flex-direction:column;align-items:flex-start"><span class="rl">CAC (costo/venta)</span><span class="rv" id="f-r-cac">-</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Visualización · <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">hacé clic en los nombres para editarlos</span></div>
+      <div class="funnel-stage">
+        <div class="funnel-meta"><span class="funnel-name">👁 Impresiones</span><span class="funnel-rate" id="f-rate-imp"></span></div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:rgba(88,166,255,.25)"></div><span class="funnel-val blue" id="f-v-imp">-</span></div>
+      </div>
+      <div class="funnel-stage">
+        <div class="funnel-meta"><span class="funnel-name">🖱 Clics</span><span class="funnel-rate" id="f-rate-click"></span></div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" id="f-bar-click" style="background:rgba(163,113,247,.35)"></div><span class="funnel-val purple" id="f-v-click">-</span></div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:right;padding:2px 0 4px">Costo por clic: <strong id="f-cost-click">-</strong></div>
+      </div>
+      <div class="funnel-stage">
+        <div class="funnel-meta">
+          <span class="funnel-name" style="display:flex;align-items:center;gap:4px">📋 <input type="text" id="f-stage3-name" value="Visitas al producto" class="funnel-label-input" oninput="updateFunnelLabels()"></span>
+          <span class="funnel-rate" id="f-rate-lead"></span>
+        </div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" id="f-bar-lead" style="background:rgba(57,208,176,.35)"></div><span class="funnel-val cyan" id="f-v-lead">-</span></div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:right;padding:2px 0 4px">Costo por <span id="f-cost-lbl3">visita</span>: <strong id="f-cost-lead">-</strong></div>
+      </div>
+      <div class="funnel-stage">
+        <div class="funnel-meta">
+          <span class="funnel-name" style="display:flex;align-items:center;gap:4px">⭐ <input type="text" id="f-stage4-name" value="Carritos / Checkouts" class="funnel-label-input" oninput="updateFunnelLabels()"></span>
+          <span class="funnel-rate" id="f-rate-sql"></span>
+        </div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" id="f-bar-sql" style="background:rgba(210,153,34,.35)"></div><span class="funnel-val amber" id="f-v-sql">-</span></div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:right;padding:2px 0 4px">Costo por <span id="f-cost-lbl4">carrito</span>: <strong id="f-cost-sql">-</strong></div>
+      </div>
+      <div class="funnel-stage">
+        <div class="funnel-meta"><span class="funnel-name">💰 Ventas</span><span class="funnel-rate" id="f-rate-sale"></span></div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" id="f-bar-sale" style="background:rgba(63,185,80,.45)"></div><span class="funnel-val green" id="f-v-sale">-</span></div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:right;padding:2px 0 4px">CAC: <strong id="f-cost-sale">-</strong></div>
+      </div>
+      <hr class="divider">
+      <div style="font-size:12px;color:var(--text-muted);display:flex;gap:1.5rem">
+        <div>Conversión global: <strong style="color:var(--text)" id="f-overall-cr">-</strong></div>
+        <div>Costo/impresión: <strong style="color:var(--text)" id="f-cpi">-</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB 4: MÉTRICAS ===== -->
+<section id="tab-metricas" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Calculadora de Métricas</div>
+    <div class="section-desc">Calculá cualquier métrica individual al instante</div>
+  </div>
+  <div class="grid-3">
+
+    <div class="metric-mini">
+      <div class="metric-mini-title">📊 CTR</div>
+      <span class="formula">CTR = Clics / Impresiones × 100</span>
+      <div class="field"><label>Clics</label><input type="number" id="m-ctr-c" value="150" oninput="mCTR()"></div>
+      <div class="field"><label>Impresiones</label><input type="number" id="m-ctr-i" value="10000" oninput="mCTR()"></div>
+      <div class="result-row" style="margin-top:.5rem"><span class="rl">CTR</span><span class="rv green" id="m-ctr-r">1,50%</span></div>
+    </div>
+
+    <div class="metric-mini">
+      <div class="metric-mini-title">💲 CPM</div>
+      <span class="formula">CPM = (Gasto / Impresiones) × 1.000</span>
+      <div class="field"><label>Gasto ($)</label><input type="number" id="m-cpm-s" value="500" oninput="mCPM()"></div>
+      <div class="field"><label>Impresiones</label><input type="number" id="m-cpm-i" value="50000" oninput="mCPM()"></div>
+      <div class="result-row" style="margin-top:.5rem"><span class="rl">CPM</span><span class="rv blue" id="m-cpm-r">$10,00</span></div>
+    </div>
+
+    <div class="metric-mini">
+      <div class="metric-mini-title">🖱 CPC</div>
+      <span class="formula">CPC = Gasto / Clics</span>
+      <div class="field"><label>Gasto ($)</label><input type="number" id="m-cpc-s" value="300" oninput="mCPC()"></div>
+      <div class="field"><label>Clics</label><input type="number" id="m-cpc-c" value="600" oninput="mCPC()"></div>
+      <div class="result-row" style="margin-top:.5rem"><span class="rl">CPC</span><span class="rv amber" id="m-cpc-r">$0,50</span></div>
+    </div>
+
+    <div class="metric-mini">
+      <div class="metric-mini-title">🎯 CPA</div>
+      <span class="formula">CPA = Gasto / Conversiones</span>
+      <div class="field"><label>Gasto ($)</label><input type="number" id="m-cpa-s" value="1000" oninput="mCPA()"></div>
+      <div class="field"><label>Conversiones</label><input type="number" id="m-cpa-c" value="25" oninput="mCPA()"></div>
+      <div class="result-row" style="margin-top:.5rem"><span class="rl">CPA</span><span class="rv purple" id="m-cpa-r">$40,00</span></div>
+    </div>
+
+    <div class="metric-mini">
+      <div class="metric-mini-title">📈 ROAS</div>
+      <span class="formula">ROAS = Ingresos / Gasto</span>
+      <div class="field"><label>Ingresos ($)</label><input type="number" id="m-roas-r" value="5000" oninput="mROAS()"></div>
+      <div class="field"><label>Gasto ($)</label><input type="number" id="m-roas-s" value="1000" oninput="mROAS()"></div>
+      <div class="result-row" style="margin-top:.5rem"><span class="rl">ROAS</span><span class="rv green" id="m-roas-v">5,00x</span></div>
+    </div>
+
+    <div class="metric-mini">
+      <div class="metric-mini-title">📈 ROAS</div>
+      <span class="formula">BE ROAS = 1 / Margen Bruto</span>
+      <div class="field"><label>Margen bruto (%)</label><div class="input-group suf"><input type="number" id="m-be-m" value="40" max="100" oninput="mBE()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>ROAS actual</label><input type="number" id="m-be-a" value="3" step=".1" oninput="mBE()"></div>
+      <div class="result-row" style="margin-top:.5rem"><span class="rl">BE ROAS</span><span class="rv" id="m-be-r">2,50x</span></div>
+      <div id="m-be-status" style="margin-top:.5rem"></div>
+    </div>
+
+    <div class="metric-mini">
+      <div class="metric-mini-title">📋 CPL</div>
+      <span class="formula">CPL = Gasto / Leads</span>
+      <div class="field"><label>Gasto ($)</label><input type="number" id="m-cpl-s" value="2000" oninput="mCPL()"></div>
+      <div class="field"><label>Leads</label><input type="number" id="m-cpl-l" value="80" oninput="mCPL()"></div>
+      <div class="result-row" style="margin-top:.5rem"><span class="rl">CPL</span><span class="rv amber" id="m-cpl-r">$25,00</span></div>
+    </div>
+
+    <div class="metric-mini">
+      <div class="metric-mini-title">✅ Tasa de Conversión</div>
+      <span class="formula">CR = Conversiones / Clics × 100</span>
+      <div class="field"><label>Conversiones</label><input type="number" id="m-cr-c" value="45" oninput="mCR()"></div>
+      <div class="field"><label>Clics</label><input type="number" id="m-cr-cl" value="1500" oninput="mCR()"></div>
+      <div class="result-row" style="margin-top:.5rem"><span class="rl">Conversion Rate</span><span class="rv green" id="m-cr-r">3,00%</span></div>
+    </div>
+
+    <div class="metric-mini">
+      <div class="metric-mini-title">🔄 Frecuencia</div>
+      <span class="formula">Freq = Impresiones / Alcance</span>
+      <div class="field"><label>Impresiones</label><input type="number" id="m-fr-i" value="50000" oninput="mFR()"></div>
+      <div class="field"><label>Alcance (Reach)</label><input type="number" id="m-fr-r" value="20000" oninput="mFR()"></div>
+      <div class="result-row" style="margin-top:.5rem"><span class="rl">Frecuencia</span><span class="rv cyan" id="m-fr-v">2,50x</span></div>
+    </div>
+
+    <div class="metric-mini">
+      <div class="metric-mini-title">💲 CPM</div>
+      <span class="formula">Imp = (Gasto / CPM) × 1.000</span>
+      <div class="field"><label>Gasto ($)</label><input type="number" id="m-imp-s" value="1000" oninput="mIMP()"></div>
+      <div class="field"><label>CPM ($)</label><input type="number" id="m-imp-c" value="8" step=".5" oninput="mIMP()"></div>
+      <div class="result-row" style="margin-top:.5rem"><span class="rl">Impresiones</span><span class="rv blue" id="m-imp-r">125.000</span></div>
+    </div>
+
+    <div class="metric-mini">
+      <div class="metric-mini-title">💰 ROI</div>
+      <span class="formula">ROI = (Ganancia - Inversión) / Inversión × 100</span>
+      <div class="field"><label>Inversión total ($)</label><input type="number" id="m-roi-i" value="2000" oninput="mROI()"></div>
+      <div class="field"><label>Ganancia neta ($)</label><input type="number" id="m-roi-g" value="3500" oninput="mROI()"></div>
+      <div class="result-row" style="margin-top:.5rem"><span class="rl">ROI</span><span class="rv green" id="m-roi-r">75,00%</span></div>
+    </div>
+
+    <div class="metric-mini">
+      <div class="metric-mini-title">📣 CPV (Costo por Vista)</div>
+      <span class="formula">CPV = Gasto / Vistas</span>
+      <div class="field"><label>Gasto ($)</label><input type="number" id="m-cpv-s" value="500" oninput="mCPV()"></div>
+      <div class="field"><label>Vistas</label><input type="number" id="m-cpv-v" value="10000" oninput="mCPV()"></div>
+      <div class="result-row" style="margin-top:.5rem"><span class="rl">CPV</span><span class="rv" id="m-cpv-r">$0,050</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== TAB 5: ROI / ROAS ===== -->
+<section id="tab-roi" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">ROI / ROAS</div>
+    <div class="section-desc">Analizá el retorno real de tu inversión publicitaria</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Inversión y Resultados</div>
+      <div class="field"><label>Gasto en publicidad</label><div class="input-group"><span class="input-prefix" id="roi-sym">$</span><input type="number" id="roi-spend" value="2000" oninput="calcROI()"></div></div>
+      <div class="field"><label>Ingresos influenciados por ads</label><div class="input-group"><span class="input-prefix" id="roi-rev-sym">$</span><input type="number" id="roi-rev" value="8000" oninput="calcROI()"></div></div>
+      <div class="field"><label>Costo de producto (COGS) <span class="info" data-t="Costo del producto o servicio vendido">?</span></label><div class="input-group"><span class="input-prefix" id="roi-cogs-sym">$</span><input type="number" id="roi-cogs" value="3000" oninput="calcROI()"></div></div>
+      <div class="field"><label>Otros gastos operativos</label><div class="input-group"><span class="input-prefix" id="roi-other-sym">$</span><input type="number" id="roi-other" value="500" oninput="calcROI()"></div></div>
+      <div class="field"><label>Margen bruto <span class="info" data-t="% de ganancia sobre el precio de venta (sin contar ads)">?</span></label><div class="input-group suf"><input type="number" id="roi-margin" value="60" max="100" oninput="calcROI()"><span class="input-suffix">%</span></div></div>
+      <hr class="divider">
+      <div class="card-title">Modelo de atribución simplificado</div>
+      <div class="field">
+        <label>Modelo</label>
+        <select id="roi-attr-model" onchange="calcROI()">
+          <option value="last">Last click</option>
+          <option value="first">First click</option>
+          <option value="linear">Linear</option>
+          <option value="blended">Blended</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Participación de ads en la conversión</label>
+        <div class="input-group suf"><input type="number" id="roi-assisted" value="75" max="100" oninput="calcROI()"><span class="input-suffix">%</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Análisis de Retorno</div>
+      <div class="hero-grid">
+        <div class="hero-card"><div class="hero-val purple" id="roi-r-roas">4,00x</div><div class="hero-lbl">ROAS</div></div>
+        <div class="hero-card"><div class="hero-val green" id="roi-r-roi">150%</div><div class="hero-lbl">ROI</div></div>
+      </div>
+      <div class="attr-grid" style="margin-bottom:.75rem">
+        <div class="result-row" style="margin-bottom:0"><span class="rl">Revenue atribuido</span><span class="rv blue" id="roi-r-attrib">-</span></div>
+        <div class="result-row" style="margin-bottom:0"><span class="rl">Crédito ads</span><span class="rv cyan" id="roi-r-credit">-</span></div>
+        <div class="result-row" style="margin-bottom:0"><span class="rl">Modelo activo</span><span class="rv" id="roi-r-model">Last click</span></div>
+      </div>
+      <div class="result-row"><span class="rl">Ganancia bruta</span><span class="rv green" id="roi-r-gross">$4.800</span></div>
+      <div class="result-row key"><span class="rl">Ganancia neta</span><span class="rv" id="roi-r-net">$2.300</span></div>
+      <div class="result-row"><span class="rl">Costo total (ads + COGS + otros)</span><span class="rv red" id="roi-r-cost">$5.500</span></div>
+      <div class="result-row"><span class="rl">Break-even ROAS</span><span class="rv" id="roi-r-beroas">1,67x</span></div>
+      <div class="result-row"><span class="rl">ROAS neto (post-margen)</span><span class="rv cyan" id="roi-r-netroas">2,40x</span></div>
+      <div class="result-row"><span class="rl">MER (Marketing Efficiency Ratio)</span><span class="rv" id="roi-r-mer">4,00x</span></div>
+      <div id="roi-alert"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB 6: LTV / CAC ===== -->
+<section id="tab-ltvcac" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">LTV / CAC</div>
+    <div class="section-desc">Calculá el valor del cliente y el costo de adquisición</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Métricas del Cliente</div>
+      <div class="field"><label>Ticket promedio (AOV)</label><div class="input-group"><span class="input-prefix" id="ltv-aov-sym">$</span><input type="number" id="ltv-aov" value="150" oninput="calcLTV()"></div></div>
+      <div class="field"><label>Frecuencia de compra (veces/año)</label><input type="number" id="ltv-freq" value="4" step=".5" oninput="calcLTV()"></div>
+      <div class="field"><label>Vida del cliente (años)</label><input type="number" id="ltv-life" value="3" step=".5" oninput="calcLTV()"></div>
+      <div class="field"><label>Churn mensual estimado</label><div class="input-group suf"><input type="number" id="ltv-churn" value="8" step=".5" max="100" oninput="calcLTV()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Margen bruto</label><div class="input-group suf"><input type="number" id="ltv-margin" value="50" max="100" oninput="calcLTV()"><span class="input-suffix">%</span></div></div>
+      <hr class="divider">
+      <div class="card-title">Inversión Publicitaria</div>
+      <div class="field"><label>Gasto en ads (período)</label><div class="input-group"><span class="input-prefix" id="ltv-spend-sym">$</span><input type="number" id="ltv-spend" value="10000" oninput="calcLTV()"></div></div>
+      <div class="field"><label>Nuevos clientes adquiridos</label><input type="number" id="ltv-cust" value="200" oninput="calcLTV()"></div>
+      <div class="field"><label>CAC máximo aceptable (% del LTV)</label><div class="input-group suf"><input type="number" id="ltv-max-pct" value="33" max="100" oninput="calcLTV()"><span class="input-suffix">%</span></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Análisis de Valor del Cliente</div>
+      <div class="hero-grid">
+        <div class="hero-card"><div class="hero-val green" id="ltv-r-ltv">$900</div><div class="hero-lbl">LTV neto</div></div>
+        <div class="hero-card"><div class="hero-val amber" id="ltv-r-cac">$50</div><div class="hero-lbl">CAC</div></div>
+      </div>
+      <div class="result-row key"><span class="rl">Ratio LTV:CAC</span><span class="rv purple" id="ltv-r-ratio">18,0:1</span></div>
+      <div class="result-row"><span class="rl">LTV bruto (sin margen)</span><span class="rv" id="ltv-r-gross">$1.800</span></div>
+      <div class="result-row"><span class="rl">Payback period</span><span class="rv cyan" id="ltv-r-payback">2,0 meses</span></div>
+      <div class="result-row"><span class="rl">Retención esperada por churn</span><span class="rv" id="ltv-r-retention">-</span></div>
+      <div class="result-row"><span class="rl">CAC máximo (para ser rentable)</span><span class="rv green" id="ltv-r-maxcac">$297</span></div>
+      <div class="result-row"><span class="rl">Ingresos total esperado (todos los clientes)</span><span class="rv green" id="ltv-r-total">$360.000</span></div>
+      <div id="ltv-alert"></div>
+      <hr class="divider">
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.9">
+        <div><span style="color:var(--red)">■</span> &lt; 1:1 - Pérdida. Revisá urgente.</div>
+        <div><span style="color:var(--amber)">&#9632;</span> 1:1 &ndash; 3:1 &mdash; Marginal. Optimizá antes de escalar.</div>
+        <div><span style="color:var(--green)">&#9632;</span> 3:1 &ndash; 5:1 &mdash; Bueno. Negocio saludable para escalar.</div>
+        <div><span style="color:var(--blue)">&#9632;</span> &gt; 5:1 &mdash; Excelente. Invertí más agresivamente.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB: PROPUESTA CLIENTE ===== -->
+<section id="tab-propuesta" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Propuesta Cliente</div>
+    <div class="section-desc">Un apartado separado para cotizar, evaluar viabilidad y presentar escenarios más precisos</div>
+  </div>
+  <div class="proposal-grid">
+    <div class="proposal-stack">
+      <div class="card">
+        <div class="card-title">Datos comerciales</div>
+        <div class="grid-2">
+          <div class="field">
+            <label>Nombre del cliente</label>
+            <input type="text" id="pc-name" value="Cliente Demo" oninput="calcProposalClient()" style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:.45rem .75rem;font-size:14px;font-family:inherit;width:100%;outline:none">
+          </div>
+          <div class="field">
+            <label>Tipo de negocio</label>
+            <select id="pc-type" onchange="calcProposalClient()">
+              <option value="leadgen">Lead Gen</option>
+              <option value="ecommerce">E-commerce</option>
+              <option value="servicios">Servicios</option>
+              <option value="saas">SaaS</option>
+              <option value="local">Local Business</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select id="pc-goal" onchange="calcProposalClient()">
+              <option value="leads">Leads</option>
+              <option value="ventas">Ventas</option>
+              <option value="revenue">Facturación</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Meta mensual</label>
+            <div class="input-group"><span class="input-prefix" id="pc-goal-prefix">#</span><input type="number" id="pc-goal-value" value="60" oninput="calcProposalClient()"></div>
+          </div>
+          <div class="field">
+            <label>Tasa de cierre lead a venta</label>
+            <div class="input-group suf"><input type="number" id="pc-close-rate" value="25" step=".5" oninput="calcProposalClient()"><span class="input-suffix">%</span></div>
+          </div>
+          <div class="field">
+            <label>Ticket promedio</label>
+            <div class="input-group"><span class="input-prefix" id="pc-aov-sym">$</span><input type="number" id="pc-aov" value="120" oninput="calcProposalClient()"></div>
+          </div>
+          <div class="field">
+            <label>Margen bruto</label>
+            <div class="input-group suf"><input type="number" id="pc-margin" value="45" step=".5" oninput="calcProposalClient()"><span class="input-suffix">%</span></div>
+          </div>
+          <div class="field">
+            <label>Horas mensuales estimadas</label>
+            <input type="number" id="pc-hours" value="14" oninput="calcProposalClient()">
+          </div>
+          <div class="field">
+            <label>Complejidad de la cuenta</label>
+            <select id="pc-complexity" onchange="calcProposalClient()">
+              <option value="1">Baja</option>
+              <option value="1.2" selected>Media</option>
+              <option value="1.45">Alta</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Fee mínimo deseado</label>
+            <div class="input-group"><span class="input-prefix" id="pc-fee-sym">$</span><input type="number" id="pc-fee-min" value="300" oninput="calcProposalClient()"></div>
+          </div>
+        </div>
+        <div class="toolbar-row">
+          <button class="btn btn-accent" onclick="copyBudgetToProposalClient()">Usar datos de Presupuesto</button>
+          <button class="btn btn-accent" onclick="copyAgencyToProposalClient()">Usar datos de Agencia</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Escenarios de propuesta</div>
+        <div class="scenario-quote">
+          <div class="quote-card">
+            <div class="quote-title">Conservador</div>
+            <div class="quote-value blue" id="pc-conservative-budget">-</div>
+            <div class="quote-meta" id="pc-conservative-meta">-</div>
+          </div>
+          <div class="quote-card recommended">
+            <div class="quote-title">Recomendado</div>
+            <div class="quote-value purple" id="pc-recommended-budget">-</div>
+            <div class="quote-meta" id="pc-recommended-meta">-</div>
+          </div>
+          <div class="quote-card">
+            <div class="quote-title">Escalar</div>
+            <div class="quote-value green" id="pc-aggressive-budget">-</div>
+            <div class="quote-meta" id="pc-aggressive-meta">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="proposal-stack">
+      <div class="card">
+        <div class="card-title">Diagnóstico de viabilidad</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem">
+          <div class="hero-val" id="pc-viability-score">-</div>
+          <span class="status-chip status-good" id="pc-viability-chip">Saludable</span>
+        </div>
+        <div class="result-row"><span class="rl">Meta convertida a ventas</span><span class="rv" id="pc-needed-sales">-</span></div>
+        <div class="result-row"><span class="rl">Meta convertida a leads</span><span class="rv" id="pc-needed-leads">-</span></div>
+        <div class="result-row"><span class="rl">CPA objetivo máximo</span><span class="rv amber" id="pc-target-cpa">-</span></div>
+        <div class="result-row"><span class="rl">CPA base usado</span><span class="rv" id="pc-base-cpa">-</span></div>
+        <div class="result-row"><span class="rl">ROAS mínimo sugerido</span><span class="rv purple" id="pc-min-roas">-</span></div>
+        <div class="result-row"><span class="rl">Fee mensual recomendado</span><span class="rv green" id="pc-fee-rec">-</span></div>
+        <div id="pc-alert" style="margin-top:.75rem"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Resumen para pasar al cliente</div>
+        <div id="pc-summary" style="background:var(--bg-input);border-radius:var(--radius-sm);padding:1rem;font-size:12px;line-height:1.8;color:var(--text-muted)">
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:.5rem" id="pc-summary-title">Propuesta comercial</div>
+          <div id="pc-summary-body"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB: SENSIBILIDAD ===== -->
+<section id="tab-sensibilidad" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Análisis de Sensibilidad</div>
+    <div class="section-desc">Vemos cómo cambia el ROAS si empeoran o mejoran el CPM y la tasa de conversión</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Base del modelo</div>
+      <div class="field"><label>Presupuesto</label><div class="input-group"><span class="input-prefix" id="sens-budget-sym">$</span><input type="number" id="sens-budget" value="1000" oninput="calcSensitivity()"></div></div>
+      <div class="field"><label>CPM base</label><div class="input-group"><span class="input-prefix" id="sens-cpm-sym">$</span><input type="number" id="sens-cpm" value="10" step=".5" oninput="calcSensitivity()"></div></div>
+      <div class="field"><label>CTR</label><div class="input-group suf"><input type="number" id="sens-ctr" value="1.5" step=".1" oninput="calcSensitivity()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>CR base</label><div class="input-group suf"><input type="number" id="sens-cr" value="3" step=".1" oninput="calcSensitivity()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Ticket promedio</label><div class="input-group"><span class="input-prefix" id="sens-aov-sym">$</span><input type="number" id="sens-aov" value="50" oninput="calcSensitivity()"></div></div>
+      <div class="field"><label>Margen bruto</label><div class="input-group suf"><input type="number" id="sens-margin" value="40" oninput="calcSensitivity()"><span class="input-suffix">%</span></div></div>
+      <div class="toolbar-row">
+        <button class="btn btn-accent" onclick="copyBudgetToSensitivity()">Usar base de Presupuesto</button>
+      </div>
+      <div id="sens-summary"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Matriz de ROAS</div>
+      <table class="sensitivity-table">
+        <thead id="sens-head"></thead>
+        <tbody id="sens-body"></tbody>
+      </table>
+      <p class="subtle-note">Cada celda combina variaciones de CPM y conversion rate para mostrar qué tan frágil o robusto es el modelo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB: FORECAST ===== -->
+<section id="tab-forecast" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Forecast de Crecimiento</div>
+    <div class="section-desc">Proyección mensual de inversión, resultados e ingresos acumulados</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Hipótesis</div>
+      <div class="field"><label>Meses a proyectar</label><input type="number" id="fc-months" value="6" min="1" max="24" oninput="calcForecast()"></div>
+      <div class="field"><label>Presupuesto inicial mensual</label><div class="input-group"><span class="input-prefix" id="fc-budget-sym">$</span><input type="number" id="fc-budget" value="2000" oninput="calcForecast()"></div></div>
+      <div class="field"><label>Crecimiento mensual del presupuesto</label><div class="input-group suf"><input type="number" id="fc-growth" value="12" step=".5" oninput="calcForecast()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>CPM base</label><div class="input-group"><span class="input-prefix" id="fc-cpm-sym">$</span><input type="number" id="fc-cpm" value="10" step=".5" oninput="calcForecast()"></div></div>
+      <div class="field"><label>CTR</label><div class="input-group suf"><input type="number" id="fc-ctr" value="1.5" step=".1" oninput="calcForecast()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>CR</label><div class="input-group suf"><input type="number" id="fc-cr" value="3" step=".1" oninput="calcForecast()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Ticket promedio</label><div class="input-group"><span class="input-prefix" id="fc-aov-sym">$</span><input type="number" id="fc-aov" value="50" oninput="calcForecast()"></div></div>
+      <div class="field"><label>Deterioro mensual de eficiencia</label><div class="input-group suf"><input type="number" id="fc-decay" value="3" step=".5" oninput="calcForecast()"><span class="input-suffix">%</span></div></div>
+      <div class="toolbar-row">
+        <button class="btn btn-accent" onclick="copyBudgetToForecast()">Usar base de Presupuesto</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Proyección</div>
+      <div class="hero-grid">
+        <div class="hero-card"><div class="hero-val green" id="fc-total-rev">-</div><div class="hero-lbl">Revenue acumulado</div></div>
+        <div class="hero-card"><div class="hero-val purple" id="fc-total-roas">-</div><div class="hero-lbl">ROAS acumulado</div></div>
+      </div>
+      <table class="forecast-table">
+        <thead><tr><th>Mes</th><th>Presupuesto</th><th>Conv.</th><th>Ingresos</th><th>ROAS</th></tr></thead>
+        <tbody id="fc-body"></tbody>
+      </table>
+      <div class="forecast-badges" id="fc-badges"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB: AGENCIA ===== -->
+<section id="tab-agencia" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">¿Cuánto cobrarle a este cliente?</div>
+    <div class="section-desc">Calculá tu fee, justificá el ROI y generá un resumen para mostrarle al cliente</div>
+  </div>
+  <div class="grid-2">
+
+    <!-- IZQUIERDA: Inputs -->
+    <div style="display:flex;flex-direction:column;gap:1.25rem">
+      <div class="card">
+        <div class="card-title">Datos del cliente</div>
+        <div class="field">
+          <label>Nombre del cliente</label>
+          <input type="text" id="ag-nombre" value="Cliente" oninput="calcAgencia()" style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:.45rem .75rem;font-size:14px;font-family:inherit;width:100%;outline:none">
+        </div>
+        <div class="field"><label>Adspend mensual (lo que invierte en ads)</label><div class="input-group"><span class="input-prefix" id="ag-sym">$</span><input type="number" id="ag-spend" value="5000" step="100" oninput="calcAgencia()"></div></div>
+        <div class="field"><label>Ingresos mensual actual de sus campañas</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="ag-rev-actual" value="10000" step="500" oninput="calcAgencia()"></div></div>
+        <div class="field"><label>Horas que le dedicás por mes</label><input type="number" id="ag-horas" value="20" step="1" min="1" oninput="calcAgencia()"></div>
+        <div class="field">
+          <label>Mejora esperada en sus resultados gracias a tu gestión <span class="info" data-t="Si el cliente genera $10.000 y mejorás un 30%, generará $13.000">?</span></label>
+          <div class="input-group suf"><input type="number" id="ag-mejora" value="30" step="5" min="0" oninput="calcAgencia()"><span class="input-suffix">%</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Mi propuesta de fee</div>
+        <div class="fee-btns">
+          <button class="fee-btn active" onclick="setFeeModel('pct',this)">% del adspend</button>
+          <button class="fee-btn" onclick="setFeeModel('fijo',this)">Fee fijo</button>
+          <button class="fee-btn" onclick="setFeeModel('mixto',this)">Fijo + %</button>
+          <button class="fee-btn" onclick="setFeeModel('rev',this)">% del ingresos</button>
+        </div>
+        <div id="ag-pct-block">
+          <div class="field"><label>% de comisión sobre adspend</label><div class="input-group suf"><input type="number" id="ag-pct" value="15" max="100" step="1" oninput="calcAgencia()"><span class="input-suffix">%</span></div></div>
+        </div>
+        <div id="ag-fijo-block" style="display:none">
+          <div class="field"><label>Fee fijo mensual</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="ag-fijo" value="800" step="50" oninput="calcAgencia()"></div></div>
+        </div>
+        <div id="ag-mixto-block" style="display:none">
+          <div class="field"><label>Fee fijo mensual</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="ag-mixto-fijo" value="500" step="50" oninput="calcAgencia()"></div></div>
+          <div class="field"><label>% adicional sobre adspend</label><div class="input-group suf"><input type="number" id="ag-mixto-pct" value="8" max="100" oninput="calcAgencia()"><span class="input-suffix">%</span></div></div>
+        </div>
+        <div id="ag-rev-block" style="display:none">
+          <div class="field"><label>% sobre ingresos mensual</label><div class="input-group suf"><input type="number" id="ag-rev-pct" value="5" max="100" oninput="calcAgencia()"><span class="input-suffix">%</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DERECHA: Resultados -->
+    <div class="card">
+      <div class="hero-grid" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="hero-card"><div class="hero-val purple" id="ag-r-fee">-</div><div class="hero-lbl">Mi fee/mes</div></div>
+        <div class="hero-card"><div class="hero-val green" id="ag-r-roi-cliente">-</div><div class="hero-lbl">ROI del cliente</div></div>
+        <div class="hero-card"><div class="hero-val amber" id="ag-r-hora">-</div><div class="hero-lbl">Mi tarifa/hora</div></div>
+      </div>
+
+      <div class="card-title" style="margin-top:.75rem">Con vs Sin mi gestión</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem">
+        <thead><tr>
+          <th style="text-align:left;padding:.4rem .75rem;background:var(--bg-input);color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:.4px">Métrica</th>
+          <th style="text-align:right;padding:.4rem .75rem;background:var(--bg-input);color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:.4px">Sin gestión</th>
+          <th style="text-align:right;padding:.4rem .75rem;background:rgba(63,185,80,.1);color:var(--green);font-size:10px;text-transform:uppercase;letter-spacing:.4px">Con mi gestión</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-top:1px solid var(--border)">
+            <td style="padding:.45rem .75rem;color:var(--text-muted)">Ingresos mensual</td>
+            <td style="text-align:right;padding:.45rem .75rem;font-weight:500" id="ag-t-rev-sin">-</td>
+            <td style="text-align:right;padding:.45rem .75rem;font-weight:600;color:var(--green)" id="ag-t-rev-con">-</td>
+          </tr>
+          <tr style="border-top:1px solid var(--border)">
+            <td style="padding:.45rem .75rem;color:var(--text-muted)">Ingresos anual</td>
+            <td style="text-align:right;padding:.45rem .75rem;font-weight:500" id="ag-t-rev-sin-anual">-</td>
+            <td style="text-align:right;padding:.45rem .75rem;font-weight:600;color:var(--green)" id="ag-t-rev-con-anual">-</td>
+          </tr>
+          <tr style="border-top:1px solid var(--border);background:rgba(63,185,80,.05)">
+            <td style="padding:.45rem .75rem;color:var(--text-muted)">Ingresos extra por mi gestión</td>
+            <td style="text-align:right;padding:.45rem .75rem">-</td>
+            <td style="text-align:right;padding:.45rem .75rem;font-weight:700;color:var(--green)" id="ag-t-extra">-</td>
+          </tr>
+          <tr style="border-top:1px solid var(--border)">
+            <td style="padding:.45rem .75rem;color:var(--text-muted)">Inversión total (adspend + fee)</td>
+            <td style="text-align:right;padding:.45rem .75rem;font-weight:500" id="ag-t-inv-sin">-</td>
+            <td style="text-align:right;padding:.45rem .75rem;font-weight:500" id="ag-t-inv-con">-</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="result-row"><span class="rl">Mi fee anualizado</span><span class="rv purple" id="ag-r-anual">-</span></div>
+      <div class="result-row key"><span class="rl">Ingresos extra vs mi fee (ratio)</span><span class="rv green" id="ag-r-ratio">-</span></div>
+      <div class="result-row"><span class="rl">Break-even: mejora mínima para que mi fee se pague solo</span><span class="rv" id="ag-r-breakeven">-</span></div>
+      <div class="result-row"><span class="rl">% que representa mi fee sobre los ingresos extra</span><span class="rv" id="ag-r-fee-pct-extra">-</span></div>
+
+      <div id="ag-alert" style="margin-top:.875rem"></div>
+
+      <hr class="divider">
+
+      <!-- RESUMEN PARA MOSTRAR AL CLIENTE -->
+      <div class="card-title">Resumen para el cliente</div>
+      <div id="ag-proposal" style="background:var(--bg-input);border-radius:var(--radius-sm);padding:1rem;font-size:12px;line-height:1.8;color:var(--text-muted)">
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:.5rem" id="ag-prop-titulo">Propuesta para Cliente</div>
+        <div id="ag-prop-body"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB: EMAIL MARKETING ===== -->
+<section id="tab-email" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Email Marketing</div>
+    <div class="section-desc">Calculá el rendimiento y ROI de tus campañas de email</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Parámetros del Envío</div>
+      <div class="field"><label>Tamaño de la lista</label><input type="number" id="em-list" value="10000" step="500" oninput="calcEmail()"></div>
+      <div class="field"><label>Costo total del envío</label><div class="input-group"><span class="input-prefix" id="em-sym">$</span><input type="number" id="em-cost" value="80" step="10" oninput="calcEmail()"></div></div>
+      <div class="field"><label>Open Rate</label><div class="input-group suf"><input type="number" id="em-or" value="22" step=".5" oninput="calcEmail()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>CTR (de los que abren)</label><div class="input-group suf"><input type="number" id="em-ctr" value="3.5" step=".5" oninput="calcEmail()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Tasa de conversión (de los que hacen clic)</label><div class="input-group suf"><input type="number" id="em-cr" value="5" step=".5" oninput="calcEmail()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Ticket promedio</label><div class="input-group"><span class="input-prefix" id="em-aov-sym">$</span><input type="number" id="em-aov" value="120" oninput="calcEmail()"></div></div>
+      <div class="field"><label>Margen bruto</label><div class="input-group suf"><input type="number" id="em-margin" value="55" max="100" oninput="calcEmail()"><span class="input-suffix">%</span></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Resultados</div>
+      <div class="hero-grid">
+        <div class="hero-card"><div class="hero-val green" id="em-r-roi">-</div><div class="hero-lbl">ROI del envío</div></div>
+        <div class="hero-card"><div class="hero-val blue" id="em-r-rpe">-</div><div class="hero-lbl">Ingresos por email</div></div>
+      </div>
+      <div class="result-row"><span class="rl">Aperturas</span><span class="rv blue" id="em-r-opens">-</span></div>
+      <div class="result-row"><span class="rl">Clics</span><span class="rv" id="em-r-clicks">-</span></div>
+      <div class="result-row"><span class="rl">Conversiones</span><span class="rv green" id="em-r-conv">-</span></div>
+      <div class="result-row"><span class="rl">Ingresos total</span><span class="rv green" id="em-r-rev">-</span></div>
+      <div class="result-row"><span class="rl">Ganancia neta</span><span class="rv" id="em-r-profit">-</span></div>
+      <div class="result-row"><span class="rl">Costo por apertura</span><span class="rv" id="em-r-cpo">-</span></div>
+      <div class="result-row"><span class="rl">Costo por clic</span><span class="rv" id="em-r-cpc">-</span></div>
+      <div class="result-row"><span class="rl">Costo por conversión (CPA)</span><span class="rv amber" id="em-r-cpa">-</span></div>
+      <div id="em-alert" style="margin-top:.75rem"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB: BENCHMARKS ===== -->
+<section id="tab-benchmarks" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Benchmarks de Industria</div>
+    <div class="section-desc">Datos de referencia por plataforma e industria para saber si tus métricas son buenas o malas</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Filtrar por plataforma</div>
+    <div class="filter-row" id="bench-plat-filters">
+      <button class="filter-btn active" onclick="filterBench('',this)">Todas</button>
+      <button class="filter-btn" onclick="filterBench('Meta',this)">Meta Ads</button>
+      <button class="filter-btn" onclick="filterBench('Google Search',this)">Google Search</button>
+      <button class="filter-btn" onclick="filterBench('Google Display',this)">Google Display</button>
+      <button class="filter-btn" onclick="filterBench('TikTok',this)">TikTok</button>
+      <button class="filter-btn" onclick="filterBench('LinkedIn',this)">LinkedIn</button>
+      <button class="filter-btn" onclick="filterBench('YouTube',this)">YouTube</button>
+    </div>
+    <div class="bench-wrap">
+      <table class="bench-table">
+        <thead><tr>
+          <th>Plataforma</th>
+          <th>Industria</th>
+          <th>CPM</th>
+          <th>CPC</th>
+          <th>CTR</th>
+          <th>Conv. Rate</th>
+          <th>CPA ref.</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="bench-tbody"></tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);margin-top:.75rem">* Valores de referencia globales en USD. Varían según segmentación, creatividad, país y período. Usalos como punto de partida, no como objetivo fijo.</p>
+  </div>
+</section>
+
+<!-- ===== TAB: COMPARADOR A vs B ===== -->
+<section id="tab-comparador" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Comparador A vs B</div>
+    <div class="section-desc">Compará dos campañas, períodos o plataformas lado a lado</div>
+  </div>
+  <div class="grid-2" style="margin-bottom:1.25rem">
+    <!-- CAMPAÑA A -->
+    <div class="card">
+      <div class="campaign-header"><span class="camp-badge camp-a">A</span><input type="text" id="cmp-a-name" value="Campaña A" style="background:none;border:none;color:var(--text);font-size:13px;font-weight:600;outline:none;width:100%" oninput="calcComp()"></div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="cmp-a-m-cpm" onclick="setModeComp('a','cpm')">Por CPM</button>
+        <button class="mode-btn" id="cmp-a-m-cpc" onclick="setModeComp('a','cpc')">Por CPC</button>
+      </div>
+      <div class="field"><label>Presupuesto</label><div class="input-group"><span class="input-prefix" id="cmp-a-sym">$</span><input type="number" id="cmp-a-budget" value="1000" step="100" oninput="calcComp()"></div></div>
+      <div id="cmp-a-cpm-block">
+        <div class="field"><label>CPM</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="cmp-a-cpm" value="10" step=".5" oninput="calcComp()"></div></div>
+        <div class="field"><label>CTR</label><div class="input-group suf"><input type="number" id="cmp-a-ctr" value="1.5" step=".1" oninput="calcComp()"><span class="input-suffix">%</span></div></div>
+      </div>
+      <div id="cmp-a-cpc-block" style="display:none">
+        <div class="field"><label>CPC</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="cmp-a-cpc" value=".50" step=".05" oninput="calcComp()"></div></div>
+      </div>
+      <div class="field"><label>Tasa de conversión</label><div class="input-group suf"><input type="number" id="cmp-a-cr" value="3" step=".1" oninput="calcComp()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Ticket promedio</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="cmp-a-aov" value="50" oninput="calcComp()"></div></div>
+      <div class="field"><label>Margen bruto</label><div class="input-group suf"><input type="number" id="cmp-a-margin" value="40" max="100" oninput="calcComp()"><span class="input-suffix">%</span></div></div>
+    </div>
+    <!-- CAMPAÑA B -->
+    <div class="card">
+      <div class="campaign-header"><span class="camp-badge camp-b">B</span><input type="text" id="cmp-b-name" value="Campaña B" style="background:none;border:none;color:var(--text);font-size:13px;font-weight:600;outline:none;width:100%" oninput="calcComp()"></div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="cmp-b-m-cpm" onclick="setModeComp('b','cpm')">Por CPM</button>
+        <button class="mode-btn" id="cmp-b-m-cpc" onclick="setModeComp('b','cpc')">Por CPC</button>
+      </div>
+      <div class="field"><label>Presupuesto</label><div class="input-group"><span class="input-prefix" id="cmp-b-sym">$</span><input type="number" id="cmp-b-budget" value="1500" step="100" oninput="calcComp()"></div></div>
+      <div id="cmp-b-cpm-block">
+        <div class="field"><label>CPM</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="cmp-b-cpm" value="12" step=".5" oninput="calcComp()"></div></div>
+        <div class="field"><label>CTR</label><div class="input-group suf"><input type="number" id="cmp-b-ctr" value="1.2" step=".1" oninput="calcComp()"><span class="input-suffix">%</span></div></div>
+      </div>
+      <div id="cmp-b-cpc-block" style="display:none">
+        <div class="field"><label>CPC</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="cmp-b-cpc" value=".60" step=".05" oninput="calcComp()"></div></div>
+      </div>
+      <div class="field"><label>Tasa de conversión</label><div class="input-group suf"><input type="number" id="cmp-b-cr" value="2.5" step=".1" oninput="calcComp()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Ticket promedio</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="cmp-b-aov" value="50" oninput="calcComp()"></div></div>
+      <div class="field"><label>Margen bruto</label><div class="input-group suf"><input type="number" id="cmp-b-margin" value="40" max="100" oninput="calcComp()"><span class="input-suffix">%</span></div></div>
+    </div>
+  </div>
+  <!-- TABLA COMPARACIÓN -->
+  <div class="card">
+    <div id="cmp-summary" style="font-size:13px;margin-bottom:.75rem"></div>
+    <table class="comp-table">
+      <thead><tr>
+        <th>Métrica</th>
+        <th id="cmp-th-a">Campaña A</th>
+        <th id="cmp-th-b">Campaña B</th>
+      </tr></thead>
+      <tbody id="cmp-tbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== TAB: ESCALADO ===== -->
+<section id="tab-escalado" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Simulador de Escalado</div>
+    <div class="section-desc">Proyectá qué pasa con tu ROAS y ganancia al aumentar el presupuesto (con rendimiento decreciente)</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Parámetros Base</div>
+      <div class="field"><label>Presupuesto base</label><div class="input-group"><span class="input-prefix" id="sc-sym">$</span><input type="number" id="sc-budget" value="1000" step="100" oninput="calcScale()"></div></div>
+      <div class="field"><label>CPM base</label><div class="input-group"><span class="input-prefix" id="sc-cpm-sym">$</span><input type="number" id="sc-cpm" value="10" step=".5" oninput="calcScale()"></div></div>
+      <div class="field"><label>CTR</label><div class="input-group suf"><input type="number" id="sc-ctr" value="1.5" step=".1" oninput="calcScale()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Tasa de conversión</label><div class="input-group suf"><input type="number" id="sc-cr" value="3" step=".1" oninput="calcScale()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Ticket promedio</label><div class="input-group"><span class="input-prefix" id="sc-aov-sym">$</span><input type="number" id="sc-aov" value="50" oninput="calcScale()"></div></div>
+      <div class="field"><label>Margen bruto</label><div class="input-group suf"><input type="number" id="sc-margin" value="40" max="100" oninput="calcScale()"><span class="input-suffix">%</span></div></div>
+      <div class="field">
+        <label>Incremento de CPM al duplicar presupuesto <span class="info" data-t="Al escalar, el CPM sube porque agotás audiencias baratas. 15% es un valor conservador.">?</span></label>
+        <div class="input-group suf"><input type="number" id="sc-eff" value="15" min="0" max="100" step="1" oninput="calcScale()"><span class="input-suffix">%</span></div>
+      </div>
+      <div id="sc-beroas-info" style="margin-top:.75rem"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Proyección por Multiplicador</div>
+      <div style="overflow-x:auto">
+        <table class="scale-table" id="sc-table">
+          <thead><tr>
+            <th>Multiplicador</th>
+            <th>Presupuesto</th>
+            <th>CPM adj.</th>
+            <th>Conversiones</th>
+            <th>Ingresos</th>
+            <th>ROAS</th>
+            <th>Ganancia</th>
+          </tr></thead>
+          <tbody id="sc-tbody"></tbody>
+        </table>
+      </div>
+      <div class="chart-wrap"><canvas id="sc-chart"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB: MEDIA MIX ===== -->
+<section id="tab-mixmedia" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Media Mix</div>
+    <div class="section-desc">Distribuí tu presupuesto entre plataformas y calculá resultados consolidados</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Configuración</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem">
+        <div class="field" style="margin-bottom:0">
+          <label>Presupuesto mensual</label>
+          <div class="input-group"><span class="input-prefix" id="mix-sym">$</span><input type="number" id="mix-budget" value="5000" step="100" oninput="calcMix()"></div>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Ticket promedio</label>
+          <div class="input-group"><span class="input-prefix" id="mix-aov-sym">$</span><input type="number" id="mix-aov" value="50" step="5" oninput="calcMix()"></div>
+        </div>
+      </div>
+      <hr class="divider" style="margin:.5rem 0 .875rem">
+      <div class="mix-hdr">
+        <span>Plataforma</span>
+        <span style="text-align:center">% presup.</span>
+        <span style="text-align:center">CPM ($)</span>
+        <span style="text-align:center">CTR (%)</span>
+        <span style="text-align:center">CR (%)</span>
+        <span style="text-align:right">Conv.</span>
+      </div>
+      <!-- Meta Ads -->
+      <div class="mix-row">
+        <label class="mix-name"><input type="checkbox" id="mix-meta-on" checked onchange="calcMix()"><span class="mix-dot" style="background:#1877F2"></span>Meta Ads</label>
+        <input type="number" id="mix-meta-pct" value="40" min="0" max="100" step="1" oninput="calcMix()">
+        <input type="number" id="mix-meta-cpm" value="10" step=".5" oninput="calcMix()">
+        <input type="number" id="mix-meta-ctr" value="1.5" step=".1" oninput="calcMix()">
+        <input type="number" id="mix-meta-cr" value="3" step=".1" oninput="calcMix()">
+        <span class="mix-result" id="mix-meta-r">-</span>
+      </div>
+      <!-- Google Search -->
+      <div class="mix-row">
+        <label class="mix-name"><input type="checkbox" id="mix-gs-on" checked onchange="calcMix()"><span class="mix-dot" style="background:#4285F4"></span>Google Search</label>
+        <input type="number" id="mix-gs-pct" value="30" min="0" max="100" step="1" oninput="calcMix()">
+        <input type="number" id="mix-gs-cpm" value="35" step="1" oninput="calcMix()">
+        <input type="number" id="mix-gs-ctr" value="4" step=".1" oninput="calcMix()">
+        <input type="number" id="mix-gs-cr" value="3.5" step=".1" oninput="calcMix()">
+        <span class="mix-result" id="mix-gs-r">-</span>
+      </div>
+      <!-- Google Display -->
+      <div class="mix-row">
+        <label class="mix-name"><input type="checkbox" id="mix-gd-on" onchange="calcMix()"><span class="mix-dot" style="background:#34A853"></span>Google Display</label>
+        <input type="number" id="mix-gd-pct" value="0" min="0" max="100" step="1" oninput="calcMix()">
+        <input type="number" id="mix-gd-cpm" value="3" step=".5" oninput="calcMix()">
+        <input type="number" id="mix-gd-ctr" value="0.5" step=".05" oninput="calcMix()">
+        <input type="number" id="mix-gd-cr" value="0.7" step=".1" oninput="calcMix()">
+        <span class="mix-result off" id="mix-gd-r">-</span>
+      </div>
+      <!-- TikTok -->
+      <div class="mix-row">
+        <label class="mix-name"><input type="checkbox" id="mix-tt-on" checked onchange="calcMix()"><span class="mix-dot" style="background:#69C9D0"></span>TikTok Ads</label>
+        <input type="number" id="mix-tt-pct" value="20" min="0" max="100" step="1" oninput="calcMix()">
+        <input type="number" id="mix-tt-cpm" value="6" step=".5" oninput="calcMix()">
+        <input type="number" id="mix-tt-ctr" value="1.5" step=".1" oninput="calcMix()">
+        <input type="number" id="mix-tt-cr" value="1.5" step=".1" oninput="calcMix()">
+        <span class="mix-result" id="mix-tt-r">-</span>
+      </div>
+      <!-- YouTube -->
+      <div class="mix-row">
+        <label class="mix-name"><input type="checkbox" id="mix-yt-on" onchange="calcMix()"><span class="mix-dot" style="background:#FF0000"></span>YouTube</label>
+        <input type="number" id="mix-yt-pct" value="0" min="0" max="100" step="1" oninput="calcMix()">
+        <input type="number" id="mix-yt-cpm" value="8" step=".5" oninput="calcMix()">
+        <input type="number" id="mix-yt-ctr" value="0.5" step=".05" oninput="calcMix()">
+        <input type="number" id="mix-yt-cr" value="1" step=".1" oninput="calcMix()">
+        <span class="mix-result off" id="mix-yt-r">-</span>
+      </div>
+      <!-- LinkedIn -->
+      <div class="mix-row">
+        <label class="mix-name"><input type="checkbox" id="mix-li-on" onchange="calcMix()"><span class="mix-dot" style="background:#0A66C2"></span>LinkedIn</label>
+        <input type="number" id="mix-li-pct" value="0" min="0" max="100" step="1" oninput="calcMix()">
+        <input type="number" id="mix-li-cpm" value="35" step="1" oninput="calcMix()">
+        <input type="number" id="mix-li-ctr" value="0.6" step=".05" oninput="calcMix()">
+        <input type="number" id="mix-li-cr" value="1.5" step=".1" oninput="calcMix()">
+        <span class="mix-result off" id="mix-li-r">-</span>
+      </div>
+      <div style="margin-top:.75rem;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="mixDistribuir()">Distribuir % en partes iguales</button>
+        <button class="btn" onclick="mixReset()">Resetear</button>
+      </div>
+      <div id="mix-pct-alert" style="margin-top:.5rem"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Resultados Consolidados</div>
+      <div class="hero-grid">
+        <div class="hero-card"><div class="hero-val blue" id="mix-r-imp">-</div><div class="hero-lbl">Impresiones</div></div>
+        <div class="hero-card"><div class="hero-val" id="mix-r-clicks">-</div><div class="hero-lbl">Clics</div></div>
+      </div>
+      <div class="result-row"><span class="rl">Conversiones totales</span><span class="rv green" id="mix-r-conv">-</span></div>
+      <div class="result-row"><span class="rl">Ingresos total</span><span class="rv green" id="mix-r-rev">-</span></div>
+      <div class="result-row key"><span class="rl">ROAS consolidado</span><span class="rv purple" id="mix-r-roas">-</span></div>
+      <div class="result-row"><span class="rl">CPA ponderado</span><span class="rv amber" id="mix-r-cpa">-</span></div>
+      <div class="result-row"><span class="rl">CPC ponderado</span><span class="rv" id="mix-r-cpc">-</span></div>
+      <div class="result-row"><span class="rl">CPM ponderado</span><span class="rv" id="mix-r-cpm">-</span></div>
+      <hr class="divider">
+      <div class="card-title">Distribución del Gasto</div>
+      <div id="mix-dist"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB: ESCENARIOS ===== -->
+<section id="tab-escenarios" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Comparador de Escenarios</div>
+    <div class="section-desc">Guardá hipótesis y comparalas lado a lado para tomar decisiones con contexto</div>
+  </div>
+  <div class="card">
+    <div class="toolbar-row">
+      <button class="btn btn-primary" onclick="saveScenario()">Guardar escenario actual</button>
+      <button class="btn" onclick="clearScenarios()">Vaciar escenarios</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="scenario-table">
+        <thead>
+          <tr>
+            <th>Escenario</th>
+            <th>Fecha</th>
+            <th>Budget</th>
+            <th>ROAS</th>
+            <th>Profit</th>
+            <th>CAC</th>
+            <th>CTR</th>
+            <th>CR</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="scenario-table-body"></tbody>
+      </table>
+    </div>
+    <div id="scenario-empty" class="scenario-empty"></div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+// ---- Utilities ----
+let currency = 'ARS';
+const SYM = {USD:'$',ARS:'$',EUR:'€',BRL:'R$',MXN:'$',CLP:'$',COP:'$',PEN:'S/'};
+const MODE1 = {v:'cpm'}, MODE2 = {v:'cpm'};
+const EMPTY='-';
+
+function n(id){return parseFloat(document.getElementById(id).value)||0}
+function el(id){return document.getElementById(id)}
+function fmt(v,d=2){if(!isFinite(v)||isNaN(v))return EMPTY;return v.toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function fmtI(v){if(!isFinite(v)||isNaN(v))return EMPTY;return Math.round(v).toLocaleString('es-AR')}
+function fmtC(v,d=2){if(!isFinite(v)||isNaN(v))return EMPTY;return(SYM[currency]||'$')+fmt(v,d)}
+function fmtP(v,d=2){return fmt(v,d)+'%'}
+function fmtX(v,d=2){return fmt(v,d)+'x'}
+function setText(id,value){const node=el(id);if(node)node.textContent=value}
+function safeRatio(a,b){return b>0?a/b:NaN}
+function getAttributionWeight(){
+  const model=el('roi-attr-model')?.value||'last';
+  const assisted=(n('roi-assisted')||0)/100;
+  if(model==='last') return 1;
+  if(model==='first') return .65;
+  if(model==='linear') return .5;
+  return Math.max(.1,Math.min(1,assisted));
+}
+function computeBudgetModel(){
+  const budget=n('p1-budget'), cr=n('p1-cr')/100, aov=n('p1-aov'), margin=n('p1-margin')/100;
+  let imp=0, clicks=0, cpc=0;
+  if(MODE1.v==='cpm'){
+    const cpm=n('p1-cpm'), ctr=n('p1-ctr')/100;
+    imp=cpm>0?(budget/cpm)*1000:0;
+    clicks=imp*ctr;
+    cpc=clicks>0?budget/clicks:0;
+  } else {
+    cpc=n('p1-cpc');
+    clicks=cpc>0?budget/cpc:0;
+  }
+  const conv=clicks*cr;
+  const cpa=conv>0?budget/conv:NaN;
+  const rev=conv*aov, roas=budget>0?rev/budget:0;
+  const netRoas=roas*margin, profit=rev*margin-budget;
+  const beRoas=margin>0?1/margin:0;
+  return {budget,cr,aov,margin,imp,clicks,cpc,conv,cpa,rev,roas,netRoas,profit,beRoas,ctr:MODE1.v==='cpm'?n('p1-ctr'):NaN,cpm:MODE1.v==='cpm'?n('p1-cpm'):NaN};
+}
+function refreshAllEnhanced(){
+  calcDashboard();
+  calcProposalClient();
+  calcSensitivity();
+  calcForecast();
+  renderScenarioTable();
+}
+
+function setCurrency(c){
+  currency=c;
+  const s=SYM[c]||'$';
+  document.querySelectorAll('[id$="-sym"],[id$="-cpm-sym"],[id$="-cpc-sym"],[id$="-aov-sym"],[id$="-spend-sym"],[id$="-rev-sym"],[id$="-cogs-sym"],[id$="-other-sym"],[id$="-budget-sym"]').forEach(e=>e.textContent=s);
+  calc1();calc2();calcF();calcROI();calcLTV();mCPM();mCPC();mCPA();mCPL();mIMP();calcMix();calcSensitivity();calcForecast();
+}
+
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(e=>e.classList.remove('active'));
+  el('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function setMode1(m){
+  MODE1.v=m;
+  el('p1-m-cpm').className='mode-btn'+(m==='cpm'?' active':'');
+  el('p1-m-cpc').className='mode-btn'+(m==='cpc'?' active':'');
+  el('p1-cpm-block').style.display=m==='cpm'?'block':'none';
+  el('p1-cpc-block').style.display=m==='cpc'?'block':'none';
+  calc1();
+}
+function setMode2(m){
+  MODE2.v=m;
+  el('p2-m-cpm').className='mode-btn'+(m==='cpm'?' active':'');
+  el('p2-m-cpc').className='mode-btn'+(m==='cpc'?' active':'');
+  el('p2-cpm-block').style.display=m==='cpm'?'block':'none';
+  el('p2-cpc-block').style.display=m==='cpc'?'block':'none';
+  calc2();
+}
+
+// ---- Platform btn clicks ----
+document.querySelectorAll('.platform-selector .plat-btn,.plat-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    this.closest('.platform-selector,.card').querySelectorAll('.plat-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// ---- TAB 1 ----
+function calc1(){
+  const {imp,clicks,cpc,conv,cpa,rev,roas,netRoas,profit,beRoas}=computeBudgetModel();
+  el('p1-r-imp').textContent=imp>0?fmtI(imp):EMPTY;
+  el('p1-r-clicks').textContent=fmtI(clicks);
+  el('p1-r-conv').textContent=fmtI(conv);
+  el('p1-r-cpa').textContent=fmtC(cpa);
+  el('p1-r-cpl').textContent=fmtC(cpa);
+  el('p1-r-cpc').textContent=fmtC(cpc);
+  el('p1-r-rev').textContent=fmtC(rev);
+  el('p1-r-roas').textContent=fmtX(roas);
+  el('p1-r-netroas').textContent=fmtX(netRoas);
+  const pe=el('p1-r-profit');
+  pe.textContent=fmtC(profit);
+  pe.className='rv '+(profit>=0?'green':'red');
+  const ae=el('p1-alert');
+  if(roas>0&&beRoas>0){
+    ae.innerHTML=roas>=beRoas
+      ?`<div class="alert-box green">&#10003; Rentable &mdash; ROAS ${fmtX(roas)} supera el break-even de ${fmtX(beRoas)}</div>`
+      :`<div class="alert-box red">&#10007; No rentable &mdash; necesitás un ROAS de al menos ${fmtX(beRoas)} para cubrir el margen</div>`;
+  } else ae.innerHTML='';
+  refreshAllEnhanced();
+}
+
+// ---- TAB 2 ----
+function calc2(){
+  const gType=el('p2-goal').value, gVal=n('p2-goal-val'), cr=n('p2-cr')/100;
+  const lbls={conv:'Conversiones / Leads',clicks:'Clics',imp:'Impresiones',ingresos:'Ingresos objetivo'};
+  el('p2-goal-lbl').textContent='Objetivo: '+lbls[gType];
+  el('p2-goal-sym').textContent=gType==='ingresos'?(SYM[currency]||'$'):'#';
+  el('p2-aov-row').style.display=gType==='ingresos'?'block':'none';
+
+  let budget=0, clicks=0, imp=0;
+  if(MODE2.v==='cpm'){
+    const cpm=n('p2-cpm'), ctr=n('p2-ctr')/100;
+    if(gType==='imp'){imp=gVal;clicks=imp*ctr;}
+    else if(gType==='clicks'){clicks=gVal;imp=ctr>0?clicks/ctr:0;}
+    else if(gType==='conv'){clicks=cr>0?gVal/cr:0;imp=ctr>0?clicks/ctr:0;}
+    else if(gType==='ingresos'){const aov=n('p2-aov')||1;clicks=cr>0?(gVal/aov)/cr:0;imp=ctr>0?clicks/ctr:0;}
+    budget=cpm>0?(imp/1000)*cpm:0;
+  } else {
+    const cpc=n('p2-cpc');
+    if(gType==='clicks') clicks=gVal;
+    else if(gType==='conv') clicks=cr>0?gVal/cr:0;
+    else if(gType==='ingresos'){const aov=n('p2-aov')||1;clicks=cr>0?(gVal/aov)/cr:0;}
+    else clicks=gVal;
+    budget=cpc*clicks;
+  }
+  const conv=clicks*cr, cpa=conv>0?budget/conv:NaN;
+  el('p2-r-budget').textContent=fmtC(budget);
+  el('p2-r-daily').textContent=fmtC(budget/30);
+  el('p2-r-weekly').textContent=fmtC(budget/4.33);
+  el('p2-r-imp').textContent=imp>0?fmtI(imp):EMPTY;
+  el('p2-r-clicks').textContent=fmtI(clicks);
+  el('p2-r-cpa').textContent=fmtC(cpa);
+  const ae=el('p2-alert');
+  ae.innerHTML=budget>0?`<div class="alert-box blue">&#128161; Invertir ${fmtC(budget)} = ${fmtI(conv)} conversiones al CPA de ${fmtC(cpa)}</div>`:'';
+}
+
+// ---- TAB 3: FUNNEL ----
+const FUNNEL_PRESETS={
+  leadgen:{stage3:'Leads / Contactos',stage4:'Leads calificados',ctr:2,cr1:5,cr2:40,cr3:25,aov:500,cpm:10,budget:5000},
+  ecomm:  {stage3:'Visitas al producto',stage4:'Carritos / Checkouts',ctr:2.5,cr1:15,cr2:60,cr3:3,aov:80,cpm:8,budget:5000},
+  servicios:{stage3:'Consultas recibidas',stage4:'Reuniones / Propuestas',ctr:1.5,cr1:4,cr2:50,cr3:30,aov:2000,cpm:12,budget:3000},
+  saas:   {stage3:'Registros / Trials',stage4:'Usuarios activos',ctr:2,cr1:8,cr2:60,cr3:30,aov:150,cpm:15,budget:5000}
+};
+
+function setFunnelPreset(key){
+  const p=FUNNEL_PRESETS[key];
+  el('f-budget').value=p.budget; el('f-cpm').value=p.cpm; el('f-ctr').value=p.ctr;
+  el('f-cr1').value=p.cr1; el('f-cr2').value=p.cr2; el('f-cr3').value=p.cr3; el('f-aov').value=p.aov;
+  el('f-stage3-name').value=p.stage3; el('f-stage4-name').value=p.stage4;
+  document.querySelectorAll('.funnel-preset-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.funnel-preset-btn[data-preset="'+key+'"]').classList.add('active');
+  updateFunnelLabels();
+  calcF();
+}
+
+function updateFunnelLabels(){
+  const s3=el('f-stage3-name').value||'Etapa 3';
+  const s4=el('f-stage4-name').value||'Etapa 4';
+  const s3short=s3.split('/')[0].trim();
+  const s4short=s4.split('/')[0].trim();
+  // Labels dinámicos en el card izquierdo
+  el('f-lbl3').textContent=s3; el('f-lbl4').textContent=s3;
+  el('f-lbl5').textContent=s4short; el('f-lbl6').textContent=s4short;
+  // Labels de costo por etapa en la visualización
+  el('f-cost-lbl3').textContent=s3short.toLowerCase();
+  el('f-cost-lbl4').textContent=s4short.toLowerCase();
+  // Label del resultado CPL
+  el('f-r-lbl-cpl').textContent='Costo por '+s3short.toLowerCase();
+}
+
+function calcF(){
+  const budget=n('f-budget'), cpm=n('f-cpm'), ctr=n('f-ctr')/100;
+  const cr1=n('f-cr1')/100, cr2=n('f-cr2')/100, cr3=n('f-cr3')/100, aov=n('f-aov');
+  const imp=cpm>0?(budget/cpm)*1000:0;
+  const clicks=imp*ctr, stage3=clicks*cr1, stage4=stage3*cr2, sales=stage4*cr3;
+  const rev=sales*aov, roas=budget>0?rev/budget:0;
+  const cac=sales>0?budget/sales:NaN;
+  const overallCR=imp>0?sales/imp*100:0;
+  const cpi=imp>0?budget/imp:0;
+
+  el('f-v-imp').textContent=fmtI(imp);
+  el('f-v-click').textContent=fmtI(clicks);
+  el('f-v-lead').textContent=fmtI(stage3);
+  el('f-v-sql').textContent=fmtI(stage4);
+  el('f-v-sale').textContent=fmtI(sales);
+  el('f-rate-click').textContent='CTR '+fmtP(ctr*100,1);
+  el('f-rate-lead').textContent=fmtP(cr1*100,1)+' de clics';
+  el('f-rate-sql').textContent=fmtP(cr2*100,0)+' avanzan';
+  el('f-rate-sale').textContent='Cierre '+fmtP(cr3*100,0);
+  el('f-r-rev').textContent=fmtC(rev);
+  el('f-r-roas').textContent=fmtX(roas);
+  el('f-r-cpl').textContent=fmtC(stage3>0?budget/stage3:NaN);
+  el('f-r-cac').textContent=fmtC(cac);
+  el('f-overall-cr').textContent=fmtP(overallCR,3);
+  el('f-cpi').textContent=fmtC(cpi,4);
+  el('f-cost-click').textContent=fmtC(clicks>0?budget/clicks:NaN);
+  el('f-cost-lead').textContent=fmtC(stage3>0?budget/stage3:NaN);
+  el('f-cost-sql').textContent=fmtC(stage4>0?budget/stage4:NaN);
+  el('f-cost-sale').textContent=fmtC(cac);
+  const mx=imp||1;
+  [['f-bar-click',clicks],['f-bar-lead',stage3],['f-bar-sql',stage4],['f-bar-sale',sales]]
+    .forEach(([id,v])=>{ el(id).style.width=Math.max(3,(v/mx)*100)+'%'; });
+}
+
+// ---- TAB 4 ----
+function mCTR(){el('m-ctr-r').textContent=fmtP((n('m-ctr-c')/(n('m-ctr-i')||1))*100);}
+function mCPM(){el('m-cpm-r').textContent=fmtC((n('m-cpm-s')/(n('m-cpm-i')||1))*1000);}
+function mCPC(){el('m-cpc-r').textContent=fmtC(n('m-cpc-s')/(n('m-cpc-c')||1));}
+function mCPA(){el('m-cpa-r').textContent=fmtC(n('m-cpa-s')/(n('m-cpa-c')||1));}
+function mROAS(){el('m-roas-v').textContent=fmtX(n('m-roas-r')/(n('m-roas-s')||1));}
+function mBE(){
+  const m=n('m-be-m')/100, a=n('m-be-a'), be=m>0?1/m:0;
+  el('m-be-r').textContent=fmtX(be);
+  const s=el('m-be-status');
+  if(a>0&&be>0) s.innerHTML=a>=be?`<span class="badge badge-green">Rentable (+${fmtP(((a-be)/be)*100,0)} sobre BE)</span>`:`<span class="badge badge-red">Faltan ${fmtX(be-a,2)} para el BE</span>`;
+  else s.innerHTML='';
+}
+function mCPL(){el('m-cpl-r').textContent=fmtC(n('m-cpl-s')/(n('m-cpl-l')||1));}
+function mCR(){el('m-cr-r').textContent=fmtP((n('m-cr-c')/(n('m-cr-cl')||1))*100);}
+function mFR(){el('m-fr-v').textContent=fmtX(n('m-fr-i')/(n('m-fr-r')||1));}
+function mIMP(){el('m-imp-r').textContent=fmtI((n('m-imp-s')/(n('m-imp-c')||1))*1000);}
+function mROI(){const i=n('m-roi-i'),g=n('m-roi-g');el('m-roi-r').textContent=fmtP(i>0?((g-i)/i)*100:0,2);}
+function mCPV(){el('m-cpv-r').textContent=fmtC(n('m-cpv-s')/(n('m-cpv-v')||1),3);}
+
+// ---- TAB 5 ----
+function calcROI(){
+  const spend=n('roi-spend'), rev=n('roi-rev'), cogs=n('roi-cogs'), other=n('roi-other'), margin=n('roi-margin')/100;
+  const roas=spend>0?rev/spend:0;
+  const attrWeight=getAttributionWeight();
+  const attributedRev=rev*attrWeight;
+  const grossP=attributedRev*margin;
+  const totalCost=spend+cogs+other;
+  const netP=attributedRev-totalCost;
+  const roi=totalCost>0?(netP/totalCost)*100:0;
+  const beRoas=margin>0?1/margin:0;
+  const netRoas=(spend>0?attributedRev/spend:0)*margin;
+  const modelMap={last:'Last click',first:'First click',linear:'Linear',blended:'Blended'};
+  const adjRoas=spend>0?attributedRev/spend:0;
+
+  el('roi-r-roas').textContent=fmtX(adjRoas);
+  const re=el('roi-r-roi');
+  re.textContent=fmtP(roi,1);
+  re.className='hero-val '+(roi>=0?'green':'red');
+  el('roi-r-gross').textContent=fmtC(grossP);
+  const ne=el('roi-r-net');
+  ne.textContent=fmtC(netP);
+  ne.className='rv '+(netP>=0?'green':'red');
+  el('roi-r-cost').textContent=fmtC(totalCost);
+  el('roi-r-beroas').textContent=fmtX(beRoas);
+  el('roi-r-netroas').textContent=fmtX(netRoas);
+  el('roi-r-mer').textContent=fmtX(adjRoas);
+  el('roi-r-attrib').textContent=fmtC(attributedRev);
+  el('roi-r-credit').textContent=fmtP(attrWeight*100,0);
+  el('roi-r-model').textContent=modelMap[el('roi-attr-model').value]||'Last click';
+  const ae=el('roi-alert');
+  ae.innerHTML=netP>=0
+    ?`<div class="alert-box green">&#10003; Ganancia neta: ${fmtC(netP)} &mdash; ROI de ${fmtP(roi,1)}</div>`
+    :`<div class="alert-box red">&#10007; Pérdida de ${fmtC(Math.abs(netP))} &mdash; necesitás un ROAS de ${fmtX(beRoas)} para el break-even</div>`;
+  refreshAllEnhanced();
+}
+
+// ---- TAB 6 ----
+function calcLTV(){
+  const aov=n('ltv-aov'), freq=n('ltv-freq'), life=n('ltv-life'), margin=n('ltv-margin')/100;
+  const spend=n('ltv-spend'), cust=n('ltv-cust')||1, maxPct=n('ltv-max-pct')/100;
+  const churn=n('ltv-churn')/100;
+  const churnLifeYears=churn>0?(1/churn)/12:life;
+  const effectiveLife=Math.max(life,churnLifeYears);
+  const ltvGross=aov*freq*effectiveLife;
+  const ltv=ltvGross*margin;
+  const cac=spend/cust;
+  const ratio=cac>0?ltv/cac:0;
+  const maxCac=ltv*maxPct;
+  const monthlyProfit=aov*margin*(freq/12);
+  const payback=monthlyProfit>0?cac/monthlyProfit:0;
+  const totalRev=cust*ltvGross;
+
+  el('ltv-r-ltv').textContent=fmtC(ltv);
+  el('ltv-r-cac').textContent=fmtC(cac);
+  el('ltv-r-ratio').textContent=fmt(ratio,1)+':1';
+  el('ltv-r-gross').textContent=fmtC(ltvGross);
+  el('ltv-r-payback').textContent=fmt(payback,1)+' meses';
+  el('ltv-r-retention').textContent=fmt(churnLifeYears*12,1)+' meses';
+  el('ltv-r-maxcac').textContent=fmtC(maxCac);
+  el('ltv-r-total').textContent=fmtC(totalRev);
+
+  const ae=el('ltv-alert');
+  let cls,msg;
+  if(ratio>=5){cls='blue';msg=`&#10003; Excelente &mdash; LTV:CAC ${fmt(ratio,1)}:1. Escalá la inversión agresivamente.`;}
+  else if(ratio>=3){cls='green';msg=`&#10003; Bueno &mdash; LTV:CAC ${fmt(ratio,1)}:1. Negocio saludable para crecer.`;}
+  else if(ratio>=1){cls='amber';msg=`&#9888; Marginal &mdash; LTV:CAC ${fmt(ratio,1)}:1. Mejorá retención o reducí CAC.`;}
+  else{cls='red';msg=`&#10007; Crítico &mdash; LTV:CAC ${fmt(ratio,1)}:1. Perdés dinero por cliente adquirido.`;}
+  ae.innerHTML=`<div class="alert-box ${cls}">${msg}</div>`;
+  refreshAllEnhanced();
+}
+
+// ---- PROPUESTA CLIENTE ----
+function copyBudgetToProposalClient(){
+  el('pc-aov').value=n('p1-aov');
+  el('pc-margin').value=n('p1-margin');
+  calcProposalClient();
+}
+function copyAgencyToProposalClient(){
+  const agencyName=el('ag-nombre')?.value;
+  if(agencyName) el('pc-name').value=agencyName;
+  const spend=n('ag-spend');
+  if(spend>0) el('pc-fee-min').value=Math.round(spend*.12);
+  calcProposalClient();
+}
+function calcProposalClient(){
+  const name=(el('pc-name').value||'Cliente').trim();
+  const goal=el('pc-goal').value;
+  const goalValue=n('pc-goal-value');
+  const closeRate=Math.max(.01,n('pc-close-rate')/100);
+  const aov=Math.max(1,n('pc-aov'));
+  const margin=Math.max(.01,n('pc-margin')/100);
+  const hours=Math.max(1,n('pc-hours'));
+  const complexity=parseFloat(el('pc-complexity').value)||1;
+  const feeMin=n('pc-fee-min');
+  const budgetModel=computeBudgetModel();
+  const agencySpend=n('ag-spend');
+  const historicalBudget=Math.max(budgetModel.budget||0,agencySpend||0);
+  const goalPrefix=goal==='revenue'?(SYM[currency]||'$'):'#';
+  el('pc-goal-prefix').textContent=goalPrefix;
+
+  let neededSales=0;
+  let neededLeads=0;
+  if(goal==='ventas'){
+    neededSales=goalValue;
+    neededLeads=neededSales/closeRate;
+  } else if(goal==='revenue'){
+    neededSales=goalValue/aov;
+    neededLeads=neededSales/closeRate;
+  } else {
+    neededLeads=goalValue;
+    neededSales=neededLeads*closeRate;
+  }
+
+  const targetCpa=neededLeads>0?(neededSales*aov*margin)/(neededLeads||1):0;
+  const fallbackCpa=Math.max(targetCpa*.65,aov*margin*.18,1);
+  const baseCpa=isFinite(budgetModel.cpa)&&budgetModel.cpa>0?budgetModel.cpa:fallbackCpa;
+  const benchmarkCpa=Math.max(baseCpa,fallbackCpa);
+  const conservativeResults=Math.round(neededLeads*.82);
+  const recommendedResults=Math.round(neededLeads);
+  const aggressiveResults=Math.round(neededLeads*1.22);
+  const recommendedBudgetRaw=neededLeads*benchmarkCpa;
+  const hourlyFloor=hours*35*complexity;
+  const pctFee=recommendedBudgetRaw*.12*complexity;
+  const recommendedFee=Math.max(feeMin,hourlyFloor,pctFee);
+  const realismFloor=Math.max(
+    historicalBudget>0?historicalBudget:0,
+    recommendedFee,
+    goal==='revenue' ? goalValue*(1/(Math.max(1.2,aov>0?(aov*margin)/Math.max(benchmarkCpa,1):1.2)))*.2 : 0
+  );
+  const recommendedBudget=Math.max(recommendedBudgetRaw,realismFloor);
+  const conservativeBudget=Math.max(recommendedBudget*.8,recommendedFee*.9);
+  const aggressiveBudget=Math.max(recommendedBudget*1.3,recommendedFee*1.1);
+  const minRoas=1/margin;
+  const viabilityRaw=(budgetModel.roas*16)+(margin*100*.25)+(closeRate*100*.45)-(recommendedBudget>aov*neededSales?6:0);
+  const viabilityScore=Math.max(18,Math.min(96,Math.round(viabilityRaw)));
+  let chipClass='status-good', chipText='Saludable', alertClass='green', alertText='La meta parece razonable con los supuestos actuales.';
+  if(viabilityScore<50){
+    chipClass='status-bad'; chipText='Riesgoso'; alertClass='red';
+    alertText='La meta está exigente para la base actual. Conviene bajar la promesa o reforzar ticket, margen y conversión.';
+  } else if(viabilityScore<72){
+    chipClass='status-warn'; chipText='Ajustado'; alertClass='amber';
+    alertText='La propuesta es viable, pero con poco margen de error. Presentala con rango y condiciones.';
+  }
+
+  setText('pc-conservative-budget',fmtC(conservativeBudget,0));
+  setText('pc-recommended-budget',fmtC(recommendedBudget,0));
+  setText('pc-aggressive-budget',fmtC(aggressiveBudget,0));
+  setText('pc-conservative-meta',`Ads: ${fmtC(conservativeBudget,0)} · total con fee: ${fmtC(conservativeBudget+Math.max(feeMin,recommendedFee*.9),0)}`);
+  setText('pc-recommended-meta',`Ads: ${fmtC(recommendedBudget,0)} · total con fee: ${fmtC(recommendedBudget+recommendedFee,0)}`);
+  setText('pc-aggressive-meta',`Ads: ${fmtC(aggressiveBudget,0)} · total con fee: ${fmtC(aggressiveBudget+(recommendedFee*1.1),0)}`);
+  setText('pc-needed-sales',fmtI(neededSales));
+  setText('pc-needed-leads',fmtI(neededLeads));
+  setText('pc-target-cpa',fmtC(targetCpa||benchmarkCpa));
+  setText('pc-base-cpa',fmtC(benchmarkCpa));
+  setText('pc-min-roas',fmtX(minRoas));
+  setText('pc-fee-rec',fmtC(recommendedFee,0));
+  setText('pc-viability-score',viabilityScore+'/100');
+  const chip=el('pc-viability-chip');
+  chip.className='status-chip '+chipClass;
+  chip.textContent=chipText;
+  el('pc-alert').innerHTML=`<div class="alert-box ${alertClass}">${alertText} Se está usando un CPA base de ${fmtC(benchmarkCpa)} y un piso de inversión de ${fmtC(realityFloorValue(recommendedFee,historicalBudget,recommendedBudgetRaw,recommendedBudget),0)}.</div>`;
+  setText('pc-summary-title','Propuesta para '+name);
+  el('pc-summary-body').innerHTML=`
+    <div>Objetivo mensual: <strong style="color:var(--text)">${goal==='revenue'?fmtC(goalValue,0):fmtI(goalValue)+' '+goal}</strong></div>
+    <div>Presupuesto de pauta recomendado: <strong style="color:var(--purple)">${fmtC(recommendedBudget,0)}</strong></div>
+    <div>Rango sugerido de pauta: <strong style="color:var(--text)">${fmtC(conservativeBudget,0)} a ${fmtC(aggressiveBudget,0)}</strong></div>
+    <div>Meta traducida: <strong style="color:var(--text)">${fmtI(neededLeads)} leads</strong> para conseguir <strong style="color:var(--text)">${fmtI(neededSales)} ventas</strong></div>
+    <div>Fee recomendado de gestión: <strong style="color:var(--green)">${fmtC(recommendedFee,0)}/mes</strong></div>
+    <div>Inversión total sugerida (ads + fee): <strong style="color:var(--text)">${fmtC(recommendedBudget+recommendedFee,0)}/mes</strong></div>
+    <div>Condición mínima de rentabilidad: <strong style="color:var(--amber)">${fmtX(minRoas)} de ROAS</strong> con margen bruto de ${fmtP(margin*100,0)}</div>
+  `;
+}
+
+function realityFloorValue(recommendedFee,historicalBudget,recommendedBudgetRaw,recommendedBudget){
+  return Math.max(historicalBudget>0?historicalBudget:0,recommendedFee,recommendedBudgetRaw,recommendedBudget);
+}
+
+// ---- AGENCIA ----
+let feeModel='pct';
+function setFeeModel(m,btn){
+  feeModel=m;
+  document.querySelectorAll('.fee-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['pct','fijo','mixto','rev'].forEach(k=>el('ag-'+k+'-block').style.display=k===m?'block':'none');
+  calcAgencia();
+}
+function calcAgencia(){
+  const nombre=el('ag-nombre').value||'el cliente';
+  const spend=n('ag-spend');
+  const revActual=n('ag-rev-actual');
+  const horas=n('ag-horas')||1;
+  const mejoraPct=n('ag-mejora');
+  const mejora=mejoraPct/100;
+
+  let fee=0;
+  if(feeModel==='pct') fee=spend*(n('ag-pct')/100);
+  else if(feeModel==='fijo') fee=n('ag-fijo');
+  else if(feeModel==='mixto') fee=n('ag-mixto-fijo')+spend*(n('ag-mixto-pct')/100);
+  else if(feeModel==='rev') fee=revActual*(n('ag-rev-pct')/100);
+
+  const revConGestion=revActual*(1+mejora);
+  const revExtra=revConGestion-revActual;
+  const roiCliente=fee>0?revExtra/fee:0;
+  const feeHora=fee/horas;
+  const breakEvenPct=revActual>0?(fee/revActual)*100:0;
+  const feePctExtra=revExtra>0?(fee/revExtra)*100:0;
+  const totalSin=spend;
+  const totalCon=spend+fee;
+
+  // Heroes
+  el('ag-r-fee').textContent=fmtC(fee);
+  el('ag-r-hora').textContent=fmtC(feeHora)+'/h';
+  const roiEl=el('ag-r-roi-cliente');
+  roiEl.textContent=fmtX(roiCliente);
+  roiEl.className='hero-val '+(roiCliente>=1?'green':'red');
+
+  // Tabla comparativa
+  el('ag-t-rev-sin').textContent=fmtC(revActual);
+  el('ag-t-rev-con').textContent=fmtC(revConGestion);
+  el('ag-t-rev-sin-anual').textContent=fmtC(revActual*12);
+  el('ag-t-rev-con-anual').textContent=fmtC(revConGestion*12);
+  el('ag-t-extra').textContent='+'+fmtC(revExtra)+'/mes';
+  el('ag-t-inv-sin').textContent=fmtC(totalSin);
+  el('ag-t-inv-con').textContent=fmtC(totalCon);
+
+  // Result rows
+  el('ag-r-anual').textContent=fmtC(fee*12);
+  el('ag-r-ratio').textContent=revExtra>0?fmtX(revExtra/fee)+' por cada $1 de fee':EMPTY;
+  el('ag-r-breakeven').textContent=fmtP(breakEvenPct,1)+' de mejora';
+  el('ag-r-fee-pct-extra').textContent=fmtP(feePctExtra,1);
+
+  // Alert
+  const ae=el('ag-alert');
+  if(fee>0&&revActual>0){
+    if(roiCliente>=3)
+      ae.innerHTML=`<div class="alert-box green">&#10003; Propuesta muy sólida &mdash; por cada $1 que te paga ${nombre}, generás $${fmt(roiCliente,1)} extra en ingresos. Fácil de justificar.</div>`;
+    else if(roiCliente>=1)
+      ae.innerHTML=`<div class="alert-box blue">&#128203; Propuesta rentable &mdash; con solo ${fmtP(mejoraPct,0)} de mejora el fee se paga solo. Necesitás mejorar al menos ${fmtP(breakEvenPct,1)} para llegar al break-even.</div>`;
+    else
+      ae.innerHTML=`<div class="alert-box amber">&#9888; Con ${fmtP(mejoraPct,0)} de mejora el fee no se justifica todavía. Necesitás mejorar al menos ${fmtP(breakEvenPct,1)}; revisá el fee o el potencial del cliente.</div>`;
+  } else ae.innerHTML='';
+
+  // Resumen ejecutivo
+  el('ag-prop-titulo').textContent='Propuesta para '+nombre;
+  el('ag-prop-body').innerHTML=`
+    <div>Adspend mensual: <strong style="color:var(--text)">${fmtC(spend)}</strong></div>
+    <div>Mi fee mensual: <strong style="color:var(--purple)">${fmtC(fee)}</strong> (anual: ${fmtC(fee*12)})</div>
+    <div>Inversión total: <strong style="color:var(--text)">${fmtC(totalCon)}/mes</strong></div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:.5rem 0">
+    <div>Ingresos actual: <strong style="color:var(--text)">${fmtC(revActual)}/mes</strong></div>
+    <div>Ingresos proyectado con mi gestión (+${fmtP(mejoraPct,0)}): <strong style="color:var(--green)">${fmtC(revConGestion)}/mes</strong></div>
+    <div>Ingresos extra mensual: <strong style="color:var(--green)">+${fmtC(revExtra)}</strong></div>
+    <div>Ingresos extra anual: <strong style="color:var(--green)">+${fmtC(revExtra*12)}</strong></div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:.5rem 0">
+    <div>Por cada $1 invertido en mi gestión, ${nombre} recibe <strong style="color:var(--green)">${fmtX(roiCliente)} en ingresos extra</strong>.</div>
+  `;
+  refreshAllEnhanced();
+}
+
+// ---- EMAIL MARKETING ----
+function calcEmail(){
+  const list=n('em-list'), cost=n('em-cost');
+  const or=n('em-or')/100, ctr=n('em-ctr')/100, cr=n('em-cr')/100;
+  const aov=n('em-aov'), margin=n('em-margin')/100;
+  const opens=list*or, clicks=opens*ctr, conv=clicks*cr;
+  const rev=conv*aov, profit=rev*margin-cost;
+  const roi=cost>0?((rev*margin-cost)/cost)*100:0;
+  const rpe=list>0?rev/list:0;
+  const cpo=opens>0?cost/opens:0, cpc=clicks>0?cost/clicks:0, cpa=conv>0?cost/conv:0;
+  el('em-r-opens').textContent=fmtI(opens);
+  el('em-r-clicks').textContent=fmtI(clicks);
+  el('em-r-conv').textContent=fmtI(conv);
+  el('em-r-rev').textContent=fmtC(rev);
+  const pe=el('em-r-profit'); pe.textContent=fmtC(profit); pe.className='rv '+(profit>=0?'green':'red');
+  const re=el('em-r-roi'); re.textContent=fmtP(roi,1); re.className='hero-val '+(roi>=0?'green':'red');
+  el('em-r-rpe').textContent=fmtC(rpe,3);
+  el('em-r-cpo').textContent=fmtC(cpo,3);
+  el('em-r-cpc').textContent=fmtC(cpc,2);
+  el('em-r-cpa').textContent=fmtC(cpa,2);
+  el('em-alert').innerHTML=roi>=0
+    ?`<div class="alert-box green">&#10003; ROI positivo &mdash; cada email enviado genera ${fmtC(rpe,3)} en ingresos</div>`
+    :`<div class="alert-box red">&#10007; ROI negativo &mdash; el envío no cubrió su costo</div>`;
+  refreshAllEnhanced();
+}
+
+// ---- BENCHMARKS ----
+const BENCH=[
+  {p:'Meta',i:'E-commerce',cpm:8.5,cpc:0.75,ctr:1.1,cr:2.5,cpa:30},
+  {p:'Meta',i:'B2B / SaaS',cpm:12,cpc:2.5,ctr:0.9,cr:1.2,cpa:120},
+  {p:'Meta',i:'Lead Gen',cpm:9,cpc:1.2,ctr:1.0,cr:8,cpa:15},
+  {p:'Meta',i:'Educación',cpm:7,cpc:0.9,ctr:1.2,cr:5,cpa:18},
+  {p:'Meta',i:'Salud & Bienestar',cpm:10,cpc:1.5,ctr:1.0,cr:3,cpa:50},
+  {p:'Meta',i:'Inmobiliario',cpm:11,cpc:2.0,ctr:0.8,cr:2,cpa:100},
+  {p:'Meta',i:'Retail / Moda',cpm:7.5,cpc:0.65,ctr:1.4,cr:3,cpa:22},
+  {p:'Meta',i:'Restaurantes',cpm:6,cpc:0.55,ctr:1.3,cr:4,cpa:14},
+  {p:'Google Search',i:'E-commerce',cpm:30,cpc:1.2,ctr:4.0,cr:3.5,cpa:35},
+  {p:'Google Search',i:'B2B / SaaS',cpm:45,cpc:5.0,ctr:2.8,cr:2,cpa:250},
+  {p:'Google Search',i:'Lead Gen',cpm:25,cpc:2.5,ctr:3.5,cr:6,cpa:42},
+  {p:'Google Search',i:'Educación',cpm:20,cpc:2.0,ctr:3.8,cr:5,cpa:40},
+  {p:'Google Search',i:'Salud & Bienestar',cpm:35,cpc:3.5,ctr:3.2,cr:3,cpa:117},
+  {p:'Google Search',i:'Inmobiliario',cpm:40,cpc:4.0,ctr:3.0,cr:2,cpa:200},
+  {p:'Google Search',i:'Legal',cpm:70,cpc:8.0,ctr:3.5,cr:3,cpa:267},
+  {p:'Google Display',i:'E-commerce',cpm:3,cpc:0.65,ctr:0.5,cr:0.7,cpa:93},
+  {p:'Google Display',i:'B2B / SaaS',cpm:5,cpc:1.2,ctr:0.4,cr:0.5,cpa:240},
+  {p:'Google Display',i:'Remarketing',cpm:2.5,cpc:0.4,ctr:0.6,cr:2,cpa:20},
+  {p:'TikTok',i:'E-commerce',cpm:6,cpc:0.5,ctr:1.5,cr:1.5,cpa:33},
+  {p:'TikTok',i:'Educación',cpm:5.5,cpc:0.6,ctr:1.3,cr:3,cpa:20},
+  {p:'TikTok',i:'Retail / Moda',cpm:5,cpc:0.45,ctr:1.6,cr:2,cpa:23},
+  {p:'TikTok',i:'App Install',cpm:4,cpc:0.8,ctr:1.2,cr:15,cpa:5},
+  {p:'LinkedIn',i:'B2B / SaaS',cpm:35,cpc:5.5,ctr:0.6,cr:1.5,cpa:367},
+  {p:'LinkedIn',i:'Educación',cpm:30,cpc:4.5,ctr:0.7,cr:2,cpa:225},
+  {p:'LinkedIn',i:'Reclutamiento',cpm:28,cpc:4.0,ctr:0.8,cr:3,cpa:133},
+  {p:'YouTube',i:'E-commerce',cpm:8,cpc:0.3,ctr:0.5,cr:1,cpa:30},
+  {p:'YouTube',i:'B2B / SaaS',cpm:12,cpc:0.5,ctr:0.4,cr:0.5,cpa:100},
+  {p:'YouTube',i:'Branding',cpm:6,cpc:0.25,ctr:0.4,cr:0.3,cpa:83},
+];
+const PLAT_COLORS={Meta:'#1877F2','Google Search':'#4285F4','Google Display':'#34A853',TikTok:'#69C9D0',LinkedIn:'#0A66C2',YouTube:'#FF0000'};
+let benchFilter='';
+function filterBench(plat,btn){
+  benchFilter=plat;
+  document.querySelectorAll('#bench-plat-filters .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBench();
+}
+function renderBench(){
+  const rows=BENCH.filter(r=>!benchFilter||r.p===benchFilter);
+  el('bench-tbody').innerHTML=rows.map(r=>{
+    const col=PLAT_COLORS[r.p]||'#888';
+    return `<tr>
+      <td><span class="bench-plat" style="background:${col}22;color:${col}">${r.p}</span></td>
+      <td>${r.i}</td>
+      <td>$${r.cpm}</td>
+      <td>$${r.cpc}</td>
+      <td>${r.ctr}%</td>
+      <td>${r.cr}%</td>
+      <td>$${r.cpa}</td>
+      <td><button class="bench-use-btn" onclick='usarBenchmark(${JSON.stringify(r)})'>Usar</button></td>
+    </tr>`;
+  }).join('');
+}
+function usarBenchmark(r){
+  // Llenar Tab Presupuesto con valores del benchmark
+  setMode1('cpm');
+  document.getElementById('p1-cpm').value=r.cpm;
+  document.getElementById('p1-ctr').value=r.ctr;
+  document.getElementById('p1-cr').value=r.cr;
+  calc1();
+  // Ir al tab presupuesto
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-presupuesto').classList.add('active');
+  Array.from(document.querySelectorAll('.tab-btn')).find(b=>b.textContent.includes('Presupuesto'))?.classList.add('active');
+  // Notificar
+  const alert=document.getElementById('p1-alert');
+  alert.innerHTML=`<div class="alert-box blue">&#8599; Valores de benchmark cargados: ${r.p} &mdash; ${r.i} (CPM $${r.cpm}, CTR ${r.ctr}%, CR ${r.cr}%)</div>`;
+}
+
+// ---- COMPARADOR A vs B ----
+const COMP_MODE={a:'cpm',b:'cpm'};
+function setModeComp(side,m){
+  COMP_MODE[side]=m;
+  el('cmp-'+side+'-m-cpm').className='mode-btn'+(m==='cpm'?' active':'');
+  el('cmp-'+side+'-m-cpc').className='mode-btn'+(m==='cpc'?' active':'');
+  el('cmp-'+side+'-cpm-block').style.display=m==='cpm'?'block':'none';
+  el('cmp-'+side+'-cpc-block').style.display=m==='cpc'?'block':'none';
+  calcComp();
+}
+function compCalcSide(s){
+  const budget=n('cmp-'+s+'-budget'), cr=n('cmp-'+s+'-cr')/100;
+  const aov=n('cmp-'+s+'-aov'), margin=n('cmp-'+s+'-margin')/100;
+  let imp=0,clicks=0,cpc=0;
+  if(COMP_MODE[s]==='cpm'){
+    const cpm=n('cmp-'+s+'-cpm'), ctr=n('cmp-'+s+'-ctr')/100;
+    imp=cpm>0?(budget/cpm)*1000:0; clicks=imp*ctr; cpc=clicks>0?budget/clicks:0;
+  } else {
+    cpc=n('cmp-'+s+'-cpc'); clicks=cpc>0?budget/cpc:0;
+  }
+  const conv=clicks*cr, rev=conv*aov;
+  const roas=budget>0?rev/budget:0, cpa=conv>0?budget/conv:0;
+  const profit=rev*margin-budget;
+  return {budget,imp,clicks,conv,cpa,rev,roas,profit};
+}
+function calcComp(){
+  const A=compCalcSide('a'), B=compCalcSide('b');
+  const nameA=el('cmp-a-name').value||'A', nameB=el('cmp-b-name').value||'B';
+  el('cmp-th-a').textContent=nameA; el('cmp-th-b').textContent=nameB;
+
+  const metrics=[
+    {lbl:'Presupuesto',  va:fmtC(A.budget),  vb:fmtC(B.budget),  win: A.budget<=B.budget?'a':'b', desc:'menor gasto'},
+    {lbl:'Impresiones',  va:fmtI(A.imp),      vb:fmtI(B.imp),      win: A.imp>=B.imp?'a':'b'},
+    {lbl:'Clics',        va:fmtI(A.clicks),   vb:fmtI(B.clicks),   win: A.clicks>=B.clicks?'a':'b'},
+    {lbl:'Conversiones', va:fmtI(A.conv),     vb:fmtI(B.conv),     win: A.conv>=B.conv?'a':'b'},
+    {lbl:'CPA',          va:fmtC(A.cpa),      vb:fmtC(B.cpa),      win: A.cpa<=B.cpa?'a':'b', desc:'menor es mejor'},
+    {lbl:'Ingresos',      va:fmtC(A.rev),      vb:fmtC(B.rev),      win: A.rev>=B.rev?'a':'b'},
+    {lbl:'ROAS',         va:fmtX(A.roas),     vb:fmtX(B.roas),     win: A.roas>=B.roas?'a':'b'},
+    {lbl:'Ganancia neta',va:fmtC(A.profit),   vb:fmtC(B.profit),   win: A.profit>=B.profit?'a':'b'},
+  ];
+
+  let winsA=0, winsB=0;
+  el('cmp-tbody').innerHTML=metrics.map(m=>{
+    const aWins=m.win==='a'; if(aWins) winsA++; else winsB++;
+    return `<tr>
+      <td>${m.lbl}${m.desc?` <span style="font-size:10px;color:var(--text-muted)">(${m.desc})</span>`:''}
+      </td>
+      <td class="${aWins?'win':'lose'}">${m.va}</td>
+      <td class="${!aWins?'win':'lose'}">${m.vb}</td>
+    </tr>`;
+  }).join('');
+
+  const winner=winsA>winsB?nameA:winsA<winsB?nameB:null;
+  el('cmp-summary').innerHTML=winner
+    ?`<span class="badge ${winsA>winsB?'badge-green':'badge-amber'}">${winner} gana en ${Math.max(winsA,winsB)} de ${metrics.length} métricas</span>`
+    :`<span class="badge badge-amber">Empate: ${winsA} métricas cada uno</span>`;
+}
+
+// ---- ESCALADO ----
+let scChart = null;
+const SC_MULTS = [0.5, 0.75, 1, 1.5, 2, 3, 5, 10];
+
+function calcScale(){
+  const base=n('sc-budget'), cpm=n('sc-cpm'), ctr=n('sc-ctr')/100;
+  const cr=n('sc-cr')/100, aov=n('sc-aov'), margin=n('sc-margin')/100;
+  const eff=n('sc-eff')/100;
+  const beRoas=margin>0?1/margin:0;
+  const effExp=Math.log(1+eff)/Math.log(2);
+
+  el('sc-beroas-info').innerHTML=`<div class="alert-box blue">Break-even ROAS: <strong>${fmtX(beRoas)}</strong> &mdash; necesitás superar esto para ser rentable</div>`;
+
+  const rows=[], labels=[], roasData=[];
+
+  SC_MULTS.forEach(m=>{
+    const budget=base*m;
+    const adjCPM=cpm*Math.pow(m,effExp);
+    const imp=adjCPM>0?(budget/adjCPM)*1000:0;
+    const clicks=imp*ctr, conv=clicks*cr;
+    const rev=conv*aov, roas=budget>0?rev/budget:0;
+    const profit=rev*margin-budget;
+    const isBase=m===1;
+    const roasClass=roas>=beRoas?'roas-ok':'roas-bad';
+    rows.push(`<tr class="${isBase?'base-row':''}">
+      <td>${m===1?'1x base':m+'x'}</td>
+      <td>${fmtC(budget,0)}</td>
+      <td>${fmtC(adjCPM)}</td>
+      <td>${fmtI(conv)}</td>
+      <td>${fmtC(rev,0)}</td>
+      <td class="${roasClass}">${roas>=beRoas?'OK ':'Riesgo '}${fmtX(roas)}</td>
+      <td class="${profit>=0?'roas-ok':'roas-bad'}">${fmtC(profit,0)}</td>
+    </tr>`);
+    labels.push(fmtC(budget,0));
+    roasData.push(parseFloat(roas.toFixed(2)));
+  });
+
+  el('sc-tbody').innerHTML=rows.join('');
+
+  const ctx=document.getElementById('sc-chart').getContext('2d');
+  if(scChart) scChart.destroy();
+  scChart=new Chart(ctx,{
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {label:'ROAS',data:roasData,borderColor:'#a371f7',backgroundColor:'rgba(163,113,247,.15)',tension:.3,pointRadius:4,pointBackgroundColor:'#a371f7',fill:true},
+        {label:'Break-even',data:SC_MULTS.map(()=>parseFloat(beRoas.toFixed(2))),borderColor:'#f85149',borderDash:[5,4],pointRadius:0,borderWidth:1.5}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#7d8590',font:{size:11}}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(2)+'x'}}},
+      scales:{
+        x:{ticks:{color:'#7d8590',font:{size:10}},grid:{color:'rgba(255,255,255,.05)'}},
+        y:{ticks:{color:'#7d8590',font:{size:10},callback:v=>v+'x'},grid:{color:'rgba(255,255,255,.05)'}}
+      }
+    }
+  });
+}
+
+// ---- MEDIA MIX ----
+const MIX_PLATS = [
+  {id:'meta', name:'Meta Ads',     color:'#1877F2'},
+  {id:'gs',   name:'Google Search',color:'#4285F4'},
+  {id:'gd',   name:'Google Display',color:'#34A853'},
+  {id:'tt',   name:'TikTok Ads',  color:'#69C9D0'},
+  {id:'yt',   name:'YouTube',     color:'#FF0000'},
+  {id:'li',   name:'LinkedIn',    color:'#0A66C2'},
+];
+
+function mixDistribuir(){
+  const activos=MIX_PLATS.filter(p=>document.getElementById('mix-'+p.id+'-on').checked);
+  if(!activos.length) return;
+  const pct=Math.floor(100/activos.length);
+  const resto=100-(pct*activos.length);
+  activos.forEach((p,i)=>{ document.getElementById('mix-'+p.id+'-pct').value=pct+(i===0?resto:0); });
+  MIX_PLATS.filter(p=>!document.getElementById('mix-'+p.id+'-on').checked)
+    .forEach(p=>{ document.getElementById('mix-'+p.id+'-pct').value=0; });
+  calcMix();
+}
+function mixReset(){
+  const defaults={meta:40,gs:30,gd:0,tt:20,yt:0,li:0};
+  MIX_PLATS.forEach(p=>{ document.getElementById('mix-'+p.id+'-pct').value=defaults[p.id]||0; });
+  calcMix();
+}
+function calcMix(){
+  const budget=n('mix-budget'), aov=n('mix-aov');
+  let totImp=0, totClicks=0, totConv=0, totBudget=0, totalPct=0;
+
+  MIX_PLATS.forEach(p=>{
+    const on=document.getElementById('mix-'+p.id+'-on').checked;
+    const pct=n('mix-'+p.id+'-pct')/100;
+    const cpm=n('mix-'+p.id+'-cpm');
+    const ctr=n('mix-'+p.id+'-ctr')/100;
+    const cr=n('mix-'+p.id+'-cr')/100;
+    if(on) totalPct+=pct*100;
+    const pb=on?budget*pct:0;
+    const imp=cpm>0?(pb/cpm)*1000:0;
+    const clicks=imp*ctr;
+    const conv=clicks*cr;
+    const rEl=el('mix-'+p.id+'-r');
+    const row=document.getElementById('mix-'+p.id+'-on').closest('.mix-row');
+    if(on&&pb>0){
+      rEl.textContent=fmtI(conv);
+      rEl.className='mix-result';
+      row.style.borderLeftColor=p.color;
+      totImp+=imp; totClicks+=clicks; totConv+=conv; totBudget+=pb;
+    } else {
+      rEl.textContent=EMPTY;
+      rEl.className='mix-result off';
+      row.style.borderLeftColor='transparent';
+    }
+  });
+
+  const rev=totConv*aov;
+  const roas=totBudget>0?rev/totBudget:0;
+  const cpa=totConv>0?totBudget/totConv:0;
+  const cpc=totClicks>0?totBudget/totClicks:0;
+  const cpm=totImp>0?(totBudget/totImp)*1000:0;
+
+  el('mix-r-imp').textContent=fmtI(totImp);
+  el('mix-r-clicks').textContent=fmtI(totClicks);
+  el('mix-r-conv').textContent=fmtI(totConv);
+  el('mix-r-rev').textContent=fmtC(rev);
+  el('mix-r-roas').textContent=fmtX(roas);
+  el('mix-r-cpa').textContent=fmtC(cpa);
+  el('mix-r-cpc').textContent=fmtC(cpc);
+  el('mix-r-cpm').textContent=fmtC(cpm);
+
+  // Alerta de porcentajes
+  const pctAlert=el('mix-pct-alert');
+  const activePct=Math.round(totalPct);
+  if(activePct!==100&&totBudget>0){
+    pctAlert.innerHTML=`<div class="alert-box amber">&#9888; Los % activos suman ${activePct}% &mdash; ajustá para llegar a 100%</div>`;
+  } else pctAlert.innerHTML='';
+
+  // Barras de distribución
+  const activePlats=MIX_PLATS.filter(p=>document.getElementById('mix-'+p.id+'-on').checked&&n('mix-'+p.id+'-pct')>0);
+  el('mix-dist').innerHTML=activePlats.map(p=>{
+    const pct=n('mix-'+p.id+'-pct');
+    const pb=budget*pct/100;
+    return `<div class="dist-bar-row">
+      <div class="dist-bar-label"><span>${p.name}</span><span>${fmtC(pb)} (${pct}%)</span></div>
+      <div class="dist-bar-track"><div class="dist-bar-fill" style="width:${pct}%;background:${p.color}"></div></div>
+    </div>`;
+  }).join('');
+  refreshAllEnhanced();
+}
+
+function calcDashboard(){
+  const budgetModel=computeBudgetModel();
+  const ltv=parseFloat((el('ltv-r-ratio').textContent||'0').replace(':1','').replace(',','.'))||0;
+  const roi=parseFloat((el('roi-r-roi').textContent||'0').replace('%','').replace(',','.'))||0;
+  const mixRoas=el('mix-r-roas').textContent||EMPTY;
+  const mixCpa=el('mix-r-cpa').textContent||EMPTY;
+  const emailRpe=el('em-r-rpe').textContent||EMPTY;
+  const score=Math.max(5,Math.min(100,Math.round(
+    (budgetModel.roas*18)+
+    (ltv*8)+
+    Math.max(0,roi/5)+
+    (budgetModel.profit>0?12:0)-
+    (budgetModel.beRoas>budgetModel.roas?14:0)
+  )));
+
+  setText('dash-kpi-roas',fmtX(budgetModel.roas));
+  const profitEl=el('dash-kpi-profit');
+  profitEl.textContent=fmtC(budgetModel.profit);
+  profitEl.className='hero-val '+(budgetModel.profit>=0?'green':'red');
+  setText('dash-kpi-ltv',(el('ltv-r-ratio').textContent||'0,0:1'));
+  setText('dash-kpi-mer',el('roi-r-mer').textContent||EMPTY);
+  setText('dash-budget',fmtC(budgetModel.budget));
+  setText('dash-revenue',fmtC(budgetModel.rev));
+  setText('dash-beroas',fmtX(budgetModel.beRoas));
+  setText('dash-payback',el('ltv-r-payback').textContent||EMPTY);
+  setText('dash-mix-roas',mixRoas);
+  setText('dash-mix-cpa',mixCpa);
+  setText('dash-email-rpe',emailRpe);
+  setText('dash-scale-tip',budgetModel.roas>=budgetModel.beRoas?'Escalable con control':'Primero corregir base');
+  setText('dash-score',score+'/100');
+  setText('dash-score-note',score>=75?'La base se ve sana para crecer. El foco pasa por sostener eficiencia al escalar.':'Hay potencial, pero todavía conviene fortalecer conversión y atribución antes de acelerar.');
+
+  const actions=[];
+  actions.push(budgetModel.roas>=budgetModel.beRoas
+    ?`ROAS principal ${fmtX(budgetModel.roas)} sobre break-even ${fmtX(budgetModel.beRoas)}. Tenés margen para escalar con disciplina.`
+    :`ROAS principal ${fmtX(budgetModel.roas)} por debajo del break-even ${fmtX(budgetModel.beRoas)}. La prioridad es mejorar conversión o ticket.`);
+  actions.push(ltv>=3
+    ?`Relación LTV:CAC ${fmt(ltv,1)}:1. La adquisición parece saludable.`
+    :`Relación LTV:CAC ${fmt(ltv,1)}:1. Conviene trabajar retención, recompra o bajar CAC.`);
+  actions.push(mixRoas!==EMPTY
+    ?`El mix consolidado devuelve ${mixRoas}. Revisá si los canales con menor intención están consumiendo demasiado presupuesto.`
+    :`Todavía no hay lectura consolidada del media mix.`);
+  actions.push(emailRpe!==EMPTY
+    ?`Email genera ${emailRpe} por contacto. Puede ser una palanca de rentabilidad sin aumentar CAC.`
+    :`Si todavía no usás email, es un buen canal para recuperar margen.`);
+  el('dash-actions').innerHTML=actions.map(a=>`<div class="decision-pill">${a}</div>`).join('');
+}
+
+function copyBudgetToSensitivity(){
+  el('sens-budget').value=n('p1-budget');
+  el('sens-cpm').value=n('p1-cpm');
+  el('sens-ctr').value=n('p1-ctr');
+  el('sens-cr').value=n('p1-cr');
+  el('sens-aov').value=n('p1-aov');
+  el('sens-margin').value=n('p1-margin');
+  calcSensitivity();
+}
+function calcSensitivity(){
+  const budget=n('sens-budget'), cpmBase=n('sens-cpm'), ctr=n('sens-ctr')/100, crBase=n('sens-cr')/100, aov=n('sens-aov'), margin=n('sens-margin')/100;
+  const cpmSteps=[-.2,-.1,0,.1,.2];
+  const crSteps=[-.2,-.1,0,.1,.2];
+  el('sens-head').innerHTML=`<tr><th>CPM \\ CR</th>${crSteps.map(v=>`<th>${v>0?'+':''}${Math.round(v*100)}%</th>`).join('')}</tr>`;
+  el('sens-body').innerHTML=cpmSteps.map(cpmDelta=>{
+    const cpmAdj=cpmBase*(1+cpmDelta);
+    const cells=crSteps.map(crDelta=>{
+      const crAdj=crBase*(1+crDelta);
+      const imp=cpmAdj>0?(budget/cpmAdj)*1000:0;
+      const clicks=imp*ctr;
+      const conv=clicks*crAdj;
+      const rev=conv*aov;
+      const roas=budget>0?rev/budget:0;
+      const net=rev*margin-budget;
+      const cls=roas>=2.5?'heat-good':roas>=1.5?'heat-mid':'heat-bad';
+      return `<td class="${cls}" title="Ganancia: ${fmtC(net)}">${fmtX(roas)}</td>`;
+    }).join('');
+    return `<tr><td>${cpmDelta>0?'+':''}${Math.round(cpmDelta*100)}%</td>${cells}</tr>`;
+  }).join('');
+  const baseImp=cpmBase>0?(budget/cpmBase)*1000:0;
+  const baseClicks=baseImp*ctr;
+  const baseConv=baseClicks*crBase;
+  const baseRev=baseConv*aov;
+  const baseRoas=budget>0?baseRev/budget:0;
+  el('sens-summary').innerHTML=`<div class="alert-box blue">Base actual: ${fmtI(baseConv)} conversiones, ${fmtC(baseRev)} de ingresos y ${fmtX(baseRoas)} de ROAS.</div>`;
+}
+
+function copyBudgetToForecast(){
+  el('fc-budget').value=n('p1-budget');
+  el('fc-cpm').value=n('p1-cpm');
+  el('fc-ctr').value=n('p1-ctr');
+  el('fc-cr').value=n('p1-cr');
+  el('fc-aov').value=n('p1-aov');
+  calcForecast();
+}
+function calcForecast(){
+  const months=Math.max(1,Math.min(24,n('fc-months')||6));
+  const startBudget=n('fc-budget'), growth=n('fc-growth')/100, cpm=n('fc-cpm');
+  const ctr=n('fc-ctr')/100, cr=n('fc-cr')/100, aov=n('fc-aov'), decay=n('fc-decay')/100;
+  let totalBudget=0,totalRev=0;
+  const rows=[], badges=[];
+  for(let month=1;month<=months;month++){
+    const budget=startBudget*Math.pow(1+growth,month-1);
+    const effPenalty=Math.pow(1-decay,month-1);
+    const adjCtr=ctr*effPenalty;
+    const adjCr=cr*effPenalty;
+    const imp=cpm>0?(budget/cpm)*1000:0;
+    const clicks=imp*adjCtr;
+    const conv=clicks*adjCr;
+    const rev=conv*aov;
+    const roas=budget>0?rev/budget:0;
+    totalBudget+=budget;
+    totalRev+=rev;
+    rows.push(`<tr><td>Mes ${month}</td><td>${fmtC(budget,0)}</td><td>${fmtI(conv)}</td><td>${fmtC(rev,0)}</td><td>${fmtX(roas)}</td></tr>`);
+  }
+  const totalRoas=totalBudget>0?totalRev/totalBudget:0;
+  el('fc-body').innerHTML=rows.join('');
+  el('fc-total-rev').textContent=fmtC(totalRev,0);
+  el('fc-total-roas').textContent=fmtX(totalRoas);
+  badges.push(`<span class="forecast-badge">Inversión acumulada: ${fmtC(totalBudget,0)}</span>`);
+  badges.push(`<span class="forecast-badge">Mes final vs inicial: ${fmtP((Math.pow(1+growth,months-1)-1)*100,0)}</span>`);
+  badges.push(`<span class="forecast-badge">Desgaste de eficiencia: ${fmtP(decay*100,0)} mensual</span>`);
+  el('fc-badges').innerHTML=badges.join('');
+}
+
+function scenarioSnapshot(){
+  const m=computeBudgetModel();
+  return {
+    budget:m.budget,cpm:n('p1-cpm'),ctr:n('p1-ctr'),cpc:n('p1-cpc'),cr:n('p1-cr'),aov:n('p1-aov'),margin:n('p1-margin'),mode:MODE1.v,
+    roas:m.roas,profit:m.profit,cac:m.cpa
+  };
+}
+
+// ---- Init ----
+window.addEventListener('load',()=>{
+  calc1();calc2();updateFunnelLabels();calcF();calcROI();calcLTV();calcProposalClient();calcMix();calcScale();calcComp();renderBench();calcAgencia();calcEmail();calcSensitivity();calcForecast();
+  mCTR();mCPM();mCPC();mCPA();mROAS();mBE();mCPL();mCR();mFR();mIMP();mROI();mCPV();
+  calcDashboard();
+});
+el('p2-goal').addEventListener('change',calc2);
+
+// ---- ESCENARIOS ----
+function saveScenario(){
+  const name=prompt('Nombre del escenario:');
+  if(!name) return;
+  const data=scenarioSnapshot();
+  const list=JSON.parse(localStorage.getItem('mkt-scenarios')||'[]');
+  list.unshift({name,data,date:new Date().toLocaleDateString('es-AR')});
+  if(list.length>12) list.pop();
+  localStorage.setItem('mkt-scenarios',JSON.stringify(list));
+  renderScenarios();
+  renderScenarioTable();
+}
+function loadScenario(idx){
+  const list=JSON.parse(localStorage.getItem('mkt-scenarios')||'[]');
+  const s=list[idx]; if(!s) return;
+  const d=s.data;
+  el('p1-budget').value=d.budget; el('p1-cpm').value=d.cpm; el('p1-ctr').value=d.ctr;
+  el('p1-cpc').value=d.cpc; el('p1-cr').value=d.cr; el('p1-aov').value=d.aov; el('p1-margin').value=d.margin;
+  setMode1(d.mode||'cpm');
+  document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');if(b.textContent.includes('Presupuesto')) b.classList.add('active');});
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el('tab-presupuesto').classList.add('active');
+  calc1();
+}
+function deleteScenario(idx){
+  const list=JSON.parse(localStorage.getItem('mkt-scenarios')||'[]');
+  list.splice(idx,1);
+  localStorage.setItem('mkt-scenarios',JSON.stringify(list));
+  renderScenarios();
+  renderScenarioTable();
+}
+function clearScenarios(){
+  localStorage.removeItem('mkt-scenarios');
+  renderScenarios();
+  renderScenarioTable();
+}
+function renderScenarios(){
+  const list=JSON.parse(localStorage.getItem('mkt-scenarios')||'[]');
+  const bar=el('scenario-bar'), chips=el('scenario-chips');
+  bar.classList.toggle('show', list.length > 0);
+  chips.innerHTML=list.map((s,i)=>`
+    <span style="display:inline-flex;align-items:center;gap:4px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:11px">
+      <span style="cursor:pointer;color:var(--text)" onclick="loadScenario(${i})" title="${s.date}">${s.name}</span>
+      <span style="cursor:pointer;color:var(--text-muted);margin-left:2px" onclick="deleteScenario(${i})">×</span>
+    </span>`).join('');
+}
+function renderScenarioTable(){
+  const list=JSON.parse(localStorage.getItem('mkt-scenarios')||'[]');
+  const tbody=el('scenario-table-body');
+  const empty=el('scenario-empty');
+  if(!tbody||!empty) return;
+  if(!list.length){
+    tbody.innerHTML='';
+    empty.textContent='Todavía no hay escenarios guardados. Guardá distintas hipótesis desde Presupuesto y comparalas acá.';
+    return;
+  }
+  empty.textContent='';
+  const bestRoas=Math.max(...list.map(s=>s.data.roas||0));
+  tbody.innerHTML=list.map((s,i)=>`
+    <tr>
+      <td>${s.name}</td>
+      <td>${s.date}</td>
+      <td>${fmtC(s.data.budget,0)}</td>
+      <td class="${s.data.roas===bestRoas?'best':''}">${fmtX(s.data.roas||0)}</td>
+      <td>${fmtC(s.data.profit||0,0)}</td>
+      <td>${fmtC(s.data.cac||0)}</td>
+      <td>${fmt(s.data.ctr||0,1)}%</td>
+      <td>${fmt(s.data.cr||0,1)}%</td>
+      <td><button class="btn" onclick="loadScenario(${i})">Cargar</button></td>
+    </tr>`).join('');
+}
+renderScenarios();
+renderScenarioTable();
+
+// ---- EXPORTAR CSV ----
+function exportCSV(){
+  const activeTab=document.querySelector('.tab-content.active');
+  const rows=[['Calculadora de Marketing Digital - '+new Date().toLocaleDateString('es-AR')]];
+  // Recopilar todos los result-row del tab activo
+  activeTab.querySelectorAll('.result-row,.hero-card').forEach(el=>{
+    const lbl=el.querySelector('.rl,.hero-lbl');
+    const val=el.querySelector('.rv,.hero-val');
+    if(lbl&&val) rows.push([lbl.textContent.trim(), val.textContent.trim()]);
+  });
+  // Escalado: tabla si está activa
+  const scTbl=activeTab.querySelector('.scale-table tbody');
+  if(scTbl){
+    rows.push([]);
+    rows.push(['Multiplicador','Presupuesto','CPM adj.','Conversiones','Ingresos','ROAS','Ganancia']);
+    scTbl.querySelectorAll('tr').forEach(tr=>{
+      rows.push(Array.from(tr.querySelectorAll('td')).map(td=>td.textContent.trim()));
+    });
+  }
+  // Benchmarks: tabla si está activa
+  const bTbl=activeTab.querySelector('.bench-table tbody');
+  if(bTbl){
+    rows.push([]);
+    rows.push(['Plataforma','Industria','CPM','CPC','CTR','Conv Rate','CPA ref.']);
+    bTbl.querySelectorAll('tr').forEach(tr=>{
+      rows.push(Array.from(tr.querySelectorAll('td')).slice(0,7).map(td=>td.textContent.trim()));
+    });
+  }
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(csv);
+  a.download='marketing-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
+
+// ---- TAB SCROLL ARROWS ----
+function scrollTabs(dx){document.getElementById('tabs-nav').scrollBy({left:dx,behavior:'smooth'});}
+function updateTabArrows(){
+  const nav=document.getElementById('tabs-nav');
+  const overflow=nav.scrollWidth>nav.clientWidth;
+  document.getElementById('tab-arr-l').classList.toggle('visible',overflow&&nav.scrollLeft>4);
+  document.getElementById('tab-arr-r').classList.toggle('visible',overflow&&nav.scrollLeft<nav.scrollWidth-nav.clientWidth-4);
+}
+document.getElementById('tabs-nav').addEventListener('scroll',updateTabArrows);
+window.addEventListener('resize',updateTabArrows);
+setTimeout(updateTabArrows,150);
+</script>
+</body>
+</html>
+
