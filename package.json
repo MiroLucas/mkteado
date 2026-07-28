@@ -1,0 +1,12 @@
+{
+  "name": "mkteado",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Calculadora de marketing (Meta, Google, TikTok, Email, Agencia)",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
