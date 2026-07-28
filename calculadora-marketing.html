@@ -333,6 +333,55 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
 .access-card input[type=password]:focus{border-color:#1877F2;box-shadow:0 0 0 3px rgba(24,119,242,.14)}
 .access-card button{width:100%}
 .access-error{color:var(--red);font-size:12px;margin-top:.75rem;min-height:14px}
+
+/* ===== TOASTS ===== */
+#toast-wrap{position:fixed;bottom:20px;right:20px;z-index:900;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:var(--radius-sm);padding:.65rem .9rem;font-size:13px;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.45);animation:toast-in .2s ease;max-width:330px}
+.toast.out{animation:toast-out .2s ease forwards}
+.toast.ok{border-left-color:var(--green)}
+.toast.warn{border-left-color:var(--amber)}
+.toast.err{border-left-color:var(--red)}
+.toast-ico{flex-shrink:0}
+@keyframes toast-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes toast-out{to{opacity:0;transform:translateY(8px)}}
+@media(prefers-reduced-motion:reduce){.toast,.toast.out{animation:none}}
+
+/* ===== COMMAND PALETTE ===== */
+.cmdk{position:fixed;inset:0;z-index:950;background:rgba(0,0,0,.55);display:none;align-items:flex-start;justify-content:center;padding:12vh 1rem 1rem;backdrop-filter:blur(3px)}
+.cmdk.show{display:flex}
+.cmdk-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:520px;box-shadow:0 24px 60px rgba(0,0,0,.6);overflow:hidden}
+.cmdk-box input{width:100%;background:none;border:none;border-bottom:1px solid var(--border);color:var(--text);padding:.9rem 1rem;font-size:15px;font-family:inherit;outline:none;box-shadow:none!important}
+.cmdk-box input::placeholder{color:var(--text-muted)}
+.cmdk-list{max-height:320px;overflow-y:auto;padding:6px}
+.cmdk-item{display:flex;align-items:center;gap:10px;padding:.55rem .7rem;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;color:var(--text);border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.cmdk-item:hover,.cmdk-item.sel{background:rgba(24,119,242,.16)}
+.cmdk-ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.cmdk-cat{margin-left:auto;font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px}
+.cmdk-empty{padding:1.25rem;text-align:center;color:var(--text-muted);font-size:13px}
+.cmdk-hint{display:flex;gap:14px;padding:.5rem 1rem;border-top:1px solid var(--border);font-size:11px;color:var(--text-muted);background:rgba(0,0,0,.15)}
+kbd{background:var(--bg-input);border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;padding:1px 5px;font-size:10px;font-family:inherit;color:var(--text-muted)}
+
+/* ===== SEARCH TRIGGER + HEADER ===== */
+.search-trigger{display:flex;align-items:center;gap:8px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-muted);padding:.4rem .7rem;font-size:12px;font-family:inherit;cursor:pointer;min-width:180px;transition:border-color .15s,color .15s}
+.search-trigger:hover{border-color:#1877F2;color:var(--text)}
+.search-trigger kbd{margin-left:auto}
+.header-right{gap:6px;flex-wrap:wrap;justify-content:flex-end}
+#autosave-hint{white-space:nowrap;transition:color .2s}
+#autosave-hint.saved{color:var(--green)}
+@media(max-width:900px){.search-trigger{min-width:0}.search-trigger .st-label,.search-trigger kbd{display:none}}
+@media(max-width:768px){
+  header{padding:.7rem 1rem;gap:.6rem}
+  header p{display:none}          /* el subtítulo no aporta en pantallas chicas */
+  #autosave-hint{display:none}    /* los toasts ya confirman el guardado */
+  .header-right{gap:5px}
+  .header-right .btn{padding:.35rem .6rem;font-size:11px}
+  #g-currency{font-size:12px!important;padding:.25rem .4rem!important}
+}
+
+/* ===== INPUT VALIDATION ===== */
+input.invalid{border-color:var(--red)!important;box-shadow:0 0 0 3px rgba(248,81,73,.12)!important}
+.field-warn{font-size:10px;color:var(--amber);margin-top:3px;display:none}
+.field-warn.show{display:block}
 </style>
 </head>
 <body>
@@ -349,6 +398,20 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
 <script>
   try{ if(sessionStorage.getItem('mkt-unlocked')==='1') document.getElementById('access-gate').style.display='none'; }catch(e){}
 </script>
+<div id="toast-wrap" aria-live="polite"></div>
+
+<div id="cmdk" class="cmdk" onclick="if(event.target===this)closeCmdk()">
+  <div class="cmdk-box" role="dialog" aria-modal="true" aria-label="Buscar herramienta">
+    <input type="text" id="cmdk-input" placeholder="Buscar herramienta… (ej: roas, cac, funnel)" autocomplete="off" aria-label="Buscar herramienta">
+    <div class="cmdk-list" id="cmdk-list"></div>
+    <div class="cmdk-hint">
+      <span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navegar</span>
+      <span><kbd>Enter</kbd> abrir</span>
+      <span><kbd>Esc</kbd> cerrar</span>
+    </div>
+  </div>
+</div>
+
 <div class="app">
 
 <header>
@@ -359,12 +422,15 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
     <p>Meta · Google · TikTok · Email · Agencia</p>
   </div>
   <div class="header-right">
-    <button class="btn" onclick="saveScenario()" title="Guardar escenario actual">Guardar</button>
+    <button class="search-trigger" onclick="openCmdk()" title="Buscar herramienta (Ctrl+K)">
+      <span>&#128269;</span><span class="st-label">Buscar herramienta</span><kbd>Ctrl K</kbd>
+    </button>
+    <button class="btn" onclick="copyResults()" title="Copiar los resultados de esta pestaña al portapapeles">Copiar</button>
+    <button class="btn" onclick="saveScenario()" title="Guardar escenario actual (Ctrl+S)">Guardar</button>
     <button class="btn" onclick="exportCSV()" title="Descargar datos en Excel/CSV">Exportar CSV</button>
     <button class="btn" onclick="window.print()" title="Imprimir / exportar PDF">Imprimir</button>
     <button class="btn" onclick="resetDatos()" title="Borrar todos los datos cargados y empezar de cero">Limpiar datos</button>
     <span style="font-size:11px;color:var(--text-muted)" id="autosave-hint">Guardado automático activo</span>
-    <label>Moneda</label>
     <select id="g-currency" aria-label="Moneda" onchange="setCurrency(this.value)" style="width:auto;padding:.3rem .5rem;font-size:13px">
       <option value="ARS" selected>$ ARS</option>
       <option value="USD">$ USD</option>
@@ -1832,6 +1898,150 @@ function safeParseJSON(key,fallback){try{const raw=localStorage.getItem(key);ret
 function safeSetJSON(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch(e){return false}}
 function escapeHtml(str){return String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
+// ---- TOASTS ----
+const TOAST_ICONS={ok:'&#10003;',warn:'&#9888;',err:'&#10007;',info:'&#8505;'};
+function toast(msg,type='info',ms=2600){
+  const wrap=el('toast-wrap'); if(!wrap) return;
+  const t=document.createElement('div');
+  t.className='toast '+type;
+  t.innerHTML=`<span class="toast-ico">${TOAST_ICONS[type]||TOAST_ICONS.info}</span><span>${escapeHtml(msg)}</span>`;
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(),200); },ms);
+}
+
+// ---- COMMAND PALETTE ----
+// Alias de búsqueda: permite encontrar un tab por la métrica que resuelve, no solo por su nombre.
+const CMDK_ALIASES={
+  presupuesto:'plata inversion invertir resultados proyeccion cpm cpc',
+  objetivos:'meta cuanto invertir ventas objetivo target',
+  anual:'año calendario mensual estacionalidad temporada black friday hot sale',
+  mixmedia:'canales distribuir plataformas reparto mix',
+  funnel:'embudo etapas conversion abandono',
+  escalado:'escalar crecer aumentar presupuesto saturacion',
+  comparador:'comparar versus ab test campañas',
+  dashboard:'resumen general overview kpis inicio',
+  roi:'roas retorno rentabilidad ganancia mer margen',
+  ltvcac:'cac adquisicion cliente valor vida payback',
+  churn:'retencion abandono bajas mrr arr suscripcion',
+  metricas:'calculadora formulas cpm cpc cpa ctr cr',
+  email:'mailing newsletter open rate aperturas envios',
+  influencers:'influencer creador ugc colaboracion',
+  whatsapp:'wa crm mensajes chat leads',
+  creatividades:'creativos anuncios ads fatiga frecuencia piezas',
+  benchmarks:'promedios industria referencia comparar mercado',
+  historial:'campañas pasadas registro guardadas historico',
+  agencia:'fee cobrar cliente freelance honorarios precio',
+  propuesta:'cotizar presupuesto cliente propuesta vender',
+  forecast:'proyeccion futuro meses pronostico',
+  sensibilidad:'escenarios variacion que pasa si riesgo',
+  escenarios:'guardados comparar hipotesis'
+};
+let CMDK_ITEMS=[], cmdkSel=0;
+
+function buildCmdkIndex(){
+  CMDK_ITEMS=[];
+  let cat='';
+  document.querySelectorAll('.sidebar > *').forEach(node=>{
+    if(node.classList.contains('sidebar-cat')){ cat=node.textContent.replace(/[^\wÁÉÍÓÚáéíóúÑñ .]/g,'').trim(); return; }
+    if(!node.classList.contains('sidebar-item')) return;
+    const m=(node.getAttribute('onclick')||'').match(/switchTab\('([^']+)'/);
+    if(!m) return;
+    const icon=node.querySelector('.sidebar-icon');
+    // El icono vive en su propio span y se renderiza aparte, así que lo saco del texto visible
+    const label=node.textContent.replace(icon?icon.textContent:'','').trim();
+    CMDK_ITEMS.push({
+      tab:m[1],
+      label,
+      icon:icon?icon.textContent:'•',
+      cat,
+      terms:(label+' '+(CMDK_ALIASES[m[1]]||'')).toLowerCase()
+    });
+  });
+}
+// Normaliza para que "practica" matchee "práctica" y viceversa
+function norm(s){return s.normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase()}
+
+function renderCmdk(){
+  const q=norm(el('cmdk-input').value.trim());
+  const list=el('cmdk-list');
+  const results=q?CMDK_ITEMS.filter(i=>norm(i.terms).includes(q)):CMDK_ITEMS;
+  if(cmdkSel>=results.length) cmdkSel=Math.max(0,results.length-1);
+  if(!results.length){ list.innerHTML='<div class="cmdk-empty">Sin resultados</div>'; return; }
+  list.innerHTML=results.map((r,i)=>
+    `<button class="cmdk-item${i===cmdkSel?' sel':''}" onmousemove="cmdkSel=${i};renderCmdk()" onclick="cmdkGo('${r.tab}')">
+      <span class="cmdk-ico">${escapeHtml(r.icon)}</span>
+      <span>${escapeHtml(r.label)}</span>
+      <span class="cmdk-cat">${escapeHtml(r.cat)}</span>
+    </button>`).join('');
+  const sel=list.querySelector('.cmdk-item.sel');
+  if(sel) sel.scrollIntoView({block:'nearest'});
+}
+function openCmdk(){
+  if(el('access-gate') && el('access-gate').style.display!=='none') return;
+  if(!CMDK_ITEMS.length) buildCmdkIndex();
+  cmdkSel=0;
+  el('cmdk').classList.add('show');
+  const inp=el('cmdk-input'); inp.value=''; renderCmdk(); inp.focus();
+}
+function closeCmdk(){ el('cmdk').classList.remove('show'); }
+function cmdkGo(tab){ closeCmdk(); navTo(tab); }
+function cmdkMove(d){
+  const items=el('cmdk-list').querySelectorAll('.cmdk-item');
+  if(!items.length) return;
+  cmdkSel=(cmdkSel+d+items.length)%items.length;
+  renderCmdk();
+}
+
+// ---- COPIAR RESULTADOS ----
+function copyResults(){
+  const tab=document.querySelector('.tab-content.active');
+  if(!tab){ toast('No hay resultados para copiar','warn'); return; }
+  const title=tab.querySelector('.section-title');
+  const lines=[title?title.textContent.trim():'Resultados'];
+  lines.push('');
+  tab.querySelectorAll('.hero-card,.result-row,.summary-item').forEach(row=>{
+    const l=row.querySelector('.hero-lbl,.rl,.label');
+    const v=row.querySelector('.hero-val,.rv,.value');
+    if(l&&v&&v.textContent.trim()&&v.textContent.trim()!==EMPTY) lines.push(`${l.textContent.trim()}: ${v.textContent.trim()}`);
+  });
+  if(lines.length<=2){ toast('Esta pestaña no tiene resultados para copiar','warn'); return; }
+  lines.push('','— Generado con Mkteado');
+  const text=lines.join('\n');
+  const done=()=>toast('Resultados copiados al portapapeles','ok');
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text,done));
+  } else fallbackCopy(text,done);
+}
+function fallbackCopy(text,done){
+  const ta=document.createElement('textarea');
+  ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); done(); }catch(e){ toast('No se pudo copiar','err'); }
+  ta.remove();
+}
+
+// ---- VALIDACIÓN DE INPUTS ----
+// Los campos con sufijo % no deberían pasar de 100 ni ser negativos; avisamos sin bloquear el tipeo.
+function validateInput(inp){
+  if(inp.type!=='number') return;
+  const v=parseFloat(inp.value);
+  const isPct=inp.closest('.input-group')?.classList.contains('suf')&&inp.parentElement.querySelector('.input-suffix')?.textContent.trim()==='%';
+  let bad=false,msg='';
+  if(inp.value!==''&&!isNaN(v)){
+    if(v<0){ bad=true; msg='No puede ser negativo'; }
+    else if(isPct&&v>100){ bad=true; msg='Un porcentaje no puede superar 100%'; }
+  }
+  inp.classList.toggle('invalid',bad);
+  const field=inp.closest('.field');
+  if(field){
+    let warn=field.querySelector('.field-warn');
+    if(bad){
+      if(!warn){ warn=document.createElement('div'); warn.className='field-warn'; field.appendChild(warn); }
+      warn.textContent=msg; warn.classList.add('show');
+    } else if(warn) warn.classList.remove('show');
+  }
+}
+
 const ACCESS_PASSWORD='Soypicante123';
 function checkAccessPassword(e){
   e.preventDefault();
@@ -3079,7 +3289,11 @@ function scheduleAutosave(){
   autosaveTimer=setTimeout(()=>{
     autosaveInputs();
     const hint=el('autosave-hint');
-    if(hint){ hint.textContent='Guardado ✓'; setTimeout(()=>{ hint.textContent='Guardado automático activo'; },1500); }
+    if(hint){
+      hint.textContent='Guardado ✓';
+      hint.classList.add('saved');
+      setTimeout(()=>{ hint.textContent='Guardado automático activo'; hint.classList.remove('saved'); },1500);
+    }
   },400);
 }
 
@@ -3090,8 +3304,28 @@ function resetDatos(){
 }
 
 // Guardado por delegación: cualquier cambio en un input/select dispara el guardado
-document.addEventListener('input',e=>{ if(e.target.matches('input[id],select[id]')) scheduleAutosave(); });
-document.addEventListener('change',e=>{ if(e.target.matches('input[id],select[id]')) scheduleAutosave(); });
+document.addEventListener('input',e=>{ if(e.target.matches('input[id],select[id]')){ scheduleAutosave(); validateInput(e.target); } });
+document.addEventListener('change',e=>{ if(e.target.matches('input[id],select[id]')){ scheduleAutosave(); validateInput(e.target); } });
+
+// ---- ATAJOS DE TECLADO ----
+document.addEventListener('keydown',e=>{
+  const cmdkOpen=el('cmdk').classList.contains('show');
+  if(cmdkOpen){
+    if(e.key==='Escape'){ e.preventDefault(); closeCmdk(); }
+    else if(e.key==='ArrowDown'){ e.preventDefault(); cmdkMove(1); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); cmdkMove(-1); }
+    else if(e.key==='Enter'){
+      e.preventDefault();
+      const sel=el('cmdk-list').querySelector('.cmdk-item.sel');
+      if(sel) sel.click();
+    }
+    return;
+  }
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){ e.preventDefault(); openCmdk(); }
+  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){ e.preventDefault(); saveScenario(); }
+  else if(e.key==='Escape'&&el('app-sidebar').classList.contains('open')) toggleSidebar(false);
+});
+el('cmdk-input').addEventListener('input',()=>{ cmdkSel=0; renderCmdk(); });
 
 // ---- Init ----
 window.addEventListener('load',()=>{
@@ -3109,6 +3343,8 @@ window.addEventListener('load',()=>{
   wireMixTable();
   wireHeadings();
   initTogglePressedSync();
+  buildCmdkIndex();
+  document.querySelectorAll('input[type=number]').forEach(validateInput);
   const yearEl=el('footer-year'); if(yearEl) yearEl.textContent=new Date().getFullYear();
 });
 el('p2-goal').addEventListener('change',calc2);
@@ -3120,10 +3356,12 @@ function saveScenario(){
   const data=scenarioSnapshot();
   const list=safeParseJSON('mkt-scenarios',[]);
   list.unshift({name,data,date:new Date().toLocaleDateString('es-AR')});
-  if(list.length>12) list.pop();
-  safeSetJSON('mkt-scenarios',list);
+  const trimmed=list.length>12;
+  if(trimmed) list.pop();
+  if(!safeSetJSON('mkt-scenarios',list)){ toast('No se pudo guardar: almacenamiento lleno','err'); return; }
   renderScenarios();
   renderScenarioTable();
+  toast(trimmed?`Escenario "${name}" guardado (se eliminó el más antiguo)`:`Escenario "${name}" guardado`,'ok');
 }
 function loadScenario(idx){
   const list=safeParseJSON('mkt-scenarios',[]);
@@ -3132,17 +3370,19 @@ function loadScenario(idx){
   el('p1-budget').value=d.budget; el('p1-cpm').value=d.cpm; el('p1-ctr').value=d.ctr;
   el('p1-cpc').value=d.cpc; el('p1-cr').value=d.cr; el('p1-aov').value=d.aov; el('p1-margin').value=d.margin;
   setMode1(d.mode||'cpm');
-  document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');if(b.textContent.includes('Presupuesto')) b.classList.add('active');});
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  el('tab-presupuesto').classList.add('active');
+  navTo('presupuesto');
   calc1();
+  toast(`Escenario "${s.name}" cargado`,'ok');
 }
 function deleteScenario(idx){
   const list=safeParseJSON('mkt-scenarios',[]);
+  const removed=list[idx];
+  if(removed&&!confirm(`¿Eliminar el escenario "${removed.name}"?`)) return;
   list.splice(idx,1);
   safeSetJSON('mkt-scenarios',list);
   renderScenarios();
   renderScenarioTable();
+  if(removed) toast(`Escenario "${removed.name}" eliminado`,'info');
 }
 function clearScenarios(){
   localStorage.removeItem('mkt-scenarios');
@@ -3215,11 +3455,13 @@ function exportCSV(){
       rows.push(Array.from(tr.querySelectorAll('td')).slice(0,7).map(td=>td.textContent.trim()));
     });
   }
+  if(rows.length<=1){ toast('Esta pestaña no tiene datos para exportar','warn'); return; }
   const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
   const a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(csv);
   a.download='marketing-'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
+  toast('CSV descargado','ok');
 }
 
 // ---- PLANIFICADOR ANUAL ----
@@ -3349,20 +3591,24 @@ function calcChurn(){
 // ---- HISTORIAL ----
 function guardarCampania(){
   const nombre=el('hist-nombre').value.trim();
-  if(!nombre){ el('hist-nombre').focus(); return; }
+  if(!nombre){ el('hist-nombre').focus(); toast('Poné un nombre para la campaña','warn'); return; }
   const camp={id:Date.now(),nombre,plat:el('hist-plat').value,periodo:el('hist-periodo').value,spend:n('hist-spend'),rev:n('hist-rev'),conv:n('hist-conv'),clicks:n('hist-clicks'),notas:el('hist-notas').value,fecha:new Date().toLocaleDateString('es-AR')};
   const list=safeParseJSON('mkt-historial',[]);
   list.unshift(camp);
   safeSetJSON('mkt-historial',list);
   el('hist-nombre').value=''; el('hist-notas').value=''; el('hist-spend').value=0; el('hist-rev').value=0; el('hist-conv').value=0; el('hist-clicks').value=0;
   renderHistorial();
+  toast(`Campaña "${nombre}" guardada en el historial`,'ok');
 }
 function eliminarCampania(id){
-  const list=safeParseJSON('mkt-historial',[]).filter(c=>c.id!==id);
-  safeSetJSON('mkt-historial',list);
+  const all=safeParseJSON('mkt-historial',[]);
+  const target=all.find(c=>c.id===id);
+  if(target&&!confirm(`¿Eliminar la campaña "${target.nombre}" del historial?`)) return;
+  safeSetJSON('mkt-historial',all.filter(c=>c.id!==id));
   renderHistorial();
+  if(target) toast(`Campaña "${target.nombre}" eliminada`,'info');
 }
-function limpiarHistorial(){ if(confirm('¿Eliminar todo el historial?')){ localStorage.removeItem('mkt-historial'); renderHistorial(); } }
+function limpiarHistorial(){ if(confirm('¿Eliminar todo el historial?')){ localStorage.removeItem('mkt-historial'); renderHistorial(); toast('Historial vaciado','info'); } }
 function renderHistorial(){
   const list=safeParseJSON('mkt-historial',[]);
   const PLAT_COLORS={'Meta Ads':'#1877F2','Google Search':'#4285F4','TikTok':'#69C9D0','LinkedIn':'#0A66C2','YouTube':'#FF0000','Email':'#a371f7','Influencer':'#d29922'};
