@@ -15,9 +15,52 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:
 radial-gradient(circle at top left,rgba(88,166,255,.11),transparent 28%),
 radial-gradient(circle at top right,rgba(57,208,176,.08),transparent 24%),
-linear-gradient(180deg,#0d1117 0%,#0f141b 100%);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5}
-.app{display:flex;flex-direction:column;min-height:100vh}
-header{padding:1.25rem 2rem;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:1rem;flex-wrap:wrap;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0))}
+linear-gradient(180deg,#0d1117 0%,#0f141b 100%);color:var(--text);height:100vh;overflow:hidden;font-size:14px;line-height:1.5}
+.app{display:flex;flex-direction:column;height:100vh}
+.app-body{display:flex;flex:1;overflow:hidden;min-height:0}
+.sidebar{width:185px;flex-shrink:0;background:rgba(0,0,0,.2);border-right:1px solid rgba(255,255,255,.06);overflow-y:auto;padding:8px 0;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+main{flex:1;overflow-y:auto;padding:1.5rem 2rem}
+.sidebar-cat{padding:10px 14px 4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#4a5568;margin-top:6px}
+.sidebar-cat:first-child{margin-top:0}
+.sidebar-item{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 10px;font-size:12px;color:var(--text-muted);cursor:pointer;border:none;background:none;width:100%;text-align:left;border-left:2px solid transparent;font-family:inherit;transition:color .12s,background .12s,border-color .12s;white-space:nowrap}
+.sidebar-item:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.sidebar-item.active{color:#e6edf3;background:rgba(24,119,242,.15);border-left-color:#1877F2;font-weight:500}
+.sidebar-icon{font-size:13px;flex-shrink:0;width:18px;text-align:center}
+.sidebar-divider{height:1px;background:rgba(255,255,255,.06);margin:6px 14px}
+/* Help bar */
+#help-bar{background:rgba(24,119,242,.07);border-bottom:1px solid rgba(24,119,242,.18);font-size:12px;flex-shrink:0;overflow:hidden;transition:max-height .25s ease}
+#help-bar.collapsed{max-height:36px}
+#help-bar.expanded{max-height:300px}
+.help-trigger{display:flex;align-items:center;justify-content:space-between;padding:8px 1.5rem;cursor:pointer;user-select:none}
+.help-trigger span:first-child{color:var(--blue);font-weight:500}
+.help-chevron{color:var(--text-muted);font-size:14px;transition:transform .2s}
+#help-bar.expanded .help-chevron{transform:rotate(90deg)}
+.help-body{padding:0 1.5rem 12px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.help-when{color:var(--text-muted);font-size:12px;line-height:1.6}
+.help-when strong{color:var(--text);display:block;margin-bottom:3px}
+.help-steps{list-style:none;padding:0}
+.help-steps li{color:var(--text-muted);padding:2px 0;font-size:11px;padding-left:14px;position:relative}
+.help-steps li::before{content:'→';position:absolute;left:0;color:var(--blue)}
+.help-tip{grid-column:1/-1;background:rgba(57,208,176,.08);border-left:2px solid var(--cyan);padding:6px 10px;border-radius:0 4px 4px 0;font-size:11px;color:var(--text-muted)}
+.help-tip strong{color:var(--cyan)}
+/* Use-case cards (Dashboard) */
+.usecase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:1.5rem}
+.usecase-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer;transition:border-color .15s,background .15s;text-align:left}
+.usecase-card:hover{border-color:#1877F2;background:rgba(24,119,242,.06)}
+.usecase-card .uc-icon{font-size:22px;margin-bottom:6px}
+.usecase-card .uc-q{font-size:12px;color:var(--text-muted);margin-bottom:4px}
+.usecase-card .uc-title{font-size:13px;font-weight:600;color:var(--text)}
+.usecase-card .uc-tab{font-size:10px;color:var(--blue);margin-top:6px}
+/* Benchmark context under results */
+.bench-ref{display:flex;align-items:center;justify-content:space-between;padding:3px 10px;font-size:10px;color:var(--text-muted);margin-top:-4px;margin-bottom:4px}
+.bench-tag{padding:1px 7px;border-radius:8px;font-size:10px;font-weight:600}
+.bench-ok{background:rgba(63,185,80,.15);color:var(--green)}
+.bench-hi{background:rgba(248,81,73,.15);color:var(--red)}
+.bench-lo{background:rgba(210,153,34,.15);color:var(--amber)}
+header{padding:1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:1rem;flex-wrap:wrap;flex-shrink:0;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0))}
 .logo{width:36px;height:36px;background:linear-gradient(135deg,#1877F2,#39d0b0);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 8px 22px rgba(24,119,242,.35)}
 header h1{font-size:18px;font-weight:600}
 header p{color:var(--text-muted);font-size:12px}
@@ -93,7 +136,17 @@ input[type=number]{-moz-appearance:textfield}
 .badge-amber{background:rgba(210,153,34,.15);color:var(--amber)}
 .info{display:inline-block;width:14px;height:14px;background:var(--bg-hover);border-radius:50%;text-align:center;line-height:14px;font-size:9px;color:var(--text-muted);cursor:help;vertical-align:middle;margin-left:3px;position:relative}
 .info:hover::after{content:attr(data-t);position:absolute;left:50%;bottom:calc(100% + 4px);transform:translateX(-50%);background:#1c2128;border:1px solid var(--border);color:var(--text);font-size:11px;padding:4px 8px;border-radius:4px;white-space:nowrap;z-index:100}
-@media(max-width:768px){main{padding:1rem}.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}header{padding:1rem}.tabs{padding:0 1rem}}
+.sidebar-toggle{display:none;background:none;border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);width:34px;height:34px;font-size:16px;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0}
+.sidebar-toggle:hover{background:var(--bg-hover)}
+.sidebar-backdrop{display:none}
+@media(max-width:768px){
+  main{padding:1rem}.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}header{padding:1rem}.tabs{padding:0 1rem}
+  .sidebar-toggle{display:flex}
+  .sidebar{position:fixed;top:0;left:0;bottom:0;z-index:50;width:250px;background:#0d1117;transform:translateX(-100%);transition:transform .2s ease}
+  .sidebar.open{transform:translateX(0);box-shadow:0 0 40px rgba(0,0,0,.6)}
+  .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40}
+  .sidebar-backdrop.show{display:block}
+}
 
 /* ===== UI IMPROVEMENTS ===== */
 /* 1. Tab activo con background sutil + esquinas redondeadas arriba */
@@ -139,6 +192,27 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
 .funnel-preset-btn.active{background:var(--bg-hover);color:var(--text);border-color:#555}
 .funnel-label-input{background:none;border:none;border-bottom:1px dashed rgba(255,255,255,.15);color:var(--text-muted);font-size:12px;font-weight:500;font-family:inherit;outline:none;width:150px;padding:0 2px;transition:border-color .15s,color .15s}
 .funnel-label-input:focus{border-bottom-color:#1877F2;color:var(--text)}
+/* Recomendador */
+.bench-mode-row{display:flex;gap:8px;margin-bottom:1.25rem}
+.bench-mode-btn{padding:.45rem 1.1rem;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-muted);font-size:13px;cursor:pointer;font-family:inherit;transition:all .15s;font-weight:500}
+.bench-mode-btn:hover{color:var(--text)}
+.bench-mode-btn.active{background:#1877F2;border-color:#1877F2;color:#fff}
+.recom-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.recom-card{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem .5rem;cursor:pointer;font-family:inherit;color:var(--text-muted);font-size:12px;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.recom-card:hover{border-color:#555;color:var(--text)}
+.recom-card.active{border-color:#1877F2;background:rgba(24,119,242,.1);color:var(--text)}
+.recom-card .recom-icon{font-size:22px;line-height:1}
+.recom-card .recom-label{font-weight:500;line-height:1.3}
+.plat-rec{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.875rem 1rem;margin-bottom:8px;display:grid;grid-template-columns:auto 1fr auto;gap:.75rem;align-items:start}
+.plat-rec-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.plat-rec-name{font-size:13px;font-weight:600;margin-bottom:2px}
+.plat-rec-tipo{font-size:11px;color:var(--text-muted);margin-bottom:4px}
+.plat-rec-nota{font-size:11px;color:var(--text-muted);font-style:italic}
+.plat-rec-pct{font-size:18px;font-weight:700;color:var(--blue);text-align:right;white-space:nowrap}
+.plat-rec-kpis{font-size:10px;color:var(--text-muted);text-align:right;line-height:1.6}
+.recom-tip{background:rgba(88,166,255,.08);border-left:3px solid var(--blue);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:.75rem 1rem;font-size:12px;color:var(--text-muted);margin-top:.875rem;line-height:1.6}
+.recom-tip strong{color:var(--text)}
+.recom-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:220px;color:var(--text-muted);font-size:13px;text-align:center;gap:.5rem}
 .tabs-wrap{position:relative;border-bottom:1px solid var(--border)}
 .tabs-wrap nav.tabs{border-bottom:none;padding:0 2rem}
 .tab-arrow{position:absolute;top:0;bottom:0;width:32px;border:none;background:var(--bg);color:var(--text-muted);font-size:18px;cursor:pointer;z-index:5;display:none;align-items:center;justify-content:center;transition:color .15s}
@@ -148,9 +222,36 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
 .tab-arrow.visible{display:flex}
 #scenario-bar{display:none;padding:.4rem 1.5rem;background:rgba(88,166,255,.06);border-bottom:1px solid rgba(88,166,255,.15);align-items:center;gap:8px;flex-wrap:wrap}
 #scenario-bar.show{display:flex}
+/* ===== NUEVOS TABS ===== */
+/* Planificador Anual */
+.month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.month-card{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px}
+.month-card.peak{border-color:var(--amber);background:rgba(210,153,34,.07)}
+.month-name{font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
+.month-badge{font-size:9px;background:rgba(210,153,34,.2);color:var(--amber);padding:1px 5px;border-radius:8px}
+.month-pct{font-size:10px;margin-top:3px;text-align:right}
+/* Influencers */
+.er-tier{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.inf-table{width:100%;border-collapse:collapse;font-size:12px}
+.inf-table th,.inf-table td{padding:.4rem .75rem;border-bottom:1px solid var(--border)}
+.inf-table th{background:var(--bg-input);color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:.4px}
+/* Dashboard */
+.dash-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin:1rem 0 .5rem;padding-bottom:.3rem;border-bottom:1px solid var(--border)}
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:.5rem}
+.dash-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem}
+.dash-val{font-size:20px;font-weight:700;line-height:1;margin-bottom:3px}
+.dash-lbl{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px}
+/* Historial */
+.hist-row{display:grid;grid-template-columns:1fr 80px 80px 70px 70px 60px 40px;gap:8px;align-items:center;padding:.5rem .75rem;border-radius:var(--radius-sm);background:var(--bg-input);margin-bottom:5px;font-size:12px;min-width:520px}
+.hist-header{color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:.4px;background:none!important;padding:.3rem .75rem!important;margin-bottom:2px}
+#hist-lista{overflow-x:auto}
+/* Creatividades */
+.creat-week{display:flex;gap:3px;margin-top:.5rem;flex-wrap:wrap}
+.creat-block{height:22px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:rgba(255,255,255,.9);flex-shrink:0}
 @media print{nav.tabs,#scenario-bar,.header-right{display:none!important}.tab-content{display:block!important;page-break-after:always}body,main{background:#fff!important;color:#000!important}.card,.metric-mini,.hero-card,.result-row,.bench-wrap{background:#fff!important;border-color:#ddd!important;color:#000!important}.rv,.hero-val,.funnel-val,.rv.green,.rv.red,.rv.amber,.rv.blue,.rv.purple,.rv.cyan{color:#000!important}header{border:none}}
-.mix-hdr{display:grid;grid-template-columns:115px 58px 65px 58px 55px 70px;gap:4px;font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;padding:2px 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px}
-.mix-row{display:grid;grid-template-columns:115px 58px 65px 58px 55px 70px;gap:4px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)}
+.mix-table-wrap{overflow-x:auto}
+.mix-hdr{display:grid;grid-template-columns:115px 58px 65px 58px 55px 70px;gap:4px;font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;padding:2px 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px;min-width:460px}
+.mix-row{display:grid;grid-template-columns:115px 58px 65px 58px 55px 70px;gap:4px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);min-width:460px}
 .mix-row:last-child{border-bottom:none}
 .mix-row input[type=number]{font-size:12px;padding:.3rem .4rem;text-align:center}
 .mix-name{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;cursor:pointer;user-select:none}
@@ -242,12 +343,35 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
 .status-bad{background:rgba(248,81,73,.14);color:var(--red)}
 @media(max-width:980px){.proposal-grid,.scenario-quote{grid-template-columns:1fr}}
 @media(max-width:980px){.header-kpis,.dashboard-grid,.attr-grid,.summary-grid{grid-template-columns:1fr}}
+.access-gate{position:fixed;inset:0;z-index:1000;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:1rem}
+.access-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;max-width:320px;width:100%;text-align:center;box-shadow:var(--glow)}
+.access-icon{font-size:32px;margin-bottom:.5rem}
+.access-card h2{font-size:18px;font-weight:600;margin-bottom:.4rem}
+.access-card p{color:var(--text-muted);font-size:13px;margin-bottom:1.25rem}
+.access-card input[type=password]{width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:.6rem .75rem;font-size:14px;margin-bottom:.75rem;outline:none;text-align:center;font-family:inherit}
+.access-card input[type=password]:focus{border-color:#1877F2;box-shadow:0 0 0 3px rgba(24,119,242,.14)}
+.access-card button{width:100%}
+.access-error{color:var(--red);font-size:12px;margin-top:.75rem;min-height:14px}
 </style>
 </head>
 <body>
+<div id="access-gate" class="access-gate">
+  <form class="access-card" onsubmit="return checkAccessPassword(event)">
+    <div class="access-icon">&#128274;</div>
+    <h2>Acceso restringido</h2>
+    <p>Ingresá la contraseña para entrar a Mkteado</p>
+    <input type="password" id="access-pass" placeholder="Contraseña" autocomplete="off" autofocus>
+    <button type="submit" class="btn btn-primary">Entrar</button>
+    <div class="access-error" id="access-error"></div>
+  </form>
+</div>
+<script>
+  try{ if(sessionStorage.getItem('mkt-unlocked')==='1') document.getElementById('access-gate').style.display='none'; }catch(e){}
+</script>
 <div class="app">
 
 <header>
+  <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Abrir/cerrar menú" aria-expanded="false" aria-controls="app-sidebar">&#9776;</button>
   <div class="logo">📊</div>
   <div>
     <h1>Mkteado</h1>
@@ -257,8 +381,10 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
     <button class="btn" onclick="saveScenario()" title="Guardar escenario actual">Guardar</button>
     <button class="btn" onclick="exportCSV()" title="Descargar datos en Excel/CSV">Exportar CSV</button>
     <button class="btn" onclick="window.print()" title="Imprimir / exportar PDF">Imprimir</button>
+    <button class="btn" onclick="resetDatos()" title="Borrar todos los datos cargados y empezar de cero">Limpiar datos</button>
+    <span style="font-size:11px;color:var(--text-muted)" id="autosave-hint">Guardado automático activo</span>
     <label>Moneda</label>
-    <select id="g-currency" onchange="setCurrency(this.value)" style="width:auto;padding:.3rem .5rem;font-size:13px">
+    <select id="g-currency" aria-label="Moneda" onchange="setCurrency(this.value)" style="width:auto;padding:.3rem .5rem;font-size:13px">
       <option value="ARS" selected>$ ARS</option>
       <option value="USD">$ USD</option>
       <option value="EUR">€ EUR</option>
@@ -271,32 +397,63 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
   </div>
 </header>
 
-<div class="tabs-wrap">
-<button class="tab-arrow left" id="tab-arr-l" onclick="scrollTabs(-200)">‹</button>
-<nav class="tabs" id="tabs-nav">
-  <button class="tab-btn active" onclick="switchTab('dashboard',this)">Overview</button>
-  <button class="tab-btn" onclick="switchTab('presupuesto',this)">💰 Presupuesto</button>
-  <button class="tab-btn" onclick="switchTab('objetivos',this)">🎯 Objetivo</button>
-  <button class="tab-btn" onclick="switchTab('funnel',this)">🔽 Funnel</button>
-  <button class="tab-btn" onclick="switchTab('metricas',this)">📐 Métricas</button>
-  <button class="tab-btn" onclick="switchTab('roi',this)">📈 ROI / ROAS</button>
-  <button class="tab-btn" onclick="switchTab('ltvcac',this)">👥 LTV / CAC</button>
-  <button class="tab-btn" onclick="switchTab('propuesta',this)">🧾 Propuesta Cliente</button>
-  <button class="tab-btn" onclick="switchTab('sensibilidad',this)">🧪 Sensibilidad</button>
-  <button class="tab-btn" onclick="switchTab('forecast',this)">🗓 Forecast</button>
-  <button class="tab-btn" onclick="switchTab('mixmedia',this)">🔀 Media Mix</button>
-  <button class="tab-btn" onclick="switchTab('escalado',this)">⚡ Escalado</button>
-  <button class="tab-btn" onclick="switchTab('comparador',this)">⚖️ A vs B</button>
-  <button class="tab-btn" onclick="switchTab('escenarios',this)">🧷 Escenarios</button>
-  <button class="tab-btn" onclick="switchTab('benchmarks',this)">📊 Benchmarks</button>
-  <button class="tab-btn" onclick="switchTab('agencia',this)">🏢 Agencia</button>
-  <button class="tab-btn" onclick="switchTab('email',this)">📧 Email</button>
+<div class="app-body">
+<div class="sidebar-backdrop" onclick="toggleSidebar(false)"></div>
+
+<nav class="sidebar" id="app-sidebar">
+  <div class="sidebar-cat">📅 Planificación</div>
+  <button class="sidebar-item" onclick="switchTab('presupuesto',this)"><span class="sidebar-icon">💰</span>Presupuesto</button>
+  <button class="sidebar-item" onclick="switchTab('objetivos',this)"><span class="sidebar-icon">🎯</span>Objetivo</button>
+  <button class="sidebar-item" onclick="switchTab('anual',this)"><span class="sidebar-icon">📅</span>Planif. Anual</button>
+  <button class="sidebar-item" onclick="switchTab('mixmedia',this)"><span class="sidebar-icon">🔀</span>Media Mix</button>
+
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-cat">📊 Análisis</div>
+  <button class="sidebar-item" onclick="switchTab('funnel',this)"><span class="sidebar-icon">🔽</span>Funnel</button>
+  <button class="sidebar-item" onclick="switchTab('escalado',this)"><span class="sidebar-icon">⚡</span>Escalado</button>
+  <button class="sidebar-item" onclick="switchTab('comparador',this)"><span class="sidebar-icon">⚖️</span>A vs B</button>
+  <button class="sidebar-item active" onclick="switchTab('dashboard',this)"><span class="sidebar-icon">📊</span>Dashboard</button>
+
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-cat">📐 Métricas</div>
+  <button class="sidebar-item" onclick="switchTab('roi',this)"><span class="sidebar-icon">💹</span>ROI / ROAS</button>
+  <button class="sidebar-item" onclick="switchTab('ltvcac',this)"><span class="sidebar-icon">👥</span>LTV / CAC</button>
+  <button class="sidebar-item" onclick="switchTab('churn',this)"><span class="sidebar-icon">🔄</span>Retención</button>
+  <button class="sidebar-item" onclick="switchTab('metricas',this)"><span class="sidebar-icon">📐</span>Calculadora</button>
+
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-cat">📡 Canales</div>
+  <button class="sidebar-item" onclick="switchTab('email',this)"><span class="sidebar-icon">📧</span>Email</button>
+  <button class="sidebar-item" onclick="switchTab('influencers',this)"><span class="sidebar-icon">🤳</span>Influencers</button>
+  <button class="sidebar-item" onclick="switchTab('whatsapp',this)"><span class="sidebar-icon">💬</span>WhatsApp</button>
+  <button class="sidebar-item" onclick="switchTab('creatividades',this)"><span class="sidebar-icon">🎨</span>Creatividades</button>
+
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-cat">📚 Referencia</div>
+  <button class="sidebar-item" onclick="switchTab('benchmarks',this)"><span class="sidebar-icon">📊</span>Benchmarks</button>
+  <button class="sidebar-item" onclick="switchTab('historial',this)"><span class="sidebar-icon">📂</span>Historial</button>
+
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-cat">🏢 Negocio</div>
+  <button class="sidebar-item" onclick="switchTab('agencia',this)"><span class="sidebar-icon">🏢</span>Agencia</button>
+  <button class="sidebar-item" onclick="switchTab('propuesta',this)"><span class="sidebar-icon">🧾</span>Propuesta</button>
+  <button class="sidebar-item" onclick="switchTab('forecast',this)"><span class="sidebar-icon">🗓</span>Forecast</button>
+  <button class="sidebar-item" onclick="switchTab('sensibilidad',this)"><span class="sidebar-icon">🧪</span>Sensibilidad</button>
+  <button class="sidebar-item" onclick="switchTab('escenarios',this)"><span class="sidebar-icon">🧷</span>Escenarios</button>
 </nav>
-<button class="tab-arrow right" id="tab-arr-r" onclick="scrollTabs(200)">›</button>
-</div>
+
+<div class="main-area">
 <div id="scenario-bar">
   <span style="font-size:11px;color:var(--text-muted)">Escenarios guardados:</span>
   <div id="scenario-chips" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+</div>
+
+<div id="help-bar" class="collapsed">
+  <div class="help-trigger" onclick="toggleHelp()">
+    <span>💡 <span id="help-title">Cómo usar esta herramienta</span></span>
+    <span class="help-chevron">›</span>
+  </div>
+  <div class="help-body" id="help-body"></div>
 </div>
 
 <main>
@@ -304,8 +461,14 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
 <!-- ===== TAB 0: DASHBOARD ===== -->
 <section id="tab-dashboard" class="tab-content active">
   <div class="section-header">
-    <div class="section-title">Overview Ejecutivo</div>
-    <div class="section-desc">Un resumen de salud para decidir rápido dónde optimizar y dónde escalar</div>
+    <div class="section-title">¿Qué necesitás calcular hoy?</div>
+    <div class="section-desc">Elegí según tu situación y te llevamos a la herramienta correcta</div>
+  </div>
+  <div class="usecase-grid" id="dash-usecase-grid"></div>
+  <hr class="divider">
+  <div class="section-header" style="margin-top:1rem">
+    <div class="section-title" style="font-size:14px">Overview Ejecutivo</div>
+    <div class="section-desc">KPIs consolidados de todas las herramientas — <button class="btn btn-primary" onclick="refreshDashboard()" style="font-size:11px;padding:3px 10px;vertical-align:middle">&#8635; Actualizar</button></div>
   </div>
   <div class="header-kpis">
     <div class="kpi-shell">
@@ -417,13 +580,16 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
         <div class="hero-card"><div class="hero-val" id="p1-r-clicks">1.500</div><div class="hero-lbl">Clics</div></div>
       </div>
       <div class="result-row"><span class="rl">Conversiones</span><span class="rv green" id="p1-r-conv">45</span></div>
-      <div class="result-row"><span class="rl">CPA (costo por conversión)</span><span class="rv amber" id="p1-r-cpa">$22,22</span></div>
-      <div class="result-row"><span class="rl">CPC efectivo</span><span class="rv" id="p1-r-cpc">$0,67</span></div>
-      <div class="result-row"><span class="rl">CPL (costo por lead)</span><span class="rv" id="p1-r-cpl">$22,22</span></div>
-      <div class="result-row"><span class="rl">Ingresos estimado</span><span class="rv green" id="p1-r-rev">$2.250</span></div>
-      <div class="result-row key"><span class="rl">ROAS</span><span class="rv purple" id="p1-r-roas">2,25x</span></div>
-      <div class="result-row"><span class="rl">ROAS neto (ajustado por margen)</span><span class="rv" id="p1-r-netroas">0,90x</span></div>
-      <div class="result-row key"><span class="rl">Ganancia neta</span><span class="rv" id="p1-r-profit">$100</span></div>
+      <div class="result-row"><span class="rl">CPA — cuánto pagás por cada resultado</span><span class="rv amber" id="p1-r-cpa">$22,22</span></div>
+      <div class="bench-ref" id="p1-bench-cpa"></div>
+      <div class="result-row"><span class="rl">CPC — costo por cada clic recibido</span><span class="rv" id="p1-r-cpc">$0,67</span></div>
+      <div class="bench-ref" id="p1-bench-cpc"></div>
+      <div class="result-row"><span class="rl">CPL — costo por lead generado</span><span class="rv" id="p1-r-cpl">$22,22</span></div>
+      <div class="result-row"><span class="rl">Ingresos estimados</span><span class="rv green" id="p1-r-rev">$2.250</span></div>
+      <div class="result-row key"><span class="rl">ROAS — ingresos por cada $ invertido</span><span class="rv purple" id="p1-r-roas">2,25x</span></div>
+      <div class="bench-ref" id="p1-bench-roas"></div>
+      <div class="result-row"><span class="rl">ROAS neto (descontando costo del producto)</span><span class="rv" id="p1-r-netroas">0,90x</span></div>
+      <div class="result-row key"><span class="rl">Ganancia neta estimada</span><span class="rv" id="p1-r-profit">$100</span></div>
       <div id="p1-alert"></div>
     </div>
   </div>
@@ -557,7 +723,7 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
       </div>
       <div class="funnel-stage">
         <div class="funnel-meta">
-          <span class="funnel-name" style="display:flex;align-items:center;gap:4px">📋 <input type="text" id="f-stage3-name" value="Visitas al producto" class="funnel-label-input" oninput="updateFunnelLabels()"></span>
+          <span class="funnel-name" style="display:flex;align-items:center;gap:4px">📋 <input type="text" id="f-stage3-name" value="Visitas al producto" aria-label="Nombre de la etapa 3 del funnel" class="funnel-label-input" oninput="updateFunnelLabels()"></span>
           <span class="funnel-rate" id="f-rate-lead"></span>
         </div>
         <div class="funnel-bar-wrap"><div class="funnel-bar" id="f-bar-lead" style="background:rgba(57,208,176,.35)"></div><span class="funnel-val cyan" id="f-v-lead">-</span></div>
@@ -565,7 +731,7 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
       </div>
       <div class="funnel-stage">
         <div class="funnel-meta">
-          <span class="funnel-name" style="display:flex;align-items:center;gap:4px">⭐ <input type="text" id="f-stage4-name" value="Carritos / Checkouts" class="funnel-label-input" oninput="updateFunnelLabels()"></span>
+          <span class="funnel-name" style="display:flex;align-items:center;gap:4px">⭐ <input type="text" id="f-stage4-name" value="Carritos / Checkouts" aria-label="Nombre de la etapa 4 del funnel" class="funnel-label-input" oninput="updateFunnelLabels()"></span>
           <span class="funnel-rate" id="f-rate-sql"></span>
         </div>
         <div class="funnel-bar-wrap"><div class="funnel-bar" id="f-bar-sql" style="background:rgba(210,153,34,.35)"></div><span class="funnel-val amber" id="f-v-sql">-</span></div>
@@ -1120,36 +1286,63 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
 <!-- ===== TAB: BENCHMARKS ===== -->
 <section id="tab-benchmarks" class="tab-content">
   <div class="section-header">
-    <div class="section-title">Benchmarks de Industria</div>
-    <div class="section-desc">Datos de referencia por plataforma e industria para saber si tus métricas son buenas o malas</div>
+    <div class="section-title">Benchmarks & Recomendador</div>
+    <div class="section-desc">Consultá métricas de referencia o recibí una recomendación de campaña para tu rubro</div>
   </div>
-  <div class="card">
-    <div class="card-title">Filtrar por plataforma</div>
-    <div class="filter-row" id="bench-plat-filters">
-      <button class="filter-btn active" onclick="filterBench('',this)">Todas</button>
-      <button class="filter-btn" onclick="filterBench('Meta',this)">Meta Ads</button>
-      <button class="filter-btn" onclick="filterBench('Google Search',this)">Google Search</button>
-      <button class="filter-btn" onclick="filterBench('Google Display',this)">Google Display</button>
-      <button class="filter-btn" onclick="filterBench('TikTok',this)">TikTok</button>
-      <button class="filter-btn" onclick="filterBench('LinkedIn',this)">LinkedIn</button>
-      <button class="filter-btn" onclick="filterBench('YouTube',this)">YouTube</button>
+
+  <div class="bench-mode-row">
+    <button class="bench-mode-btn active" id="bm-tabla" onclick="setBenchMode('tabla')">📊 Tabla de benchmarks</button>
+    <button class="bench-mode-btn" id="bm-recom" onclick="setBenchMode('recom')">💡 Recomendador de campañas</button>
+  </div>
+
+  <!-- MODO TABLA -->
+  <div id="bench-tabla-mode">
+    <div class="card">
+      <div class="card-title">Filtrar por plataforma</div>
+      <div class="filter-row" id="bench-plat-filters">
+        <button class="filter-btn active" onclick="filterBench('',this)">Todas</button>
+        <button class="filter-btn" onclick="filterBench('Meta',this)">Meta Ads</button>
+        <button class="filter-btn" onclick="filterBench('Google Search',this)">Google Search</button>
+        <button class="filter-btn" onclick="filterBench('Google Display',this)">Google Display</button>
+        <button class="filter-btn" onclick="filterBench('TikTok',this)">TikTok</button>
+        <button class="filter-btn" onclick="filterBench('LinkedIn',this)">LinkedIn</button>
+        <button class="filter-btn" onclick="filterBench('YouTube',this)">YouTube</button>
+      </div>
+      <div class="bench-wrap">
+        <table class="bench-table">
+          <thead><tr>
+            <th>Plataforma</th><th>Industria</th><th>CPM</th><th>CPC</th><th>CTR</th><th>Conv. Rate</th><th>CPA ref.</th><th></th>
+          </tr></thead>
+          <tbody id="bench-tbody"></tbody>
+        </table>
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);margin-top:.75rem">* Valores de referencia globales en USD. Varían según segmentación, creatividad, país y período.</p>
     </div>
-    <div class="bench-wrap">
-      <table class="bench-table">
-        <thead><tr>
-          <th>Plataforma</th>
-          <th>Industria</th>
-          <th>CPM</th>
-          <th>CPC</th>
-          <th>CTR</th>
-          <th>Conv. Rate</th>
-          <th>CPA ref.</th>
-          <th></th>
-        </tr></thead>
-        <tbody id="bench-tbody"></tbody>
-      </table>
+  </div>
+
+  <!-- MODO RECOMENDADOR -->
+  <div id="bench-recom-mode" style="display:none">
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:1.25rem">
+          <div class="card-title">1. ¿Cuál es tu rubro?</div>
+          <div class="recom-grid" id="recom-rubro-grid"></div>
+        </div>
+        <div class="card" id="recom-obj-card" style="display:none">
+          <div class="card-title">2. ¿Qué querés lograr?</div>
+          <div class="recom-grid" id="recom-obj-grid"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card" id="recom-placeholder-card">
+          <div class="recom-placeholder">
+            <span style="font-size:32px">💡</span>
+            <span>Seleccioná tu rubro y objetivo<br>para ver las recomendaciones</span>
+          </div>
+        </div>
+        <div id="recom-results" style="display:none"></div>
+      </div>
     </div>
-    <p style="font-size:11px;color:var(--text-muted);margin-top:.75rem">* Valores de referencia globales en USD. Varían según segmentación, creatividad, país y período. Usalos como punto de partida, no como objetivo fijo.</p>
   </div>
 </section>
 
@@ -1162,7 +1355,7 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
   <div class="grid-2" style="margin-bottom:1.25rem">
     <!-- CAMPAÑA A -->
     <div class="card">
-      <div class="campaign-header"><span class="camp-badge camp-a">A</span><input type="text" id="cmp-a-name" value="Campaña A" style="background:none;border:none;color:var(--text);font-size:13px;font-weight:600;outline:none;width:100%" oninput="calcComp()"></div>
+      <div class="campaign-header"><span class="camp-badge camp-a">A</span><input type="text" id="cmp-a-name" value="Campaña A" aria-label="Nombre de la campaña A" style="background:none;border:none;color:var(--text);font-size:13px;font-weight:600;outline:none;width:100%" oninput="calcComp()"></div>
       <div class="mode-toggle">
         <button class="mode-btn active" id="cmp-a-m-cpm" onclick="setModeComp('a','cpm')">Por CPM</button>
         <button class="mode-btn" id="cmp-a-m-cpc" onclick="setModeComp('a','cpc')">Por CPC</button>
@@ -1181,7 +1374,7 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
     </div>
     <!-- CAMPAÑA B -->
     <div class="card">
-      <div class="campaign-header"><span class="camp-badge camp-b">B</span><input type="text" id="cmp-b-name" value="Campaña B" style="background:none;border:none;color:var(--text);font-size:13px;font-weight:600;outline:none;width:100%" oninput="calcComp()"></div>
+      <div class="campaign-header"><span class="camp-badge camp-b">B</span><input type="text" id="cmp-b-name" value="Campaña B" aria-label="Nombre de la campaña B" style="background:none;border:none;color:var(--text);font-size:13px;font-weight:600;outline:none;width:100%" oninput="calcComp()"></div>
       <div class="mode-toggle">
         <button class="mode-btn active" id="cmp-b-m-cpm" onclick="setModeComp('b','cpm')">Por CPM</button>
         <button class="mode-btn" id="cmp-b-m-cpc" onclick="setModeComp('b','cpc')">Por CPC</button>
@@ -1275,6 +1468,7 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
         </div>
       </div>
       <hr class="divider" style="margin:.5rem 0 .875rem">
+      <div class="mix-table-wrap">
       <div class="mix-hdr">
         <span>Plataforma</span>
         <span style="text-align:center">% presup.</span>
@@ -1337,6 +1531,7 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
         <input type="number" id="mix-li-cr" value="1.5" step=".1" oninput="calcMix()">
         <span class="mix-result off" id="mix-li-r">-</span>
       </div>
+      </div>
       <div style="margin-top:.75rem;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-primary" onclick="mixDistribuir()">Distribuir % en partes iguales</button>
         <button class="btn" onclick="mixReset()">Resetear</button>
@@ -1396,13 +1591,249 @@ input[type=number]:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3p
   </div>
 </section>
 
-</main>
-</div>
+<!-- ===== PLANIFICADOR ANUAL ===== -->
+<section id="tab-anual" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Planificador Anual</div>
+    <div class="section-desc">Distribuí tu presupuesto mes a mes con variaciones estacionales</div>
+  </div>
+  <div class="grid-2">
+    <div>
+      <div class="card" style="margin-bottom:1.25rem">
+        <div class="card-title">Configuración</div>
+        <div class="field"><label>Presupuesto base mensual</label><div class="input-group"><span class="input-prefix" id="an-sym">$</span><input type="number" id="an-base" value="5000" step="100" oninput="calcAnual()"></div></div>
+        <div class="field"><label>Año</label><input type="number" id="an-year" value="2025" oninput="calcAnual()"></div>
+        <hr class="divider">
+        <div class="card-title">Distribución rápida</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn" onclick="anualPreset('equal')">Igual todos los meses</button>
+          <button class="btn" onclick="anualPreset('q4')">Foco Q4</button>
+          <button class="btn" onclick="anualPreset('hotsale')">Hot Sale + Navidad</button>
+          <button class="btn" onclick="anualPreset('verano')">Foco Verano</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Resumen</div>
+        <div class="hero-grid"><div class="hero-card"><div class="hero-val green" id="an-r-total">$60.000</div><div class="hero-lbl">Total anual</div></div><div class="hero-card"><div class="hero-val" id="an-r-avg">$5.000</div><div class="hero-lbl">Promedio mensual</div></div></div>
+        <div class="result-row"><span class="rl">Mes más alto</span><span class="rv amber" id="an-r-max">—</span></div>
+        <div class="result-row"><span class="rl">Mes más bajo</span><span class="rv" id="an-r-min">—</span></div>
+        <div class="result-row"><span class="rl">Variación pico vs base</span><span class="rv" id="an-r-var">0%</span></div>
+        <div class="chart-wrap"><canvas id="an-chart"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Presupuesto por mes — clic en 🔔 para marcar temporada alta</div>
+      <div class="month-grid" id="an-month-grid"></div>
+    </div>
+  </div>
+</section>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<!-- ===== INFLUENCERS ===== -->
+<section id="tab-influencers" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Calculadora de Influencers</div>
+    <div class="section-desc">Evaluá si una colaboración vale la pena vs paid media</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Datos del influencer</div>
+      <div class="field"><label>Seguidores</label><input type="number" id="inf-seg" value="50000" step="1000" oninput="calcInf()"></div>
+      <div class="field"><label>Engagement Rate (likes + comentarios / seguidores)</label><div class="input-group suf"><input type="number" id="inf-er" value="3.5" step=".1" oninput="calcInf()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Costo por post / story</label><div class="input-group"><span class="input-prefix" id="inf-sym">$</span><input type="number" id="inf-costo" value="300" step="50" oninput="calcInf()"></div></div>
+      <div class="field"><label>Cantidad de posts / stories</label><input type="number" id="inf-posts" value="3" min="1" oninput="calcInf()"></div>
+      <div class="field"><label>Tasa de conversión estimada (% de alcance)</label><div class="input-group suf"><input type="number" id="inf-cr" value="0.5" step=".1" oninput="calcInf()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Ticket promedio</label><div class="input-group"><span class="input-prefix" id="inf-aov-sym">$</span><input type="number" id="inf-aov" value="80" oninput="calcInf()"></div></div>
+      <hr class="divider">
+      <div class="card-title">Benchmarks de ER por tamaño</div>
+      <table class="inf-table">
+        <tr><th>Tipo</th><th>Seguidores</th><th>ER promedio</th><th>Tu ER</th></tr>
+        <tr><td>Nano</td><td>&lt;10K</td><td>5-8%</td><td id="inf-b-nano">—</td></tr>
+        <tr><td>Micro</td><td>10K-100K</td><td>2-5%</td><td id="inf-b-micro">—</td></tr>
+        <tr><td>Macro</td><td>100K-1M</td><td>1-3%</td><td id="inf-b-macro">—</td></tr>
+        <tr><td>Mega</td><td>&gt;1M</td><td>0.5-1.5%</td><td id="inf-b-mega">—</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Análisis de la colaboración</div>
+      <div class="hero-grid" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="hero-card"><div class="hero-val blue" id="inf-r-alcance">—</div><div class="hero-lbl">Alcance est.</div></div>
+        <div class="hero-card"><div class="hero-val amber" id="inf-r-cpe">—</div><div class="hero-lbl">CPE</div></div>
+        <div class="hero-card"><div class="hero-val green" id="inf-r-roi">—</div><div class="hero-lbl">ROI</div></div>
+      </div>
+      <div class="result-row"><span class="rl">Inversión total (posts × costo)</span><span class="rv" id="inf-r-inversion">—</span></div>
+      <div class="result-row"><span class="rl">Engagements totales</span><span class="rv blue" id="inf-r-eng">—</span></div>
+      <div class="result-row"><span class="rl">Costo por engagement (CPE)</span><span class="rv" id="inf-r-cpe2">—</span></div>
+      <div class="result-row"><span class="rl">Conversiones estimadas</span><span class="rv green" id="inf-r-conv">—</span></div>
+      <div class="result-row"><span class="rl">Ingresos estimados</span><span class="rv green" id="inf-r-rev">—</span></div>
+      <div class="result-row key"><span class="rl">Costo por conversión (CPA)</span><span class="rv amber" id="inf-r-cpa">—</span></div>
+      <hr class="divider">
+      <div class="card-title">vs Meta Ads con el mismo presupuesto</div>
+      <div class="result-row"><span class="rl">Impresiones Meta (CPM $8)</span><span class="rv" id="inf-vs-imp">—</span></div>
+      <div class="result-row"><span class="rl">Clics Meta (CTR 1.5%)</span><span class="rv" id="inf-vs-clicks">—</span></div>
+      <div class="result-row"><span class="rl">Conversiones Meta (CR 2.5%)</span><span class="rv" id="inf-vs-conv">—</span></div>
+      <div id="inf-alert" style="margin-top:.75rem"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RETENCIÓN / CHURN ===== -->
+<section id="tab-churn" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Retención & Churn</div>
+    <div class="section-desc">Para negocios de suscripción, SaaS o membresías</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Parámetros</div>
+      <div class="field"><label>Clientes actuales</label><input type="number" id="ch-clientes" value="200" oninput="calcChurn()"></div>
+      <div class="field"><label>Nuevos clientes por mes</label><input type="number" id="ch-nuevos" value="30" oninput="calcChurn()"></div>
+      <div class="field"><label>Churn rate mensual</label><div class="input-group suf"><input type="number" id="ch-churn" value="5" step=".5" oninput="calcChurn()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>MRR por cliente (facturación mensual)</label><div class="input-group"><span class="input-prefix" id="ch-sym">$</span><input type="number" id="ch-mrr" value="50" oninput="calcChurn()"></div></div>
+      <div class="field"><label>CAC actual</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="ch-cac" value="150" oninput="calcChurn()"></div></div>
+      <div class="field"><label>Meses a proyectar</label><input type="number" id="ch-meses" value="12" min="3" max="36" oninput="calcChurn()"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Métricas de Retención</div>
+      <div class="hero-grid" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="hero-card"><div class="hero-val green" id="ch-r-mrr">—</div><div class="hero-lbl">MRR actual</div></div>
+        <div class="hero-card"><div class="hero-val" id="ch-r-arr">—</div><div class="hero-lbl">ARR</div></div>
+        <div class="hero-card"><div class="hero-val amber" id="ch-r-churnc">—</div><div class="hero-lbl">Clientes perdidos/mes</div></div>
+      </div>
+      <div class="result-row"><span class="rl">Crecimiento neto de clientes/mes</span><span class="rv" id="ch-r-neto">—</span></div>
+      <div class="result-row key"><span class="rl">LTV ajustado por churn</span><span class="rv green" id="ch-r-ltv">—</span></div>
+      <div class="result-row"><span class="rl">Tiempo hasta recuperar CAC</span><span class="rv cyan" id="ch-r-payback">—</span></div>
+      <div class="result-row"><span class="rl">MRR perdido por churn/mes</span><span class="rv red" id="ch-r-mrrchurn">—</span></div>
+      <div class="result-row"><span class="rl">Para crecer: necesitás traer más de</span><span class="rv" id="ch-r-needed">—</span></div>
+      <div id="ch-alert" style="margin-top:.75rem"></div>
+      <div class="chart-wrap"><canvas id="ch-chart"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HISTORIAL ===== -->
+<section id="tab-historial" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Historial de Campañas</div>
+    <div class="section-desc">Registrá resultados reales y compará con las proyecciones</div>
+  </div>
+  <div class="grid-2" style="margin-bottom:1.25rem">
+    <div class="card">
+      <div class="card-title">Registrar campaña</div>
+      <div class="field"><label>Nombre de la campaña</label><input type="text" id="hist-nombre" placeholder="Ej: Meta - Agosto 2025" style="width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:.45rem .75rem;font-size:13px;font-family:inherit;outline:none"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+        <div class="field"><label>Plataforma</label><select id="hist-plat"><option>Meta Ads</option><option>Google Search</option><option>Google Shopping</option><option>TikTok</option><option>LinkedIn</option><option>YouTube</option><option>Email</option><option>Influencer</option></select></div>
+        <div class="field"><label>Mes / Período</label><input type="text" id="hist-periodo" placeholder="Ago 2025" style="width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:.45rem .75rem;font-size:13px;font-family:inherit;outline:none"></div>
+        <div class="field"><label>Presupuesto invertido</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="hist-spend" value="0"></div></div>
+        <div class="field"><label>Ingresos generados</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="hist-rev" value="0"></div></div>
+        <div class="field"><label>Conversiones</label><input type="number" id="hist-conv" value="0"></div>
+        <div class="field"><label>Clics</label><input type="number" id="hist-clicks" value="0"></div>
+      </div>
+      <div class="field"><label>Notas</label><input type="text" id="hist-notas" placeholder="Observaciones..." style="width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:.45rem .75rem;font-size:13px;font-family:inherit;outline:none"></div>
+      <div style="margin-top:.875rem"><button class="btn btn-primary" onclick="guardarCampania()">+ Guardar campaña</button></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Resumen del historial</div>
+      <div class="hero-grid">
+        <div class="hero-card"><div class="hero-val blue" id="hist-r-total">0</div><div class="hero-lbl">Campañas guardadas</div></div>
+        <div class="hero-card"><div class="hero-val green" id="hist-r-spend">$0</div><div class="hero-lbl">Total invertido</div></div>
+      </div>
+      <div class="result-row"><span class="rl">Total ingresos registrados</span><span class="rv green" id="hist-r-rev">$0</span></div>
+      <div class="result-row key"><span class="rl">ROAS promedio histórico</span><span class="rv purple" id="hist-r-roas">—</span></div>
+      <div class="result-row"><span class="rl">CPA promedio histórico</span><span class="rv amber" id="hist-r-cpa">—</span></div>
+      <div class="result-row"><span class="rl">Total conversiones</span><span class="rv" id="hist-r-conv">0</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.875rem">
+      <div class="card-title" style="margin:0">Registro de campañas</div>
+      <button class="btn" onclick="limpiarHistorial()" style="font-size:11px">&#128465; Limpiar todo</button>
+    </div>
+    <div id="hist-lista"><div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:13px">No hay campañas guardadas todavía</div></div>
+  </div>
+</section>
+
+<!-- ===== WHATSAPP / CRM ===== -->
+<section id="tab-whatsapp" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">WhatsApp & CRM</div>
+    <div class="section-desc">Métricas de conversación y seguimiento comercial</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Parámetros de conversación</div>
+      <div class="field"><label>Mensajes / conversaciones iniciadas</label><input type="number" id="wa-msgs" value="500" oninput="calcWA()"></div>
+      <div class="field"><label>Tasa de apertura / lectura</label><div class="input-group suf"><input type="number" id="wa-open" value="85" max="100" oninput="calcWA()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Tasa de respuesta</label><div class="input-group suf"><input type="number" id="wa-resp" value="40" max="100" oninput="calcWA()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Tasa de interés (avanzan en el proceso)</label><div class="input-group suf"><input type="number" id="wa-interest" value="30" max="100" oninput="calcWA()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Tasa de cierre (de los interesados)</label><div class="input-group suf"><input type="number" id="wa-close" value="20" max="100" oninput="calcWA()"><span class="input-suffix">%</span></div></div>
+      <div class="field"><label>Ticket promedio</label><div class="input-group"><span class="input-prefix" id="wa-sym">$</span><input type="number" id="wa-aov" value="200" oninput="calcWA()"></div></div>
+      <div class="field"><label>Costo mensual de la herramienta / gestión</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="wa-costo" value="50" oninput="calcWA()"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Resultados</div>
+      <div class="hero-grid">
+        <div class="hero-card"><div class="hero-val green" id="wa-r-ventas">—</div><div class="hero-lbl">Ventas cerradas</div></div>
+        <div class="hero-card"><div class="hero-val purple" id="wa-r-roi">—</div><div class="hero-lbl">ROI</div></div>
+      </div>
+      <div class="result-row"><span class="rl">Mensajes leídos</span><span class="rv blue" id="wa-r-open">—</span></div>
+      <div class="result-row"><span class="rl">Respuestas recibidas</span><span class="rv" id="wa-r-resp">—</span></div>
+      <div class="result-row"><span class="rl">Prospectos interesados</span><span class="rv cyan" id="wa-r-int">—</span></div>
+      <div class="result-row key"><span class="rl">Ventas cerradas</span><span class="rv green" id="wa-r-ventas2">—</span></div>
+      <div class="result-row"><span class="rl">Ingresos generados</span><span class="rv green" id="wa-r-rev">—</span></div>
+      <div class="result-row"><span class="rl">Costo por conversación iniciada</span><span class="rv" id="wa-r-cpc">—</span></div>
+      <div class="result-row"><span class="rl">Costo por venta cerrada</span><span class="rv amber" id="wa-r-cpv">—</span></div>
+      <div class="result-row"><span class="rl">Tasa de conversión global</span><span class="rv" id="wa-r-cr">—</span></div>
+      <div id="wa-alert" style="margin-top:.75rem"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CREATIVIDADES ===== -->
+<section id="tab-creatividades" class="tab-content">
+  <div class="section-header">
+    <div class="section-title">Calculadora de Creatividades</div>
+    <div class="section-desc">Cuántos creativos necesitás y cuándo renovarlos antes de la fatiga publicitaria</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Parámetros de campaña</div>
+      <div class="field"><label>Presupuesto diario</label><div class="input-group"><span class="input-prefix" id="cr-sym">$</span><input type="number" id="cr-budget" value="100" oninput="calcCreat()"></div></div>
+      <div class="field"><label>CPM esperado</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="cr-cpm" value="10" step=".5" oninput="calcCreat()"></div></div>
+      <div class="field"><label>Alcance de la audiencia objetivo</label><input type="number" id="cr-audience" value="100000" step="5000" oninput="calcCreat()"></div>
+      <div class="field"><label>Frecuencia máxima antes de fatiga</label><div class="input-group suf"><input type="number" id="cr-freq" value="3" step=".5" oninput="calcCreat()"><span class="input-suffix">x</span></div></div>
+      <div class="field"><label>Duración de la campaña (días)</label><input type="number" id="cr-dias" value="30" oninput="calcCreat()"></div>
+      <div class="field"><label>Costo de producción por creativo</label><div class="input-group"><span class="input-prefix">$</span><input type="number" id="cr-prod" value="200" oninput="calcCreat()"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Necesidades de producción</div>
+      <div class="hero-grid" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="hero-card"><div class="hero-val blue" id="cr-r-creativos">—</div><div class="hero-lbl">Creativos necesarios</div></div>
+        <div class="hero-card"><div class="hero-val amber" id="cr-r-vida">—</div><div class="hero-lbl">Vida útil (días)</div></div>
+        <div class="hero-card"><div class="hero-val" id="cr-r-prod">—</div><div class="hero-lbl">Costo producción</div></div>
+      </div>
+      <div class="result-row"><span class="rl">Impresiones totales de campaña</span><span class="rv blue" id="cr-r-imp">—</span></div>
+      <div class="result-row"><span class="rl">Impresiones por creativo (antes de fatiga)</span><span class="rv" id="cr-r-imp-c">—</span></div>
+      <div class="result-row"><span class="rl">Renovar creativos cada</span><span class="rv cyan" id="cr-r-renovar">—</span></div>
+      <div class="result-row"><span class="rl">Presupuesto total de campaña</span><span class="rv" id="cr-r-spend">—</span></div>
+      <div class="result-row key"><span class="rl">Costo producción vs presupuesto ads</span><span class="rv" id="cr-r-ratio">—</span></div>
+      <div id="cr-alert" style="margin-top:.75rem"></div>
+      <hr class="divider">
+      <div class="card-title">Calendario de renovación</div>
+      <div id="cr-calendar"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+</div><!-- .main-area -->
+</div><!-- .app-body -->
+</div><!-- .app -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" integrity="sha384-DhxhYObIMeMNGyAG7iK11OHzBIKyEIeRL0ad1iFPAOwZB8iirUlTT0O/WJJUk8+o" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 // ---- Utilities ----
 let currency = 'ARS';
+let LAST_ROI = 0, LAST_LTV_RATIO = 0;
 const SYM = {USD:'$',ARS:'$',EUR:'€',BRL:'R$',MXN:'$',CLP:'$',COP:'$',PEN:'S/'};
 const MODE1 = {v:'cpm'}, MODE2 = {v:'cpm'};
 const EMPTY='-';
@@ -1415,6 +1846,69 @@ function fmtC(v,d=2){if(!isFinite(v)||isNaN(v))return EMPTY;return(SYM[currency]
 function fmtP(v,d=2){return fmt(v,d)+'%'}
 function fmtX(v,d=2){return fmt(v,d)+'x'}
 function setText(id,value){const node=el(id);if(node)node.textContent=value}
+function safeParseJSON(key,fallback){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback}catch(e){return fallback}}
+function safeSetJSON(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch(e){return false}}
+function escapeHtml(str){return String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+const ACCESS_PASSWORD='Soypicante123';
+function checkAccessPassword(e){
+  e.preventDefault();
+  const input=el('access-pass');
+  if(input.value===ACCESS_PASSWORD){
+    try{ sessionStorage.setItem('mkt-unlocked','1'); }catch(err){}
+    el('access-gate').style.display='none';
+    input.value='';
+    el('access-error').textContent='';
+  } else {
+    el('access-error').textContent='Contraseña incorrecta';
+    input.value='';
+    input.focus();
+  }
+  return false;
+}
+
+// Mantiene aria-pressed sincronizado con la clase .active en todos los grupos de botones toggle,
+// sin depender de tocar cada handler que agrega/quita esa clase.
+const TOGGLE_BTN_SEL='.plat-btn,.mode-btn,.filter-btn,.fee-btn,.funnel-preset-btn,.bench-mode-btn,.recom-card';
+// Asocia cada <label> de un .field con su input/select para lectores de pantalla,
+// sin reescribir manualmente los ~150+ campos existentes.
+function wireFieldLabels(){
+  document.querySelectorAll('.field').forEach(field=>{
+    const label=field.querySelector('label');
+    const input=field.querySelector('input[id],select[id],textarea[id]');
+    if(label&&input&&!label.hasAttribute('for')) label.setAttribute('for',input.id);
+  });
+}
+// Da semántica de heading a los títulos de sección (son <div> por diseño visual) para navegación por lectores de pantalla
+function wireHeadings(){
+  document.querySelectorAll('.section-title').forEach(h=>{ h.setAttribute('role','heading'); h.setAttribute('aria-level','2'); });
+  document.querySelectorAll('.dash-section-title,.panel-title,.card-title').forEach(h=>{ h.setAttribute('role','heading'); h.setAttribute('aria-level','3'); });
+}
+// Etiqueta los inputs numéricos de la tabla Media Mix combinando plataforma + columna del header
+function wireMixTable(){
+  const hdr=document.querySelector('.mix-hdr');
+  if(!hdr) return;
+  const cols=Array.from(hdr.children).map(s=>s.textContent.trim());
+  document.querySelectorAll('.mix-row').forEach(row=>{
+    const nameEl=row.querySelector('.mix-name');
+    const platform=nameEl?nameEl.textContent.trim():'';
+    row.querySelectorAll('input[type=number]').forEach((inp,idx)=>{
+      const colLabel=cols[idx+1]||'';
+      if(platform&&colLabel&&!inp.hasAttribute('aria-label')) inp.setAttribute('aria-label',`${platform} — ${colLabel}`);
+    });
+  });
+}
+function initTogglePressedSync(){
+  const sync=node=>{ if(node.nodeType===1&&node.matches&&node.matches(TOGGLE_BTN_SEL)) node.setAttribute('aria-pressed',node.classList.contains('active')?'true':'false'); };
+  const syncTree=root=>{ sync(root); root.querySelectorAll&&root.querySelectorAll(TOGGLE_BTN_SEL).forEach(sync); };
+  syncTree(document.body);
+  new MutationObserver(muts=>{
+    muts.forEach(m=>{
+      if(m.type==='attributes'&&m.attributeName==='class') sync(m.target);
+      else if(m.type==='childList') m.addedNodes.forEach(syncTree);
+    });
+  }).observe(document.body,{attributes:true,attributeFilter:['class'],subtree:true,childList:true});
+}
 function safeRatio(a,b){return b>0?a/b:NaN}
 function getAttributionWeight(){
   const model=el('roi-attr-model')?.value||'last';
@@ -1424,24 +1918,39 @@ function getAttributionWeight(){
   if(model==='linear') return .5;
   return Math.max(.1,Math.min(1,assisted));
 }
-function computeBudgetModel(){
-  const budget=n('p1-budget'), cr=n('p1-cr')/100, aov=n('p1-aov'), margin=n('p1-margin')/100;
+// ---- NÚCLEO DE PROYECCIÓN (función pura, sin DOM) ----
+// Recibe los parámetros de una campaña y devuelve todas las métricas derivadas.
+// mode: 'cpm' (usa cpm+ctr) o 'cpc' (usa cpc directo). ctr y cr en decimal (0.015 = 1.5%).
+function projectAds(o){
+  const budget=o.budget||0, cr=o.cr||0, aov=o.aov||0, margin=o.margin||0;
   let imp=0, clicks=0, cpc=0;
-  if(MODE1.v==='cpm'){
-    const cpm=n('p1-cpm'), ctr=n('p1-ctr')/100;
+  if(o.mode==='cpc'){
+    cpc=o.cpc||0;
+    clicks=cpc>0?budget/cpc:0;
+  } else {
+    const cpm=o.cpm||0, ctr=o.ctr||0;
     imp=cpm>0?(budget/cpm)*1000:0;
     clicks=imp*ctr;
     cpc=clicks>0?budget/clicks:0;
-  } else {
-    cpc=n('p1-cpc');
-    clicks=cpc>0?budget/cpc:0;
   }
   const conv=clicks*cr;
   const cpa=conv>0?budget/conv:NaN;
-  const rev=conv*aov, roas=budget>0?rev/budget:0;
-  const netRoas=roas*margin, profit=rev*margin-budget;
+  const rev=conv*aov;
+  const roas=budget>0?rev/budget:0;
+  const netRoas=roas*margin;
+  const profit=rev*margin-budget;
   const beRoas=margin>0?1/margin:0;
-  return {budget,cr,aov,margin,imp,clicks,cpc,conv,cpa,rev,roas,netRoas,profit,beRoas,ctr:MODE1.v==='cpm'?n('p1-ctr'):NaN,cpm:MODE1.v==='cpm'?n('p1-cpm'):NaN};
+  return {budget,cr,aov,margin,imp,clicks,cpc,conv,cpa,rev,roas,netRoas,profit,beRoas};
+}
+
+// Wrapper que lee los inputs del Tab 1 y proyecta
+function computeBudgetModel(){
+  const m=projectAds({
+    budget:n('p1-budget'), mode:MODE1.v,
+    cpm:n('p1-cpm'), ctr:n('p1-ctr')/100, cpc:n('p1-cpc'),
+    cr:n('p1-cr')/100, aov:n('p1-aov'), margin:n('p1-margin')/100
+  });
+  return {...m, ctr:MODE1.v==='cpm'?n('p1-ctr'):NaN, cpm:MODE1.v==='cpm'?n('p1-cpm'):NaN};
 }
 function refreshAllEnhanced(){
   calcDashboard();
@@ -1455,14 +1964,28 @@ function setCurrency(c){
   currency=c;
   const s=SYM[c]||'$';
   document.querySelectorAll('[id$="-sym"],[id$="-cpm-sym"],[id$="-cpc-sym"],[id$="-aov-sym"],[id$="-spend-sym"],[id$="-rev-sym"],[id$="-cogs-sym"],[id$="-other-sym"],[id$="-budget-sym"]').forEach(e=>e.textContent=s);
-  calc1();calc2();calcF();calcROI();calcLTV();mCPM();mCPC();mCPA();mCPL();mIMP();calcMix();calcSensitivity();calcForecast();
+  recalcAll();
 }
 
 function switchTab(name,btn){
   document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(e=>e.classList.remove('active'));
-  el('tab-'+name).classList.add('active');
-  btn.classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(e=>e.classList.remove('active'));
+  const tabEl=el('tab-'+name);
+  if(tabEl) tabEl.classList.add('active');
+  if(btn) btn.classList.add('active');
+  const mainEl=document.querySelector('main');
+  if(mainEl) mainEl.scrollTop=0;
+  updateHelp(name);
+  if(name==='dashboard') renderUseCases();
+  toggleSidebar(false);
+}
+function toggleSidebar(force){
+  const sidebar=el('app-sidebar'), backdrop=document.querySelector('.sidebar-backdrop'), btn=document.querySelector('.sidebar-toggle');
+  if(!sidebar) return;
+  const open = typeof force==='boolean' ? force : !sidebar.classList.contains('open');
+  sidebar.classList.toggle('open',open);
+  if(backdrop) backdrop.classList.toggle('show',open);
+  if(btn) btn.setAttribute('aria-expanded',open?'true':'false');
 }
 
 function setMode1(m){
@@ -1501,6 +2024,10 @@ function calc1(){
   el('p1-r-cpc').textContent=fmtC(cpc);
   el('p1-r-rev').textContent=fmtC(rev);
   el('p1-r-roas').textContent=fmtX(roas);
+  // Contexto de benchmark (C)
+  const platBtn=document.querySelector('#tab-presupuesto .plat-btn.active');
+  const platName=platBtn?platBtn.textContent.trim():'Meta Ads';
+  updateBenchContext(platName,cpa,cpc,roas);
   el('p1-r-netroas').textContent=fmtX(netRoas);
   const pe=el('p1-r-profit');
   pe.textContent=fmtC(profit);
@@ -1647,6 +2174,7 @@ function calcROI(){
   const totalCost=spend+cogs+other;
   const netP=attributedRev-totalCost;
   const roi=totalCost>0?(netP/totalCost)*100:0;
+  LAST_ROI = roi;
   const beRoas=margin>0?1/margin:0;
   const netRoas=(spend>0?attributedRev/spend:0)*margin;
   const modelMap={last:'Last click',first:'First click',linear:'Linear',blended:'Blended'};
@@ -1685,6 +2213,7 @@ function calcLTV(){
   const ltv=ltvGross*margin;
   const cac=spend/cust;
   const ratio=cac>0?ltv/cac:0;
+  LAST_LTV_RATIO = ratio;
   const maxCac=ltv*maxPct;
   const monthlyProfit=aov*margin*(freq/12);
   const payback=monthlyProfit>0?cac/monthlyProfit:0;
@@ -1873,7 +2402,7 @@ function calcAgencia(){
   const ae=el('ag-alert');
   if(fee>0&&revActual>0){
     if(roiCliente>=3)
-      ae.innerHTML=`<div class="alert-box green">&#10003; Propuesta muy sólida &mdash; por cada $1 que te paga ${nombre}, generás $${fmt(roiCliente,1)} extra en ingresos. Fácil de justificar.</div>`;
+      ae.innerHTML=`<div class="alert-box green">&#10003; Propuesta muy sólida &mdash; por cada $1 que te paga ${escapeHtml(nombre)}, generás $${fmt(roiCliente,1)} extra en ingresos. Fácil de justificar.</div>`;
     else if(roiCliente>=1)
       ae.innerHTML=`<div class="alert-box blue">&#128203; Propuesta rentable &mdash; con solo ${fmtP(mejoraPct,0)} de mejora el fee se paga solo. Necesitás mejorar al menos ${fmtP(breakEvenPct,1)} para llegar al break-even.</div>`;
     else
@@ -1892,7 +2421,7 @@ function calcAgencia(){
     <div>Ingresos extra mensual: <strong style="color:var(--green)">+${fmtC(revExtra)}</strong></div>
     <div>Ingresos extra anual: <strong style="color:var(--green)">+${fmtC(revExtra*12)}</strong></div>
     <hr style="border:none;border-top:1px solid var(--border);margin:.5rem 0">
-    <div>Por cada $1 invertido en mi gestión, ${nombre} recibe <strong style="color:var(--green)">${fmtX(roiCliente)} en ingresos extra</strong>.</div>
+    <div>Por cada $1 invertido en mi gestión, ${escapeHtml(nombre)} recibe <strong style="color:var(--green)">${fmtX(roiCliente)} en ingresos extra</strong>.</div>
   `;
   refreshAllEnhanced();
 }
@@ -1962,6 +2491,215 @@ function filterBench(plat,btn){
   btn.classList.add('active');
   renderBench();
 }
+// ---- RECOMENDADOR ----
+const RECOM={
+  ecommerce:{name:'E-commerce',icon:'🛒',objetivos:{
+    ventas:{name:'Ventas / Conversiones',plats:[
+      {p:'Meta Ads',color:'#1877F2',tipo:'Conversión (Purchase)',pct:35,cpm:8,ctr:1.5,cr:2.5,nota:'Retargeting + Lookalike de compradores'},
+      {p:'Google Shopping / PMax',color:'#4285F4',tipo:'Shopping + Performance Max',pct:35,cpm:25,ctr:5,cr:3.5,nota:'Alta intención de compra'},
+      {p:'TikTok Ads',color:'#69C9D0',tipo:'Spark Ads + Video Shopping',pct:20,cpm:6,ctr:1.5,cr:1.5,nota:'Descubrimiento de producto'},
+      {p:'Google Display',color:'#34A853',tipo:'Remarketing Display',pct:10,cpm:3,ctr:0.5,cr:0.7,nota:'Recuperar visitantes que no compraron'},
+    ],tip:'Empezá con Meta Conversiones + Google Shopping. Una vez estable el ROAS, escalá con TikTok para discovery.',kpi:'ROAS objetivo: 3x &mdash; CPA ref: $35'},
+    trafico:{name:'Tráfico al sitio',plats:[
+      {p:'Meta Ads',color:'#1877F2',tipo:'Campaña de Tráfico',pct:50,cpm:6,ctr:2,cr:1,nota:'Intereses + Comportamiento'},
+      {p:'Google Search',color:'#4285F4',tipo:'Search de marca y categoría',pct:30,cpm:20,ctr:4,cr:2,nota:'Capturá demanda existente'},
+      {p:'TikTok Ads',color:'#69C9D0',tipo:'Tráfico / Video Views',pct:20,cpm:5,ctr:1.5,cr:0.8,nota:'Audiencias jóvenes y mobile'},
+    ],tip:'Optimizá por sesiones o tiempo en sitio, no solo clics. Medí calidad del tráfico con Analytics.',kpi:'CPC objetivo: $0.70 &mdash; CTR ref: 2%'},
+    reconocimiento:{name:'Reconocimiento de marca',plats:[
+      {p:'Meta Ads',color:'#1877F2',tipo:'Alcance / Reconocimiento de marca',pct:40,cpm:5,ctr:0.8,cr:0,nota:'CPM bajo, alta frecuencia'},
+      {p:'YouTube',color:'#FF0000',tipo:'TrueView / Bumpers 6s',pct:35,cpm:7,ctr:0.4,cr:0,nota:'Video en pantalla grande, alto impacto'},
+      {p:'TikTok Ads',color:'#69C9D0',tipo:'TopView / Brand Takeover',pct:25,cpm:5,ctr:1,cr:0,nota:'Potencial viral'},
+    ],tip:'Medí por Reach y frecuencia, no por CPA. Priorizá creatividades de 6-15 segundos con gancho en los primeros 3s.',kpi:'CPM objetivo: $6 &mdash; Frecuencia: 3-5x'},
+  }},
+  leadgen:{name:'Lead Gen / Servicios',icon:'📋',objetivos:{
+    leads:{name:'Generar Leads',plats:[
+      {p:'Meta Ads',color:'#1877F2',tipo:'Lead Ads (formulario nativo)',pct:55,cpm:9,ctr:1.2,cr:8,nota:'Formulario dentro de Meta = más conversión que landing'},
+      {p:'Google Search',color:'#4285F4',tipo:'Search con palabras de intención',pct:35,cpm:25,ctr:3.5,cr:6,nota:'Usuarios buscando activamente tu servicio'},
+      {p:'LinkedIn',color:'#0A66C2',tipo:'Lead Gen Forms',pct:10,cpm:35,ctr:0.6,cr:1.5,nota:'Solo si tu target es profesional / B2B'},
+    ],tip:'Meta Lead Ads convierte mejor que redirigir a landing. El lead se enfría en horas &mdash; automatizá el seguimiento inmediato.',kpi:'CPL objetivo: $15 &mdash; CR ref: 7%'},
+    consultas:{name:'Llamadas / Consultas',plats:[
+      {p:'Google Search',color:'#4285F4',tipo:'Call-only Ads + Call Extensions',pct:60,cpm:30,ctr:4,cr:5,nota:'Llamadas directas desde el anuncio'},
+      {p:'Meta Ads',color:'#1877F2',tipo:'Lead Ads con CTA a WhatsApp',pct:40,cpm:9,ctr:1.5,cr:6,nota:'Botón "Enviar mensaje" a WhatsApp Business'},
+    ],tip:'Configurá conversión de llamadas en Google Ads (mínimo 30s). En Meta usá el botón de WhatsApp como CTA principal.',kpi:'CPL objetivo: $20 &mdash; CR ref: 5%'},
+  }},
+  inmobiliaria:{name:'Inmobiliaria',icon:'🏠',objetivos:{
+    leads:{name:'Generar Leads / Consultas',plats:[
+      {p:'Meta Ads',color:'#1877F2',tipo:'Lead Ads + Carrusel de propiedades',pct:60,cpm:11,ctr:0.9,cr:2,nota:'Segmentá por ubicación + ingresos estimados'},
+      {p:'Google Search',color:'#4285F4',tipo:'Search de alta intención',pct:30,cpm:40,ctr:3,cr:2,nota:'Búsquedas de alto valor = leads calificados'},
+      {p:'YouTube',color:'#FF0000',tipo:'Video showcase de propiedades',pct:10,cpm:10,ctr:0.4,cr:0.5,nota:'Recorridos virtuales generan más confianza'},
+    ],tip:'El CPL es alto pero el ticket también. Un solo cierre puede costear meses de inversión. Priorizá calidad sobre volumen de leads.',kpi:'CPL objetivo: $80 &mdash; CR ref: 2%'},
+    reconocimiento:{name:'Reconocimiento de zona',plats:[
+      {p:'Meta Ads',color:'#1877F2',tipo:'Alcance por radio geográfico',pct:65,cpm:8,ctr:0.7,cr:0,nota:'Alcanzá gente en la zona de la propiedad'},
+      {p:'YouTube',color:'#FF0000',tipo:'Bumpers 6s locales',pct:35,cpm:8,ctr:0.4,cr:0,nota:'Brand awareness local de alto impacto'},
+    ],tip:'Combiná awareness de zona con retargeting a quien vio tus propiedades. El segundo impacto es el que convierte.',kpi:'CPM objetivo: $9 &mdash; Frecuencia: 4x'},
+  }},
+  gastronomia:{name:'Gastronomía',icon:'🍕',objetivos:{
+    pedidos:{name:'Pedidos / Reservas',plats:[
+      {p:'Meta Ads',color:'#1877F2',tipo:'Conversión + Dynamic Ads',pct:60,cpm:6,ctr:1.3,cr:4,nota:'Radio de 3-5km del local, horarios pico'},
+      {p:'Google Search',color:'#4285F4',tipo:'Search local + Google Maps',pct:30,cpm:15,ctr:4,cr:5,nota:'Gente que busca "restaurante cerca"'},
+      {p:'TikTok Ads',color:'#69C9D0',tipo:'Videos apetitosos de platos',pct:10,cpm:5,ctr:1.5,cr:1,nota:'Creatividades de comida funcionan muy bien'},
+    ],tip:'La geolocalización es clave. Activá en horarios pico: 11-13hs y 18-21hs. Un buen video de platos puede generar antojo inmediato.',kpi:'CPA objetivo: $12 &mdash; CR ref: 4%'},
+    reconocimiento:{name:'Reconocimiento local',plats:[
+      {p:'Meta Ads',color:'#1877F2',tipo:'Alcance local (3-5km)',pct:70,cpm:5,ctr:1.2,cr:0,nota:'Radio del local, todas las edades'},
+      {p:'TikTok Ads',color:'#69C9D0',tipo:'Video viral de platos / ambiente',pct:30,cpm:4,ctr:1.5,cr:0,nota:'Potencial viral = visitas orgánicas gratuitas'},
+    ],tip:'El contenido es el diferencial en gastronomía. Invertí en buenas fotos y videos de platos antes de escalar presupuesto.',kpi:'CPM objetivo: $5 &mdash; Frecuencia: 4x'},
+  }},
+  saas:{name:'SaaS / Software',icon:'💻',objetivos:{
+    trials:{name:'Registros / Free Trials',plats:[
+      {p:'Google Search',color:'#4285F4',tipo:'Search de palabras de solución',pct:40,cpm:45,ctr:2.8,cr:2,nota:'Búsquedas de alta intención de compra'},
+      {p:'Meta Ads',color:'#1877F2',tipo:'Lead Ads o tráfico a landing',pct:35,cpm:12,ctr:0.9,cr:1.2,nota:'Audiencias de tech + cargo laboral'},
+      {p:'LinkedIn',color:'#0A66C2',tipo:'Lead Gen Forms + Sponsored Content',pct:25,cpm:35,ctr:0.6,cr:1.5,nota:'Targeting por cargo, empresa e industria'},
+    ],tip:'El CAC en SaaS puede ser alto si el LTV lo justifica. Calculá tu ratio LTV:CAC antes de definir el CPA máximo aceptable.',kpi:'CPA objetivo: $80 &mdash; CR ref: 2%'},
+    leads:{name:'Leads calificados (B2B)',plats:[
+      {p:'LinkedIn',color:'#0A66C2',tipo:'Lead Gen Forms + Message Ads',pct:50,cpm:35,ctr:0.6,cr:1.5,nota:'Targeting preciso por cargo y empresa'},
+      {p:'Google Search',color:'#4285F4',tipo:'Search branded + categoría',pct:35,cpm:45,ctr:2.8,cr:2,nota:'Capturá quien ya te busca'},
+      {p:'Meta Ads',color:'#1877F2',tipo:'Retargeting a visitantes del sitio',pct:15,cpm:12,ctr:1,cr:1,nota:'Nurturing de leads que ya te conocen'},
+    ],tip:'LinkedIn tiene el CPL más alto pero la mejor calidad para B2B. El ciclo de ventas puede durar meses &mdash; medí MQL→SQL→cierre.',kpi:'CPL objetivo: $200 &mdash; CR ref: 1.5%'},
+  }},
+  salud:{name:'Salud & Bienestar',icon:'🏋',objetivos:{
+    turnos:{name:'Turnos / Consultas',plats:[
+      {p:'Google Search',color:'#4285F4',tipo:'Search local del profesional',pct:50,cpm:35,ctr:3.2,cr:3,nota:'Alta intención: "médico cardiólogo zona X"'},
+      {p:'Meta Ads',color:'#1877F2',tipo:'Lead Ads con formulario de turno',pct:40,cpm:10,ctr:1,cr:3,nota:'Segmentá por edad e intereses de salud'},
+      {p:'YouTube',color:'#FF0000',tipo:'Video educativo / testimonios',pct:10,cpm:9,ctr:0.4,cr:0.5,nota:'Genera confianza antes de la consulta'},
+    ],tip:'En salud la confianza es todo. Usá fotos reales, testimonios y credenciales. Respetá las restricciones de Meta para contenido de salud.',kpi:'CPL objetivo: $40 &mdash; CR ref: 3%'},
+  }},
+  educacion:{name:'Educación',icon:'📚',objetivos:{
+    inscripciones:{name:'Inscripciones / Leads',plats:[
+      {p:'Meta Ads',color:'#1877F2',tipo:'Lead Ads + Video del curso',pct:55,cpm:7,ctr:1.2,cr:5,nota:'Segmentá por intereses + etapa de vida'},
+      {p:'Google Search',color:'#4285F4',tipo:'Search de cursos y carreras',pct:35,cpm:20,ctr:3.8,cr:5,nota:'Alta intención: "curso de X online"'},
+      {p:'YouTube',color:'#FF0000',tipo:'Preview del contenido del curso',pct:10,cpm:7,ctr:0.5,cr:0.5,nota:'Mostrar el contenido genera más confianza'},
+    ],tip:'El embudo de educación es largo. El retargeting es clave &mdash; quien vio el curso 3 veces tiene mucha más probabilidad de inscribirse.',kpi:'CPL objetivo: $18 &mdash; CR ref: 5%'},
+  }},
+  b2b:{name:'B2B / Empresas',icon:'🏢',objetivos:{
+    leads:{name:'Leads calificados',plats:[
+      {p:'LinkedIn',color:'#0A66C2',tipo:'Sponsored Content + Lead Gen Forms',pct:55,cpm:35,ctr:0.6,cr:1.5,nota:'Único canal con targeting por cargo y empresa'},
+      {p:'Google Search',color:'#4285F4',tipo:'Search de soluciones empresariales',pct:35,cpm:45,ctr:2.8,cr:2,nota:'Capturá demanda activa'},
+      {p:'Meta Ads',color:'#1877F2',tipo:'Retargeting a visitantes del sitio',pct:10,cpm:12,ctr:0.8,cr:1,nota:'Nurturing de prospectos fríos'},
+    ],tip:'B2B tiene ciclos de venta largos. Medí MQL→SQL→cierre, no solo costo por lead. Un lead de LinkedIn puede tardar 3 meses en cerrar.',kpi:'CPL objetivo: $150 &mdash; CR ref: 1.5%'},
+  }},
+  app:{name:'App Móvil',icon:'📱',objetivos:{
+    instalaciones:{name:'Instalaciones',plats:[
+      {p:'Meta Ads',color:'#1877F2',tipo:'App Install Campaigns',pct:50,cpm:6,ctr:1.5,cr:12,nota:'Mayor volumen a menor costo'},
+      {p:'TikTok Ads',color:'#69C9D0',tipo:'App Install + Spark Ads',pct:30,cpm:4,ctr:1.5,cr:15,nota:'Muy efectivo para entretenimiento y gaming'},
+      {p:'Google UAC',color:'#4285F4',tipo:'Universal App Campaigns',pct:20,cpm:10,ctr:1.2,cr:10,nota:'Google distribuye en Search + Display + YouTube'},
+    ],tip:'Optimizá por retención D1/D7, no solo installs. Un install que no abre la app al día siguiente vale $0.',kpi:'CPI objetivo: $2 &mdash; CR ref: 12%'},
+    activaciones:{name:'Activaciones / Eventos en app',plats:[
+      {p:'Meta Ads',color:'#1877F2',tipo:'App Events (registro, compra, nivel)',pct:60,cpm:8,ctr:1.2,cr:5,nota:'Optimizá por evento post-install'},
+      {p:'Google UAC',color:'#4285F4',tipo:'UAC optimizado por evento en app',pct:40,cpm:12,ctr:1,cr:6,nota:'Machine learning para usuarios de valor'},
+    ],tip:'Para optimizar por eventos en app necesitás SDK integrado (Meta SDK o Firebase). Sin tracking no hay optimización posible.',kpi:'CPA objetivo: $5 &mdash; CR ref: 5%'},
+  }},
+};
+
+let recomRubroKey=null, recomObjKey=null;
+
+function setBenchMode(mode){
+  el('bench-tabla-mode').style.display=mode==='tabla'?'block':'none';
+  el('bench-recom-mode').style.display=mode==='recom'?'block':'none';
+  el('bm-tabla').className='bench-mode-btn'+(mode==='tabla'?' active':'');
+  el('bm-recom').className='bench-mode-btn'+(mode==='recom'?' active':'');
+  if(mode==='recom'&&!el('recom-rubro-grid').hasChildNodes()) renderRecomRubros();
+}
+
+function renderRecomRubros(){
+  el('recom-rubro-grid').innerHTML=Object.entries(RECOM).map(([k,r])=>
+    `<button class="recom-card${recomRubroKey===k?' active':''}" onclick="selectRubro('${k}')">
+      <span class="recom-icon">${r.icon}</span>
+      <span class="recom-label">${r.name}</span>
+    </button>`
+  ).join('');
+}
+
+function selectRubro(key){
+  recomRubroKey=key; recomObjKey=null;
+  renderRecomRubros();
+  const r=RECOM[key];
+  el('recom-obj-card').style.display='block';
+  el('recom-obj-grid').innerHTML=Object.entries(r.objetivos).map(([k,o])=>
+    `<button class="recom-card" onclick="selectObj('${k}')">
+      <span class="recom-label" style="font-size:13px">${o.name}</span>
+    </button>`
+  ).join('');
+  el('recom-placeholder-card').style.display='block';
+  el('recom-results').style.display='none';
+}
+
+function selectObj(key){
+  recomObjKey=key;
+  document.querySelectorAll('#recom-obj-grid .recom-card').forEach(b=>{
+    b.classList.toggle('active', b.textContent.trim()===RECOM[recomRubroKey].objetivos[key].name);
+  });
+  renderRecomResults();
+}
+
+function renderRecomResults(){
+  const r=RECOM[recomRubroKey], obj=r.objetivos[recomObjKey];
+  el('recom-placeholder-card').style.display='none';
+  el('recom-results').style.display='block';
+
+  const platsHtml=obj.plats.map(p=>`
+    <div class="plat-rec">
+      <div class="plat-rec-dot" style="background:${p.color}"></div>
+      <div>
+        <div class="plat-rec-name" style="color:${p.color}">${p.p}</div>
+        <div class="plat-rec-tipo">${p.tipo}</div>
+        <div class="plat-rec-nota">${p.nota}</div>
+        ${p.cr>0?`<div style="margin-top:4px;font-size:10px;color:var(--text-muted)">CPM ~$${p.cpm} &bull; CTR ~${p.ctr}% &bull; CR ~${p.cr}%</div>`:'<div style="margin-top:4px;font-size:10px;color:var(--text-muted)">CPM ~$'+p.cpm+' &bull; Campaña de awareness</div>'}
+      </div>
+      <div>
+        <div class="plat-rec-pct">${p.pct}%</div>
+        <div class="plat-rec-kpis">del budget</div>
+      </div>
+    </div>`).join('');
+
+  el('recom-results').innerHTML=`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">${r.icon} ${r.name}</div>
+          <div style="font-size:15px;font-weight:600">${obj.name}</div>
+        </div>
+        <button class="btn btn-primary" onclick="aplicarEnMediaMix()">&#8599; Aplicar en Media Mix</button>
+      </div>
+      <div class="card-title">Distribución recomendada del presupuesto</div>
+      ${platsHtml}
+      <div class="recom-tip">
+        <strong>Consejo:</strong> ${obj.tip}<br>
+        <span style="margin-top:4px;display:block;color:var(--cyan)">${obj.kpi}</span>
+      </div>
+    </div>`;
+}
+
+function aplicarEnMediaMix(){
+  if(!recomRubroKey||!recomObjKey) return;
+  const obj=RECOM[recomRubroKey].objetivos[recomObjKey];
+  const platMap={
+    'Meta Ads':'meta','Google Search':'gs','Google Shopping / PMax':'gs',
+    'Google Display':'gd','TikTok Ads':'tt','YouTube':'yt','LinkedIn':'li',
+    'Google UAC':'gs','Google Search de marca y categoría':'gs'
+  };
+  // Reset all to 0 and uncheck
+  ['meta','gs','gd','tt','yt','li'].forEach(id=>{
+    const cb=document.getElementById('mix-'+id+'-on');
+    if(cb){cb.checked=false; document.getElementById('mix-'+id+'-pct').value=0;}
+  });
+  obj.plats.forEach(p=>{
+    const id=platMap[p.p];
+    if(!id) return;
+    const cb=document.getElementById('mix-'+id+'-on');
+    const pctEl=document.getElementById('mix-'+id+'-pct');
+    const cpmEl=document.getElementById('mix-'+id+'-cpm');
+    const ctrEl=document.getElementById('mix-'+id+'-ctr');
+    const crEl=document.getElementById('mix-'+id+'-cr');
+    if(cb){cb.checked=true; pctEl.value=p.pct; cpmEl.value=p.cpm; ctrEl.value=p.ctr; crEl.value=p.cr;}
+  });
+  calcMix();
+  // Ir a Media Mix
+  document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el('tab-mixmedia').classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent.includes('Media Mix'))b.classList.add('active');});
+}
+
 function renderBench(){
   const rows=BENCH.filter(r=>!benchFilter||r.p===benchFilter);
   el('bench-tbody').innerHTML=rows.map(r=>{
@@ -1986,10 +2724,10 @@ function usarBenchmark(r){
   document.getElementById('p1-cr').value=r.cr;
   calc1();
   // Ir al tab presupuesto
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-presupuesto').classList.add('active');
-  Array.from(document.querySelectorAll('.tab-btn')).find(b=>b.textContent.includes('Presupuesto'))?.classList.add('active');
+  Array.from(document.querySelectorAll('.sidebar-item')).find(b=>b.textContent.includes('Presupuesto'))?.classList.add('active');
   // Notificar
   const alert=document.getElementById('p1-alert');
   alert.innerHTML=`<div class="alert-box blue">&#8599; Valores de benchmark cargados: ${r.p} &mdash; ${r.i} (CPM $${r.cpm}, CTR ${r.ctr}%, CR ${r.cr}%)</div>`;
@@ -2006,19 +2744,11 @@ function setModeComp(side,m){
   calcComp();
 }
 function compCalcSide(s){
-  const budget=n('cmp-'+s+'-budget'), cr=n('cmp-'+s+'-cr')/100;
-  const aov=n('cmp-'+s+'-aov'), margin=n('cmp-'+s+'-margin')/100;
-  let imp=0,clicks=0,cpc=0;
-  if(COMP_MODE[s]==='cpm'){
-    const cpm=n('cmp-'+s+'-cpm'), ctr=n('cmp-'+s+'-ctr')/100;
-    imp=cpm>0?(budget/cpm)*1000:0; clicks=imp*ctr; cpc=clicks>0?budget/clicks:0;
-  } else {
-    cpc=n('cmp-'+s+'-cpc'); clicks=cpc>0?budget/cpc:0;
-  }
-  const conv=clicks*cr, rev=conv*aov;
-  const roas=budget>0?rev/budget:0, cpa=conv>0?budget/conv:0;
-  const profit=rev*margin-budget;
-  return {budget,imp,clicks,conv,cpa,rev,roas,profit};
+  return projectAds({
+    budget:n('cmp-'+s+'-budget'), mode:COMP_MODE[s],
+    cpm:n('cmp-'+s+'-cpm'), ctr:n('cmp-'+s+'-ctr')/100, cpc:n('cmp-'+s+'-cpc'),
+    cr:n('cmp-'+s+'-cr')/100, aov:n('cmp-'+s+'-aov'), margin:n('cmp-'+s+'-margin')/100
+  });
 }
 function calcComp(){
   const A=compCalcSide('a'), B=compCalcSide('b');
@@ -2049,7 +2779,7 @@ function calcComp(){
 
   const winner=winsA>winsB?nameA:winsA<winsB?nameB:null;
   el('cmp-summary').innerHTML=winner
-    ?`<span class="badge ${winsA>winsB?'badge-green':'badge-amber'}">${winner} gana en ${Math.max(winsA,winsB)} de ${metrics.length} métricas</span>`
+    ?`<span class="badge ${winsA>winsB?'badge-green':'badge-amber'}">${escapeHtml(winner)} gana en ${Math.max(winsA,winsB)} de ${metrics.length} métricas</span>`
     :`<span class="badge badge-amber">Empate: ${winsA} métricas cada uno</span>`;
 }
 
@@ -2071,10 +2801,7 @@ function calcScale(){
   SC_MULTS.forEach(m=>{
     const budget=base*m;
     const adjCPM=cpm*Math.pow(m,effExp);
-    const imp=adjCPM>0?(budget/adjCPM)*1000:0;
-    const clicks=imp*ctr, conv=clicks*cr;
-    const rev=conv*aov, roas=budget>0?rev/budget:0;
-    const profit=rev*margin-budget;
+    const {conv,rev,roas,profit}=projectAds({budget,mode:'cpm',cpm:adjCPM,ctr,cr,aov,margin});
     const isBase=m===1;
     const roasClass=roas>=beRoas?'roas-ok':'roas-bad';
     rows.push(`<tr class="${isBase?'base-row':''}">
@@ -2146,14 +2873,12 @@ function calcMix(){
   MIX_PLATS.forEach(p=>{
     const on=document.getElementById('mix-'+p.id+'-on').checked;
     const pct=n('mix-'+p.id+'-pct')/100;
-    const cpm=n('mix-'+p.id+'-cpm');
-    const ctr=n('mix-'+p.id+'-ctr')/100;
-    const cr=n('mix-'+p.id+'-cr')/100;
     if(on) totalPct+=pct*100;
     const pb=on?budget*pct:0;
-    const imp=cpm>0?(pb/cpm)*1000:0;
-    const clicks=imp*ctr;
-    const conv=clicks*cr;
+    const {imp,clicks,conv}=projectAds({
+      budget:pb, mode:'cpm',
+      cpm:n('mix-'+p.id+'-cpm'), ctr:n('mix-'+p.id+'-ctr')/100, cr:n('mix-'+p.id+'-cr')/100
+    });
     const rEl=el('mix-'+p.id+'-r');
     const row=document.getElementById('mix-'+p.id+'-on').closest('.mix-row');
     if(on&&pb>0){
@@ -2205,8 +2930,8 @@ function calcMix(){
 
 function calcDashboard(){
   const budgetModel=computeBudgetModel();
-  const ltv=parseFloat((el('ltv-r-ratio').textContent||'0').replace(':1','').replace(',','.'))||0;
-  const roi=parseFloat((el('roi-r-roi').textContent||'0').replace('%','').replace(',','.'))||0;
+  const ltv=LAST_LTV_RATIO;
+  const roi=LAST_ROI;
   const mixRoas=el('mix-r-roas').textContent||EMPTY;
   const mixCpa=el('mix-r-cpa').textContent||EMPTY;
   const emailRpe=el('em-r-rpe').textContent||EMPTY;
@@ -2334,11 +3059,74 @@ function scenarioSnapshot(){
   };
 }
 
-// ---- Init ----
-window.addEventListener('load',()=>{
+// ---- Recalcular todo ----
+function recalcAll(){
   calc1();calc2();updateFunnelLabels();calcF();calcROI();calcLTV();calcProposalClient();calcMix();calcScale();calcComp();renderBench();calcAgencia();calcEmail();calcSensitivity();calcForecast();
+  calcAnual();calcInf();calcChurn();calcWA();calcCreat();
   mCTR();mCPM();mCPC();mCPA();mROAS();mBE();mCPL();mCR();mFR();mIMP();mROI();mCPV();
   calcDashboard();
+}
+
+// ---- AUTOGUARDADO DE INPUTS ----
+const AUTOSAVE_KEY='mkt-inputs';
+let autosaveTimer=null;
+
+function autosaveInputs(){
+  const data={};
+  document.querySelectorAll('input[id],select[id]').forEach(e=>{
+    if(e.type==='checkbox') data[e.id]=e.checked;
+    else data[e.id]=e.value;
+  });
+  try{ localStorage.setItem(AUTOSAVE_KEY,JSON.stringify(data)); }catch(err){}
+}
+
+function restoreInputs(){
+  let data;
+  try{ data=JSON.parse(localStorage.getItem(AUTOSAVE_KEY)||'null'); }catch(err){ return; }
+  if(!data) return;
+  Object.entries(data).forEach(([id,val])=>{
+    const e=document.getElementById(id);
+    if(!e) return;
+    if(e.type==='checkbox') e.checked=val;
+    else e.value=val;
+  });
+}
+
+function scheduleAutosave(){
+  clearTimeout(autosaveTimer);
+  autosaveTimer=setTimeout(()=>{
+    autosaveInputs();
+    const hint=el('autosave-hint');
+    if(hint){ hint.textContent='Guardado ✓'; setTimeout(()=>{ hint.textContent='Guardado automático activo'; },1500); }
+  },400);
+}
+
+function resetDatos(){
+  if(!confirm('Esto borra todos los valores que cargaste y vuelve a los datos de ejemplo. ¿Continuar?')) return;
+  localStorage.removeItem(AUTOSAVE_KEY);
+  location.reload();
+}
+
+// Guardado por delegación: cualquier cambio en un input/select dispara el guardado
+document.addEventListener('input',e=>{ if(e.target.matches('input[id],select[id]')) scheduleAutosave(); });
+document.addEventListener('change',e=>{ if(e.target.matches('input[id],select[id]')) scheduleAutosave(); });
+
+// ---- Init ----
+window.addEventListener('load',()=>{
+  // 1. Generar la grilla anual (crea inputs dinámicos an-m-0..11)
+  initAnualGrid();
+  // 2. Restaurar todos los inputs guardados (incluye los dinámicos ya creados)
+  restoreInputs();
+  // 3. Sincronizar moneda + símbolos con el valor restaurado
+  const curSel=el('g-currency'); if(curSel) setCurrency(curSel.value);
+  // 4. Calcular todo y renderizar listas
+  recalcAll();
+  renderHistorial();renderUseCases();updateHelp('dashboard');
+  // 5. Accesibilidad: asociar <label> con su input y sincronizar aria-pressed en toggles
+  wireFieldLabels();
+  wireMixTable();
+  wireHeadings();
+  initTogglePressedSync();
 });
 el('p2-goal').addEventListener('change',calc2);
 
@@ -2347,15 +3135,15 @@ function saveScenario(){
   const name=prompt('Nombre del escenario:');
   if(!name) return;
   const data=scenarioSnapshot();
-  const list=JSON.parse(localStorage.getItem('mkt-scenarios')||'[]');
+  const list=safeParseJSON('mkt-scenarios',[]);
   list.unshift({name,data,date:new Date().toLocaleDateString('es-AR')});
   if(list.length>12) list.pop();
-  localStorage.setItem('mkt-scenarios',JSON.stringify(list));
+  safeSetJSON('mkt-scenarios',list);
   renderScenarios();
   renderScenarioTable();
 }
 function loadScenario(idx){
-  const list=JSON.parse(localStorage.getItem('mkt-scenarios')||'[]');
+  const list=safeParseJSON('mkt-scenarios',[]);
   const s=list[idx]; if(!s) return;
   const d=s.data;
   el('p1-budget').value=d.budget; el('p1-cpm').value=d.cpm; el('p1-ctr').value=d.ctr;
@@ -2367,9 +3155,9 @@ function loadScenario(idx){
   calc1();
 }
 function deleteScenario(idx){
-  const list=JSON.parse(localStorage.getItem('mkt-scenarios')||'[]');
+  const list=safeParseJSON('mkt-scenarios',[]);
   list.splice(idx,1);
-  localStorage.setItem('mkt-scenarios',JSON.stringify(list));
+  safeSetJSON('mkt-scenarios',list);
   renderScenarios();
   renderScenarioTable();
 }
@@ -2379,17 +3167,17 @@ function clearScenarios(){
   renderScenarioTable();
 }
 function renderScenarios(){
-  const list=JSON.parse(localStorage.getItem('mkt-scenarios')||'[]');
+  const list=safeParseJSON('mkt-scenarios',[]);
   const bar=el('scenario-bar'), chips=el('scenario-chips');
   bar.classList.toggle('show', list.length > 0);
   chips.innerHTML=list.map((s,i)=>`
     <span style="display:inline-flex;align-items:center;gap:4px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:11px">
-      <span style="cursor:pointer;color:var(--text)" onclick="loadScenario(${i})" title="${s.date}">${s.name}</span>
+      <span style="cursor:pointer;color:var(--text)" onclick="loadScenario(${i})" title="${escapeHtml(s.date)}">${escapeHtml(s.name)}</span>
       <span style="cursor:pointer;color:var(--text-muted);margin-left:2px" onclick="deleteScenario(${i})">×</span>
     </span>`).join('');
 }
 function renderScenarioTable(){
-  const list=JSON.parse(localStorage.getItem('mkt-scenarios')||'[]');
+  const list=safeParseJSON('mkt-scenarios',[]);
   const tbody=el('scenario-table-body');
   const empty=el('scenario-empty');
   if(!tbody||!empty) return;
@@ -2402,8 +3190,8 @@ function renderScenarioTable(){
   const bestRoas=Math.max(...list.map(s=>s.data.roas||0));
   tbody.innerHTML=list.map((s,i)=>`
     <tr>
-      <td>${s.name}</td>
-      <td>${s.date}</td>
+      <td>${escapeHtml(s.name)}</td>
+      <td>${escapeHtml(s.date)}</td>
       <td>${fmtC(s.data.budget,0)}</td>
       <td class="${s.data.roas===bestRoas?'best':''}">${fmtX(s.data.roas||0)}</td>
       <td>${fmtC(s.data.profit||0,0)}</td>
@@ -2449,6 +3237,360 @@ function exportCSV(){
   a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(csv);
   a.download='marketing-'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
+}
+
+// ---- PLANIFICADOR ANUAL ----
+const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const SEASON_LABELS={5:'Hot Sale',10:'Black Friday',11:'Navidad'};
+let anualPeaks=new Set([10,11]);
+let anualChart2=null;
+
+function initAnualGrid(){
+  const base=n('an-base')||5000;
+  el('an-month-grid').innerHTML=MESES.map((m,i)=>`
+    <div class="month-card${anualPeaks.has(i)?' peak':''}" id="an-month-${i}">
+      <div class="month-name">${m}${SEASON_LABELS[i]?` <span class="month-badge">${SEASON_LABELS[i]}</span>`:''}<button onclick="togglePeak(${i})" style="background:none;border:none;cursor:pointer;font-size:12px;padding:0">${anualPeaks.has(i)?'🔔':'🔕'}</button></div>
+      <div class="input-group"><span class="input-prefix">$</span><input type="number" id="an-m-${i}" value="${base}" step="100" aria-label="Presupuesto de ${m}" style="font-size:12px;padding:.3rem .5rem" oninput="calcAnual()"></div>
+      <div class="month-pct" id="an-pct-${i}"></div>
+    </div>`).join('');
+}
+function togglePeak(i){
+  if(anualPeaks.has(i)) anualPeaks.delete(i); else anualPeaks.add(i);
+  initAnualGrid(); calcAnual();
+}
+function anualPreset(type){
+  const base=n('an-base')||5000;
+  const mults={equal:[1,1,1,1,1,1,1,1,1,1,1,1],q4:[0.7,0.7,0.7,0.7,0.8,0.8,0.9,0.9,1,1.5,2,2],hotsale:[0.8,0.8,0.8,0.8,1.8,0.8,0.8,0.8,1,1,2,1.5],verano:[1.5,1.5,1.2,1,0.8,0.8,0.8,0.8,0.8,0.9,1,1.3]};
+  const m=mults[type];
+  MESES.forEach((_,i)=>{ const inp=el('an-m-'+i); if(inp) inp.value=Math.round(base*m[i]); });
+  calcAnual();
+}
+function calcAnual(){
+  if(!el('an-m-0')) { initAnualGrid(); }
+  const vals=MESES.map((_,i)=>n('an-m-'+i));
+  const total=vals.reduce((a,b)=>a+b,0);
+  const avg=total/12;
+  const max=Math.max(...vals), min=Math.min(...vals);
+  const maxM=MESES[vals.indexOf(max)], minM=MESES[vals.indexOf(min)];
+  el('an-r-total').textContent=fmtC(total,0);
+  el('an-r-avg').textContent=fmtC(avg,0);
+  el('an-r-max').textContent=`${maxM}: ${fmtC(max,0)}`;
+  el('an-r-min').textContent=`${minM}: ${fmtC(min,0)}`;
+  el('an-r-var').textContent=avg>0?fmtP(((max-avg)/avg)*100,0):'—';
+  MESES.forEach((_,i)=>{
+    const pctEl=el('an-pct-'+i);
+    if(pctEl&&avg>0){ const d=((vals[i]-avg)/avg)*100; pctEl.textContent=(d>=0?'+':'')+fmt(d,0)+'% vs promedio'; pctEl.style.color=d>10?'var(--amber)':d<-10?'var(--text-muted)':'var(--text-muted)'; }
+  });
+  // Chart
+  const ctx=document.getElementById('an-chart');
+  if(!ctx) return;
+  if(anualChart2) anualChart2.destroy();
+  anualChart2=new Chart(ctx,{type:'bar',data:{labels:MESES.map(m=>m.slice(0,3)),datasets:[{data:vals,backgroundColor:vals.map((_,i)=>anualPeaks.has(i)?'rgba(210,153,34,.6)':'rgba(88,166,255,.5)'),borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtC(c.parsed.y,0)}}},scales:{x:{ticks:{color:'#7d8590',font:{size:9}},grid:{display:false}},y:{ticks:{color:'#7d8590',font:{size:9},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,.04)'}}}}});
+}
+
+// ---- INFLUENCERS ----
+function calcInf(){
+  const seg=n('inf-seg'),er=n('inf-er')/100,costo=n('inf-costo'),posts=n('inf-posts'),cr=n('inf-cr')/100,aov=n('inf-aov');
+  const alcance=seg*0.3; // ~30% de seguidores ve el contenido
+  const engTotal=seg*er*posts;
+  const inversion=costo*posts;
+  const cpe=engTotal>0?inversion/engTotal:0;
+  const conv=alcance*posts*cr;
+  const rev=conv*aov;
+  const roi=inversion>0?((rev-inversion)/inversion)*100:0;
+  const cpa=conv>0?inversion/conv:NaN;
+  el('inf-r-alcance').textContent=fmtI(alcance*posts);
+  el('inf-r-eng').textContent=fmtI(engTotal);
+  el('inf-r-cpe').textContent=fmtC(cpe,3);
+  el('inf-r-cpe2').textContent=fmtC(cpe,3);
+  el('inf-r-conv').textContent=fmtI(conv);
+  el('inf-r-rev').textContent=fmtC(rev);
+  el('inf-r-cpa').textContent=fmtC(cpa);
+  el('inf-r-inversion').textContent=fmtC(inversion);
+  const re=el('inf-r-roi'); re.textContent=fmtP(roi,1); re.className='hero-val '+(roi>=0?'green':'red');
+  // vs Meta Ads
+  const metaImp=(inversion/8)*1000, metaClicks=metaImp*.015, metaConv=metaClicks*.025;
+  el('inf-vs-imp').textContent=fmtI(metaImp);
+  el('inf-vs-clicks').textContent=fmtI(metaClicks);
+  el('inf-vs-conv').textContent=fmtI(metaConv);
+  // Benchmark tiers
+  const tier=seg<10000?'nano':seg<100000?'micro':seg<1000000?'macro':'mega';
+  const erPct=n('inf-er');
+  ['nano','micro','macro','mega'].forEach(t=>{
+    const cell=el('inf-b-'+t);
+    if(cell) { cell.textContent=tier===t?fmtP(erPct):'—'; cell.style.color=tier===t?(erPct>=3?'var(--green)':erPct>=1.5?'var(--amber)':'var(--red)'):''; }
+  });
+  const ae=el('inf-alert');
+  if(conv>metaConv) ae.innerHTML=`<div class="alert-box green">&#10003; El influencer genera <strong>${fmtI(conv-metaConv)} conversiones más</strong> que Meta Ads con el mismo presupuesto.</div>`;
+  else ae.innerHTML=`<div class="alert-box amber">&#9888; Meta Ads generaría <strong>${fmtI(metaConv-conv)} conversiones más</strong> con el mismo presupuesto. Evaluá el valor de marca del influencer.</div>`;
+}
+
+// ---- DASHBOARD ----
+function refreshDashboard(){
+  calc1(); calcROI(); calcLTV(); calcAnual(); calcMix(); calcEmail();
+  calcDashboard();
+}
+
+// ---- CHURN ----
+let churnChart2=null;
+function calcChurn(){
+  const clientes=n('ch-clientes'),nuevos=n('ch-nuevos'),churnPct=n('ch-churn')/100,mrr=n('ch-mrr'),cac=n('ch-cac'),meses=n('ch-meses')||12;
+  const churnC=Math.round(clientes*churnPct);
+  const neto=nuevos-churnC;
+  const mrrActual=clientes*mrr;
+  const arr=mrrActual*12;
+  const ltv=churnPct>0?mrr/churnPct:0;
+  const payback=mrr>0?cac/mrr:0;
+  const mrrChurn=churnC*mrr;
+  el('ch-r-mrr').textContent=fmtC(mrrActual,0);
+  el('ch-r-arr').textContent=fmtC(arr,0);
+  el('ch-r-churnc').textContent=fmtI(churnC)+'/mes';
+  const ne=el('ch-r-neto'); ne.textContent=(neto>=0?'+':'')+fmtI(neto)+'/mes'; ne.className='rv '+(neto>=0?'green':'red');
+  el('ch-r-ltv').textContent=fmtC(ltv,0);
+  el('ch-r-payback').textContent=fmt(payback,1)+' meses';
+  el('ch-r-mrrchurn').textContent=fmtC(mrrChurn,0)+'/mes';
+  el('ch-r-needed').textContent=fmtI(churnC+1)+' clientes/mes para crecer';
+  const ae=el('ch-alert');
+  if(neto>0) ae.innerHTML=`<div class="alert-box green">&#10003; Crecimiento positivo: +${fmtI(neto)} clientes netos por mes.</div>`;
+  else if(neto===0) ae.innerHTML=`<div class="alert-box amber">&#9888; Estás en punto de equilibrio — necesitás más de ${fmtI(nuevos)} adquisiciones para crecer.</div>`;
+  else ae.innerHTML=`<div class="alert-box red">&#10007; Pérdida neta de ${fmtI(Math.abs(neto))} clientes/mes. Necesitás reducir el churn o aumentar adquisición.</div>`;
+  // Proyección chart
+  const labels=[],data=[];
+  let c=clientes;
+  for(let i=0;i<=meses;i++){labels.push(i===0?'Hoy':'M'+i);data.push(Math.round(c));c=c*(1-churnPct)+nuevos;}
+  const ctx=document.getElementById('ch-chart'); if(!ctx) return;
+  if(churnChart2) churnChart2.destroy();
+  churnChart2=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Clientes',data,borderColor:'#3fb950',backgroundColor:'rgba(63,185,80,.12)',tension:.3,fill:true,pointRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtI(c.parsed.y)+' clientes'}}},scales:{x:{ticks:{color:'#7d8590',font:{size:9}},grid:{display:false}},y:{ticks:{color:'#7d8590',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}}}}});
+}
+
+// ---- HISTORIAL ----
+function guardarCampania(){
+  const nombre=el('hist-nombre').value.trim();
+  if(!nombre){ el('hist-nombre').focus(); return; }
+  const camp={id:Date.now(),nombre,plat:el('hist-plat').value,periodo:el('hist-periodo').value,spend:n('hist-spend'),rev:n('hist-rev'),conv:n('hist-conv'),clicks:n('hist-clicks'),notas:el('hist-notas').value,fecha:new Date().toLocaleDateString('es-AR')};
+  const list=safeParseJSON('mkt-historial',[]);
+  list.unshift(camp);
+  safeSetJSON('mkt-historial',list);
+  el('hist-nombre').value=''; el('hist-notas').value=''; el('hist-spend').value=0; el('hist-rev').value=0; el('hist-conv').value=0; el('hist-clicks').value=0;
+  renderHistorial();
+}
+function eliminarCampania(id){
+  const list=safeParseJSON('mkt-historial',[]).filter(c=>c.id!==id);
+  safeSetJSON('mkt-historial',list);
+  renderHistorial();
+}
+function limpiarHistorial(){ if(confirm('¿Eliminar todo el historial?')){ localStorage.removeItem('mkt-historial'); renderHistorial(); } }
+function renderHistorial(){
+  const list=safeParseJSON('mkt-historial',[]);
+  const PLAT_COLORS={'Meta Ads':'#1877F2','Google Search':'#4285F4','TikTok':'#69C9D0','LinkedIn':'#0A66C2','YouTube':'#FF0000','Email':'#a371f7','Influencer':'#d29922'};
+  const totalSpend=list.reduce((a,c)=>a+c.spend,0);
+  const totalRev=list.reduce((a,c)=>a+c.rev,0);
+  const totalConv=list.reduce((a,c)=>a+c.conv,0);
+  const avgRoas=totalSpend>0?totalRev/totalSpend:0;
+  const avgCpa=totalConv>0?totalSpend/totalConv:NaN;
+  el('hist-r-total').textContent=list.length;
+  el('hist-r-spend').textContent=fmtC(totalSpend,0);
+  el('hist-r-rev').textContent=fmtC(totalRev,0);
+  el('hist-r-roas').textContent=fmtX(avgRoas);
+  el('hist-r-cpa').textContent=fmtC(avgCpa);
+  el('hist-r-conv').textContent=fmtI(totalConv);
+  if(!list.length){ el('hist-lista').innerHTML='<div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:13px">No hay campañas guardadas todavía</div>'; return; }
+  el('hist-lista').innerHTML=`
+    <div class="hist-row hist-header"><span>Campaña</span><span>Gasto</span><span>Ingresos</span><span>ROAS</span><span>Conv.</span><span>CPA</span><span></span></div>
+    ${list.map(c=>{
+      const roas=c.spend>0?c.rev/c.spend:0;
+      const cpa=c.conv>0?c.spend/c.conv:NaN;
+      const col=PLAT_COLORS[c.plat]||'#888';
+      return `<div class="hist-row">
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${col};margin-right:5px"></span><strong>${escapeHtml(c.nombre)}</strong><br><span style="font-size:10px;color:var(--text-muted)">${escapeHtml(c.plat)} · ${escapeHtml(c.periodo)}</span></span>
+        <span>${fmtC(c.spend,0)}</span><span style="color:var(--green)">${fmtC(c.rev,0)}</span>
+        <span style="color:var(--purple)">${fmtX(roas)}</span><span>${fmtI(c.conv)}</span>
+        <span style="color:var(--amber)">${fmtC(cpa)}</span>
+        <span><button onclick="eliminarCampania(${c.id})" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px">&#215;</button></span>
+      </div>`;
+    }).join('')}`;
+}
+
+// ---- WHATSAPP / CRM ----
+function calcWA(){
+  const msgs=n('wa-msgs'),open=n('wa-open')/100,resp=n('wa-resp')/100,interest=n('wa-interest')/100,close=n('wa-close')/100,aov=n('wa-aov'),costo=n('wa-costo');
+  const opens=msgs*open,respuestas=msgs*resp,interesados=respuestas*interest,ventas=interesados*close;
+  const rev=ventas*aov,roi=costo>0?((rev-costo)/costo)*100:0;
+  const cpc=msgs>0?costo/msgs:0,cpv=ventas>0?costo/ventas:NaN;
+  const crGlobal=msgs>0?ventas/msgs*100:0;
+  el('wa-r-open').textContent=fmtI(opens);
+  el('wa-r-resp').textContent=fmtI(respuestas);
+  el('wa-r-int').textContent=fmtI(interesados);
+  el('wa-r-ventas').textContent=fmtI(ventas);
+  el('wa-r-ventas2').textContent=fmtI(ventas);
+  el('wa-r-rev').textContent=fmtC(rev);
+  el('wa-r-cpc').textContent=fmtC(cpc,3);
+  el('wa-r-cpv').textContent=fmtC(cpv);
+  el('wa-r-cr').textContent=fmtP(crGlobal,2);
+  const re=el('wa-r-roi'); re.textContent=fmtP(roi,1); re.className='hero-val '+(roi>=0?'purple':'red');
+  const ae=el('wa-alert');
+  ae.innerHTML=roi>=0?`<div class="alert-box green">&#10003; Por cada $1 invertido en gestión, generás ${fmtC(rev/costo,1)} en ingresos.</div>`:`<div class="alert-box red">&#10007; El costo de gestión supera los ingresos generados.</div>`;
+}
+
+// ---- CREATIVIDADES ----
+function calcCreat(){
+  const budget=n('cr-budget'),cpm=n('cr-cpm'),audience=n('cr-audience'),freq=n('cr-freq'),dias=n('cr-dias'),prod=n('cr-prod');
+
+  // Impresiones totales de la campaña
+  const impTotal=cpm>0?(budget*dias/cpm)*1000:0;
+
+  // Impresiones que puede recibir un creativo antes de saturar la audiencia
+  const impPerCreat=audience*freq;
+
+  // Creativos necesarios: cuántas veces cabe impPerCreat dentro de impTotal
+  const creativosNec=impPerCreat>0?Math.max(1,Math.ceil(impTotal/impPerCreat)):1;
+
+  // Vida útil real de cada creativo en días (cuántos días hasta saturar)
+  // = impPerCreat / (impTotal/dias), pero máximo = duración de la campaña
+  const dailyImp=dias>0?impTotal/dias:0;
+  const vidaUtilDias=dailyImp>0?Math.min(dias,Math.ceil(impPerCreat/dailyImp)):dias;
+
+  // Cada cuántos días rotar → usa ceil para que el calendario nunca supere creativosNec
+  const renovarCada=Math.max(1,Math.ceil(dias/creativosNec));
+
+  const costoProd=creativosNec*prod;
+  const spendTotal=budget*dias;
+  const ratioProd=spendTotal>0?costoProd/spendTotal*100:0;
+
+  el('cr-r-creativos').textContent=creativosNec;
+  el('cr-r-vida').textContent=vidaUtilDias===dias?'Toda la campaña':vidaUtilDias+' días';
+  el('cr-r-prod').textContent=fmtC(costoProd,0);
+  el('cr-r-imp').textContent=fmtI(impTotal);
+  el('cr-r-imp-c').textContent=fmtI(impPerCreat);
+  el('cr-r-renovar').textContent=renovarCada+' días';
+  el('cr-r-spend').textContent=fmtC(spendTotal,0);
+  el('cr-r-ratio').textContent=fmtP(ratioProd,1)+' del presupuesto';
+
+  const ae=el('cr-alert');
+  if(ratioProd>20)
+    ae.innerHTML=`<div class="alert-box amber">&#9888; La producción (${fmtP(ratioProd,0)}) es alta vs el presupuesto en ads. Considerá simplificar o reutilizar creativos.</div>`;
+  else
+    ae.innerHTML=`<div class="alert-box green">&#10003; Necesitás <strong>${creativosNec} creativo${creativosNec>1?'s':''}</strong>, rotando cada <strong>${renovarCada} días</strong>. Producción = ${fmtP(ratioProd,0)} del gasto total.</div>`;
+
+  // Calendario visual — el índice siempre queda dentro de creativosNec
+  const colors=['#1877F2','#a371f7','#3fb950','#d29922','#f85149','#39d0b0','#58a6ff','#FF0000'];
+  let cal='<div class="creat-week">';
+  for(let d=0;d<dias;d++){
+    const c=Math.min(creativosNec-1,Math.floor(d/renovarCada));
+    const w=Math.max(16,Math.floor(560/dias));
+    cal+=`<div class="creat-block" style="background:${colors[c%colors.length]};width:${w}px" title="Día ${d+1}: Creativo ${c+1}">C${c+1}</div>`;
+  }
+  cal+=`</div><div style="margin-top:6px;font-size:10px;color:var(--text-muted)">${creativosNec} creativo${creativosNec>1?'s distintos':' (el mismo toda la campaña)'}. Cada color = un creativo.</div>`;
+  el('cr-calendar').innerHTML=cal;
+}
+
+// ---- HELP SYSTEM (D) ----
+const HELP = {
+  presupuesto:{title:'Calculadora de Presupuesto',when:'Usá esta herramienta cuando ya sabés cuánto querés invertir y querés proyectar los resultados.',steps:['Elegí la plataforma (Meta, Google, TikTok)',  'Seleccioná el modo: CPM si manejás impresiones, CPC si sabés el costo por clic','Completá el CPM y CTR de tu campaña (o el CPC directo)','Ingresá la tasa de conversión de tu landing page','Completá el ticket promedio para ver el ROAS y ganancia estimados'],tip:'La tasa de conversión varía mucho según el rubro. E-commerce: 1-3%. Lead gen: 4-8%. Servicios: 2-5%.'},
+  objetivos:{title:'Calculadora por Objetivo',when:'Usá esta herramienta cuando tenés una meta (ej: 100 ventas o $50.000 en ingresos) y querés saber cuánto tenés que invertir.',steps:['Elegí qué querés lograr: conversiones, clics, impresiones o ingresos','Ingresá el número objetivo','Completá CPM y CTR esperados (usá los benchmarks como referencia)','El resultado te da el presupuesto total, diario y semanal necesario'],tip:'Si no tenés datos propios, usá los benchmarks de tu industria en la sección Referencia &rarr; Benchmarks.'},
+  anual:{title:'Planificador Anual',when:'Para distribuir tu presupuesto total del año mes a mes, considerando temporadas altas y bajas.',steps:['Ingresá el presupuesto base mensual','Usá los presets para distribución rápida (Hot Sale, Q4, etc.)','Ajustá manualmente cada mes','Marcá los meses de temporada alta con el ícono 🔔'],tip:'Los meses de temporada alta suelen requerir 2-3x más presupuesto. Empezá con el preset y ajustá a tu realidad.'},
+  mixmedia:{title:'Media Mix',when:'Para distribuir tu presupuesto entre múltiples plataformas y ver los resultados consolidados.',steps:['Ingresá el presupuesto mensual total','Activá las plataformas que vas a usar y asignales un porcentaje','Completá CPM, CTR y CR esperados por plataforma','Los porcentajes deben sumar 100% (usá el botón ⚖️)'],tip:'No pongas todo en una sola plataforma. Meta + Google Search es el mix más estable para la mayoría de los rubros.'},
+  funnel:{title:'Funnel de Conversión',when:'Para visualizar cuántas personas llegan a cada etapa del proceso de venta.',steps:['Elegí el preset que corresponda a tu modelo de negocio','Ajustá los porcentajes de conversión de cada etapa','El funnel muestra el costo de llegar a cada nivel'],tip:'La etapa más cara suele ser la última. Optimizar la tasa de cierre tiene más impacto que bajar el CPM.'},
+  escalado:{title:'Simulador de Escalado',when:'Para saber qué pasa con tu ROAS cuando aumentás el presupuesto.',steps:['Ingresá tus parámetros actuales de campaña','Configurá el % de incremento del CPM por duplicación (15% es conservador)','La tabla y el gráfico muestran el ROAS proyectado a cada nivel de presupuesto'],tip:'Al escalar más de 3x, el CPM sube porque agotás las audiencias baratas. Planificá nuevas creatividades y audiencias.'},
+  comparador:{title:'Comparador A vs B',when:'Para comparar dos campañas, períodos o plataformas y ver cuál rinde mejor en cada métrica.',steps:['Completá los datos de cada campaña en su columna','La tabla marca en verde al ganador de cada métrica','El resumen te dice cuál campaña ganó en más métricas'],tip:'Podés comparar el mismo período en dos plataformas distintas, o el mismo canal en dos períodos de tiempo.'},
+  dashboard:{title:'Dashboard',when:'Vista general de todos los KPIs calculados.',steps:['Completá los datos en cada herramienta','Volvé acá y presioná "Actualizar dashboard"','Vas a ver todos los KPIs en un solo lugar'],tip:'Ideal para sacar una captura o imprimir un resumen para presentar a un cliente.'},
+  roi:{title:'ROI / ROAS',when:'Para calcular el retorno real incluyendo el costo del producto y otros gastos, no solo el gasto en ads.',steps:['Ingresá el gasto en publicidad y los ingresos atribuidos','Completá el COGS (costo del producto vendido) y otros gastos','Ajustá el margen bruto','Los resultados muestran ROAS, ROI y ganancia neta real'],tip:'El ROAS de la plataforma (ej: Meta) no es lo mismo que el ROI real. El ROAS no descuenta el costo del producto.'},
+  ltvcac:{title:'LTV / CAC',when:'Para saber si tu costo de adquisición de clientes es sostenible a largo plazo.',steps:['Ingresá el ticket promedio y con qué frecuencia compra un cliente por año','Completá los años de vida útil del cliente y el margen bruto','Ingresá el gasto total en ads y los clientes adquiridos'],tip:'El ratio LTV:CAC debe ser al menos 3:1 para ser saludable. Si es menor, revisá la retención o bajá el CAC.'},
+  churn:{title:'Retención & Churn',when:'Para negocios de suscripción o membresía. Te dice si estás creciendo o perdiendo clientes netos.',steps:['Ingresá los clientes actuales y cuántos nuevos sumás por mes','Configurá tu churn rate (% de clientes que se van por mes)','Ajustá el MRR (facturación mensual por cliente)'],tip:'Reducir el churn 1% tiene más impacto que duplicar la adquisición. Enfocate en retener antes de escalar.'},
+  metricas:{title:'Calculadora de Métricas',when:'Para calcular cualquier métrica individual a partir de los datos que ya tenés.',steps:['Elegí la métrica que querés calcular','Ingresá los valores que conocés','El resultado aparece al instante'],tip:'Útil para verificar si los números que reporta la plataforma son correctos.'},
+  email:{title:'Email Marketing',when:'Para calcular el rendimiento de tus campañas de email y compararlo con paid media.',steps:['Ingresá el tamaño de tu lista y el costo del envío','Completá las tasas de apertura, CTR y conversión','Agregá el ticket promedio para ver el ROI'],tip:'El email marketing tiene uno de los mejores ROI del marketing digital. Un buen open rate es 20-25%.'},
+  influencers:{title:'Calculadora de Influencers',when:'Para evaluar si una colaboración con un influencer vale la pena comparado con paid media.',steps:['Ingresá los seguidores y el engagement rate del influencer','Completá el costo por post y la cantidad de publicaciones','Compará automáticamente con lo que obtendrías con Meta Ads con el mismo presupuesto'],tip:'Un ER &gt;3% es bueno para cuentas de 10k-100k. El ER cae naturalmente con más seguidores.'},
+  whatsapp:{title:'WhatsApp & CRM',when:'Para medir el rendimiento de tu equipo de ventas o bot de WhatsApp.',steps:['Ingresá la cantidad de mensajes o conversaciones iniciadas','Completá las tasas de cada etapa del proceso','Agregá el costo de la herramienta/gestión mensual'],tip:'La tasa de cierre del 15-25% es buena para ventas por WhatsApp. Si es menor, revisá el guión de ventas.'},
+  creatividades:{title:'Creatividades',when:'Para saber cuántos creativos necesitás y cada cuánto renovarlos antes de que la audiencia se sature.',steps:['Ingresá el presupuesto diario y el CPM de tu campaña','Configurá el tamaño de tu audiencia objetivo','Ajustá la frecuencia máxima antes de fatiga (3-4 es estándar)'],tip:'Meta recomienda renovar creatividades cada 7-14 días en campañas activas. Con presupuestos altos, podés necesitar rotación más rápida.'},
+  benchmarks:{title:'Benchmarks & Recomendador',when:'Para ver métricas de referencia de tu industria o recibir una recomendación de campaña.',steps:['En modo Tabla: filtrá por plataforma para ver CPM, CTR y CPA de referencia','En modo Recomendador: elegí tu rubro y objetivo','El recomendador sugiere plataformas, tipos de campaña y KPIs esperados'],tip:'Los benchmarks son promedios globales. Tu mercado (Argentina, Latam) puede tener variaciones significativas.'},
+  historial:{title:'Historial de Campañas',when:'Para registrar los resultados reales de tus campañas y construir un histórico.',steps:['Completá los datos de la campaña en el formulario','Presioná "Guardar campaña"','El historial muestra el ROAS y CPA promedio histórico'],tip:'Registrar campañas pasadas te ayuda a tener benchmarks propios más precisos que los datos generales.'},
+  agencia:{title:'Propuesta de Fee',when:'Para calcular cuánto cobrarle a un cliente y cómo justificar el valor de tu gestión.',steps:['Ingresá el nombre del cliente y sus datos actuales de campaña','Elegí el modelo de fee que vas a proponer','Configurá la mejora que esperás lograr con tu gestión','El resumen ejecutivo se genera automáticamente para mostrarle al cliente'],tip:'Un ROI de 3:1 o más (el cliente recibe $3 en ingresos extra por cada $1 que te paga) es fácil de justificar.'},
+  propuesta:{title:'Propuesta para Cliente',when:'Para armar una propuesta comercial completa con proyecciones.',steps:['Completá los datos del cliente y objetivos','El documento se genera automáticamente'],tip:''},
+  sensibilidad:{title:'Análisis de Sensibilidad',when:'Para ver cómo cambian los resultados si varían los parámetros clave.',steps:['Ajustá los rangos de variación','El análisis muestra el impacto en ROAS y CPA'],tip:''},
+  forecast:{title:'Forecast de Campaña',when:'Para proyectar resultados a lo largo del tiempo.',steps:['Ingresá el presupuesto y los parámetros','El forecast muestra la evolución mes a mes'],tip:''},
+  escenarios:{title:'Escenarios Guardados',when:'Para comparar diferentes configuraciones de campaña.',steps:['Guardá el escenario actual con el botón 💾 del header','Cargá y comparalos desde acá'],tip:''},
+};
+
+function toggleHelp(){
+  const bar=el('help-bar');
+  bar.classList.toggle('collapsed');
+  bar.classList.toggle('expanded');
+}
+function updateHelp(name){
+  const h=HELP[name];
+  if(!h) return;
+  el('help-title').textContent=h.title;
+  el('help-body').innerHTML=`
+    <div class="help-when"><strong>¿Cuándo usarlo?</strong>${h.when}</div>
+    <div>
+      <strong style="font-size:11px;color:var(--text-muted);display:block;margin-bottom:4px">PASO A PASO</strong>
+      <ol class="help-steps">${h.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+    </div>
+    ${h.tip?`<div class="help-tip"><strong>Consejo:</strong> ${h.tip}</div>`:''}`;
+}
+
+// ---- BENCHMARK CONTEXT en Tab 1 (C) ----
+function updateBenchContext(platName,cpa,cpc,roas){
+  // Buscar benchmark de la plataforma seleccionada en BENCH array
+  const platMap={'Meta Ads':'Meta','Google Ads':'Google Search','Google':'Google Search','TikTok':'TikTok','General':'Meta'};
+  const benchPlat=platMap[platName]||'Meta';
+  const rows=BENCH.filter(r=>r.p===benchPlat);
+  if(!rows.length) return;
+  const avgCpa=rows.reduce((s,r)=>s+r.cpa,0)/rows.length;
+  const avgCpc=rows.reduce((s,r)=>s+r.cpc,0)/rows.length;
+
+  function benchTag(val,avg,lower=true){
+    if(!isFinite(val)||isNaN(val)) return '';
+    const ratio=val/avg;
+    const good=lower?(ratio<=1.2):(ratio>=0.8);
+    const great=lower?(ratio<=0.8):(ratio>=1.2);
+    if(great) return `<span class="bench-tag bench-ok">&#10003; Muy bueno</span>`;
+    if(good)  return `<span class="bench-tag bench-ok">&#10003; Dentro del rango</span>`;
+    return `<span class="bench-tag bench-hi">&#9888; Por encima del promedio</span>`;
+  }
+
+  const cpaBench=el('p1-bench-cpa');
+  const cpcBench=el('p1-bench-cpc');
+  const roasBench=el('p1-bench-roas');
+  if(cpaBench&&isFinite(cpa)&&cpa>0) cpaBench.innerHTML=`<span>Promedio ${benchPlat}: ${fmtC(avgCpa,0)}</span>${benchTag(cpa,avgCpa,true)}`;
+  if(cpcBench&&isFinite(cpc)&&cpc>0) cpcBench.innerHTML=`<span>Promedio ${benchPlat}: $${avgCpc.toFixed(2)}</span>${benchTag(cpc,avgCpc,true)}`;
+  if(roasBench&&isFinite(roas)&&roas>0){
+    const avgRoas=rows.reduce((s,r)=>s+(r.cpa>0?r.cpc/r.cpa*100:0),0); // heurística
+    roasBench.innerHTML=`<span>Un buen ROAS para este canal</span>${roas>=3?'<span class="bench-tag bench-ok">&#10003; Muy bueno</span>':roas>=2?'<span class="bench-tag bench-ok">&#10003; Aceptable</span>':'<span class="bench-tag bench-lo">&#9888; Bajo, optimizá</span>'}`;
+  }
+}
+
+// ---- DASHBOARD ORIENTACIÓN (B) ----
+const USE_CASES=[
+  {icon:'💰',q:'Tengo un presupuesto...',title:'¿Qué resultados voy a obtener?',tab:'presupuesto'},
+  {icon:'🎯',q:'Quiero llegar a X ventas...',title:'¿Cuánto necesito invertir?',tab:'objetivos'},
+  {icon:'🔀',q:'Invierto en varias plataformas...',title:'¿Cómo distribuyo el presupuesto?',tab:'mixmedia'},
+  {icon:'🔽',q:'Tengo un proceso de ventas...',title:'¿Dónde pierdo clientes en el funnel?',tab:'funnel'},
+  {icon:'💹',q:'Quiero saber el retorno real...',title:'¿Cuál es mi ROI neto?',tab:'roi'},
+  {icon:'👥',q:'Quiero crecer de forma sostenible...',title:'¿Vale la pena el costo de adquisición?',tab:'ltvcac'},
+  {icon:'⚖️',q:'Tengo dos campañas o períodos...',title:'¿Cuál funcionó mejor?',tab:'comparador'},
+  {icon:'📊',q:'No sé si mis métricas son buenas...',title:'¿Cómo estoy vs la industria?',tab:'benchmarks'},
+  {icon:'🏢',q:'Soy freelance o agencia...',title:'¿Cuánto cobrarle a este cliente?',tab:'agencia'},
+  {icon:'📅',q:'Quiero planificar el año...',title:'¿Cómo distribuyo el budget mensual?',tab:'anual'},
+  {icon:'🤳',q:'Me ofrecen trabajar con un influencer...',title:'¿Conviene vs Meta Ads?',tab:'influencers'},
+  {icon:'🎨',q:'Quiero lanzar una campaña...',title:'¿Cuántos creativos necesito?',tab:'creatividades'},
+];
+
+function renderUseCases(){
+  const grid=el('dash-usecase-grid');
+  if(!grid) return;
+  grid.innerHTML=USE_CASES.map(u=>`
+    <button class="usecase-card" onclick="navTo('${u.tab}')">
+      <div class="uc-icon">${u.icon}</div>
+      <div class="uc-q">${u.q}</div>
+      <div class="uc-title">${u.title}</div>
+      <div class="uc-tab">Ir a ${u.tab.charAt(0).toUpperCase()+u.tab.slice(1)} &rarr;</div>
+    </button>`).join('');
+}
+
+function navTo(tab){
+  const btn=Array.from(document.querySelectorAll('.sidebar-item')).find(b=>b.getAttribute('onclick')?.includes("'"+tab+"'"));
+  switchTab(tab,btn||document.querySelector('.sidebar-item'));
 }
 
 // ---- TAB SCROLL ARROWS ----
